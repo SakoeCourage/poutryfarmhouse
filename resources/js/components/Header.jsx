@@ -9,11 +9,8 @@ import { motion, AnimatePresence } from "framer-motion"
 function Accountmenu() {
     const { auth } = usePage().props
     const { user } = auth
-
-
-
     return <div
-            className="mt-2 absolute   z-[50]  right-16">
+            className="mt-2 absolute   right-16">
         <div className="bg-white rounded overflow-hidden shadow-lg">
             <div className="text-center p-6  border-b">
                 <img
@@ -86,7 +83,7 @@ export default function Header() {
     const { auth } = usePage().props
     const { user } = auth
     return (
-        <div className='relative z-[50]' id='header'>
+        <div className='relative z-20' id='header'>
             <div className='flex justify-end  px-10 py-2'>
                 <nav className=' flex items-center gap-3'> <span className=' order-2 flex flex-col'>
                     <span>{user.user?.name ?? "Username"}</span>

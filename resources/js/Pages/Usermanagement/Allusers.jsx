@@ -7,6 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Inertia } from '@inertiajs/inertia'
 import Customsearchinput from '../../components/customsearchinput'
 import { useDebounce } from '@react-hook/debounce'
+import Rightmodalwithbackdrop from '../../components/Rightmodalwithbackdrop'
+import { AnimatePresence } from 'framer-motion'
+import Edituser from './Edituser'
 
 
 function SearchBar(props) {
@@ -42,8 +45,19 @@ function SearchBar(props) {
 
 export default function Allusers() {
     let { users } = usePage().props
+    const [currentUser, setCurrentUser] = useState(  {
+         currentUserId : null,
+         currentUsername: null,
+    }  )
     return (
-        <div className='w-full h-full'>
+        <div className='w-full h-full z-50'>
+             {currentUser.currentUserId &&
+             <AnimatePresence>
+                <Rightmodalwithbackdrop onClose={()=>setCurrentUser(cu=>cu={currentUsername: null, currentUserId:null})} title={`${currentUser.currentUsername} Edit`}>
+                    <Edituser />
+            </Rightmodalwithbackdrop>
+             </AnimatePresence>
+             }
             <SimpleBar className="  w-full overflow-x-scroll overflow-y-scroll h-full relative">
                 <nav className=' py-2'>
                     <div className='w-full md:w-[25rem] px-4'>
@@ -102,7 +116,7 @@ export default function Allusers() {
 
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        <button className='border-2 border-gray-300 p-2 px-4 rounded-full text-xs'>
+                                        <button onClick={()=>setCurrentUser(cu=>cu={currentUsername: user.name, currentUserId:user.id})} className='border-2 border-gray-300 p-2 px-4 rounded-full text-xs'>
                                             <span>view </span>
                                         </button>
                                     </td>

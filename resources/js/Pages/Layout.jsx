@@ -37,8 +37,8 @@ export default function Layout({ children }) {
                 <Sidebar />
             </span>
             <span className=' grow h-full overflow-x-hidden flex flex-col' id='documentPage'>
-                <nav className='sticky top-0 shadow-sm z-50  bg-white basis-16 '><Header /></nav>
-                <nav className='w-full h-full bg-white  z-10 relative   mx-auto overflow-x-hidden px-5 md:px-2 grow pb-5' id='outlet'>
+                <nav className='sticky top-0 shadow-sm z-20  bg-white basis-16 '><Header /></nav>
+                <nav className='w-full h-full bg-white   relative   mx-auto overflow-x-hidden px-5 md:px-2 grow pb-5' id='outlet'>
                     {children}
                 </nav>
             </span>

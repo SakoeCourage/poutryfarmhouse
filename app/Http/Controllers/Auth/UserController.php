@@ -51,7 +51,7 @@ class UserController extends Controller
             'password' => ['required_if:usedefault,0', 'max:255'],
             'firstname' => ['required', 'string','min:2', 'max:255'],
             'lastname' => ['required', 'string','min:2', 'max:255'],
-            'contact' => ['required', 'numeric','min:10', ],
+            'contact' => ['required', 'numeric','min:9'],
             'location' => ['max:255'],
             'identification_number' => ['max:255'],
             'jobposition' => ['required', 'string','max:255'],

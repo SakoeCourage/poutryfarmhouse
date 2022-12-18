@@ -11,7 +11,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 library.add(faGrip,faMagnifyingGlass, faCaretUp,faCaretDown, faKiwiBird,faWarning, faLayerGroup, faPen, faClose, faTimes, faCheck, faArrowRight, faListCheck, faShop, faRightFromBracket, faCalendarDay, faAngleDown, faArrowTrendUp, faTent, faFileLines, faUserGroup)
 
 InertiaProgress.init({
-    
     color: '#3730a3',
     showSpinner: false,
     
