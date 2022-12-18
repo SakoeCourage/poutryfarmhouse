@@ -84,12 +84,13 @@ function Accountmenu() {
 export default function Header() {
     const [isDropped, setisDropped] = useState(false)
     const { auth } = usePage().props
+    const { user } = auth
     return (
         <div className='relative z-[50]' id='header'>
             <div className='flex justify-end  px-10 py-2'>
                 <nav className=' flex items-center gap-3'> <span className=' order-2 flex flex-col'>
-                    <span>Isaac Kyei</span>
-                    <span className='text-xs text-gray-400'>Admin</span>
+                    <span>{user.user?.name ?? "Username"}</span>
+                    <span className='text-xs text-gray-400'>{user.roles[0] ?? 'role'}</span>
                 </span>
                     <img className='h-8 w-8 aspect-square object-cover rounded-full order-1' src={profilepic} alt="" />
 
