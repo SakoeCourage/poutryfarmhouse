@@ -1,0 +1,16 @@
+import React from 'react'
+
+export default function Compareoveramonth() {
+  return (
+    <div className='border border-blue-400 shadow-md rounded-md '>
+    <div className='flex  items-center justify-between w-full shadow-sm pb-2  px-2 pt-2'>
+    <span className=' text-blue-400 bg-blue-50 px-2 py-1 text-sm rounded-md'>a month(weeks)</span> 
+    <input className='' type="checkbox" name="" id="" />
+    </div>
+     <div className='flex px-2 items-center justify-between gap-2 mt-2 pb-3'>
+        <input placeholder='month' type="number" min='1' max='12' className='text-xs border border-gray-200 rounded px-1 py-1 leading-6 w-full focus-within:border-blue-400 focus-within:outline-none focus-within:ring focus-within:ring-blue-400 focus-within:ring-opacity-50 transition-all duration-500' name="" id="" />
+        <input placeholder='year' type="number" min='0'  className='text-xs border border-gray-200 rounded px-1 py-1 leading-6 w-full focus-within:border-blue-400 focus-within:outline-none focus-within:ring focus-within:ring-blue-400 focus-within:ring-opacity-50 transition-all duration-500' name="" id="" />
+     </div>
+</div>
+  )
+}

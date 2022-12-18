@@ -1,0 +1,37 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "build-css": "npx tailwindcss -i ./resources/css/input.css -o ./resources/css/app.css --watch"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.13",
+        "axios": "^1.2.1",
+        "laravel-vite-plugin": "^0.7.0",
+        "postcss": "^8.4.20",
+        "tailwindcss": "^3.2.4",
+        "vite": "^3.0.0"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.2.1",
+        "@fortawesome/free-regular-svg-icons": "^6.2.1",
+        "@fortawesome/free-solid-svg-icons": "^6.2.1",
+        "@fortawesome/react-fontawesome": "^0.2.0",
+        "@inertiajs/inertia": "^0.11.1",
+        "@inertiajs/inertia-react": "^0.8.1",
+        "@inertiajs/progress": "^0.2.7",
+        "@react-hook/debounce": "^4.0.0",
+        "body-scroll-lock": "^4.0.0-beta.0",
+        "dayjs": "^1.11.7",
+        "echarts": "^5.4.0",
+        "framer-motion": "^7.10.2",
+        "js-cookie": "^3.0.1",
+        "loadash": "^1.0.0",
+        "react-datepicker": "^4.8.0",
+        "react-number-format": "^5.1.2",
+        "react-router-dom": "^6.4.5",
+        "react-toastify": "^9.1.1",
+        "simplebar-react": "^2.4.3"
+    }
+}

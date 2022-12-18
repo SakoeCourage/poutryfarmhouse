@@ -1,0 +1,7 @@
+.font-awesome .error {
+    display: none;
+}
+
+.font-awesome:hover .error {
+    display: block;
+}
