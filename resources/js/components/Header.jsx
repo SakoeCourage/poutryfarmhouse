@@ -10,7 +10,7 @@ function Accountmenu() {
     const { auth } = usePage().props
     const { user } = auth
     return <div
-            className="mt-2 absolute   right-16">
+        className="mt-2 absolute min-w-[18rem]  right-16">
         <div className="bg-white rounded overflow-hidden shadow-lg">
             <div className="text-center p-6  border-b">
                 <img
@@ -94,8 +94,8 @@ export default function Header() {
                     <FontAwesomeIcon onClick={() => setisDropped(!isDropped)} className='order-3 cursor-pointer  bg-gray-700 text-white h-2 w-2 p-1 rounded-full' icon='angle-down' />
                 </nav>
             </div>
-            {isDropped &&  <Accountmenu />
-           
+            {isDropped && <Accountmenu />
+
             }
         </div>
     )

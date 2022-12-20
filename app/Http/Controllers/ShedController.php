@@ -31,6 +31,7 @@ class ShedController extends Controller
     }
     public function create(Request $request, Shed $shed)
     {
+            
             $data = $request->validate([
                 'identification_name' => ['required','string','max:255'],
                 'number_of_flocks' => ['nullable','numeric']

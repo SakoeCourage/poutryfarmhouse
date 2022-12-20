@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Userprofile;
 
 
-
 class UserController extends Controller
 {
     //
@@ -33,6 +32,16 @@ class UserController extends Controller
         ]);
     }
     
+    public function getuserinfo(User $user){
+        return([
+            'user' => $user,
+            'profile'=> $user->profile,
+            'role' => $user->getRoleNames()
+
+            
+        ]);
+
+    }
 
 
     public function showcreateuserform(){
@@ -89,5 +98,59 @@ class UserController extends Controller
             ]
 
         ]);
+    }
+
+    public function edit(User $user){
+       
+        $data = request()->validate([
+            'name' => ['required', 'string', 'min:8', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'firstname' => ['required', 'string','min:2', 'max:255'],
+            'lastname' => ['required', 'string','min:2', 'max:255'],
+            'contact' => ['required', 'numeric','min:9'],
+            'location' => ['max:255'],
+            'identification_number' => ['max:255'],
+            'jobposition' => ['required', 'string','max:255'],
+            'role' => ['required', 'string','max:255']
+        ]);
+ 
+        DB::transaction(function()use ($data, $user,) {     
+            $user->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+            ]);
+             
+             $user->syncRoles($data['role']);
+            $user->profile()->update([
+                'firstname' => $data['firstname'],
+                'lastname' => $data['lastname'],
+                'contact' => $data['contact'],
+                'location' => $data['location'],
+                'jobposition' => $data['jobposition'],
+                'identification_number' => $data['identification_number']
+
+            ]);
+        
+        });
+        return redirect()->back()->with([
+            "message" => [
+                'type' => 'success',
+                'text' => 'user updated succesfully'
+            ]
+
+        ]);
+
+    }
+    public function delete(User $user){
+        if($user->delete()){
+            return redirect()->back()->with([
+                "message" => [
+                    'type' => 'success',
+                    'text' => 'user account deleted succesfully'
+                ]
+    
+            ]);
+        }
+    
     }
 }

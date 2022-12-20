@@ -2,7 +2,7 @@ export let sidebarRoutes =
 [{
     title: "Flock management",
     icon: "list-check",
-    Role: ['Super Admin','Admin', 'data entry operator'],
+    Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
         title: 'new flock',
         link: '/flock/create',
@@ -29,7 +29,7 @@ export let sidebarRoutes =
 {
     title: "Stock management",
     icon: "arrow-trend-up",
-    Role: ['Super Admin','Admin', 'data entry operator'],
+    Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
         title: 'all stock',
         link: '/stock/all',
@@ -45,7 +45,7 @@ export let sidebarRoutes =
 {
     title: "Shed management",
     icon: "shop",
-    Role: ['Super Admin','Admin'],
+    Role: ['Super Admin','admin'],
     links: [{
         title: 'all shed',
         link: '/shed/all',
@@ -62,7 +62,7 @@ export let sidebarRoutes =
 {
     title: "Report",
     icon: "file-lines",
-    Role: ['Super Admin','Admin', 'data entry operator'],
+    Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
         title: 'tabular',
         link: '/report/tabular'

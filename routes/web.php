@@ -27,6 +27,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/user/create',  [\App\Http\Controllers\Auth\UserController::class, 'showcreateuserform']);
         Route::get('/user/all', [\App\Http\Controllers\Auth\UserController::class, 'index']);
         Route::post('/createuser', [\App\Http\Controllers\Auth\UserController::class, 'create']);
+        Route::put('/user/edit/{user}', [\App\Http\Controllers\Auth\UserController::class, 'edit'])->middleware(['permission:edit user']);
+        Route::delete('/user/delete/{user}', [\App\Http\Controllers\Auth\UserController::class, 'delete'])->middleware(['permission:delete user']);
+       
     });
 
     Route::group(['prefix' => 'flock'], function () {

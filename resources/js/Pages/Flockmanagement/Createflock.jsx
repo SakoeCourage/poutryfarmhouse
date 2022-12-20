@@ -83,8 +83,8 @@ export default function Createflock() {
   } 
   
   let submit = (e) => {  
-    
-    e.preventDefault()
+
+    // e.preventDefault()
     post('/flock/create', {
       onSuccess: (e) => handlereset(e)
     })
@@ -103,7 +103,7 @@ export default function Createflock() {
   return (
     <div className='mt-10'>
       
-      <form ref={form} onSubmit={submit} className=' max-w-4xl mx-auto'>
+      <main ref={form} onSubmit={submit} className=' max-w-4xl mx-auto'>
         <nav className='flex flex-col gap-3'>
           <span>
             <label htmlFor="" className='font-medium text-sm'>Today</label>
@@ -145,11 +145,11 @@ export default function Createflock() {
           </span>
           </div>
           <nav className=' self-end mt-5'>
-            <Buttonsubmint processing={processing} text='create' />
+            <Buttonsubmint onClick={()=>{submit()}} processing={processing} text='create' />
           </nav>
         </nav>
 
-      </form>
+      </main>
     </div>
   )
 }

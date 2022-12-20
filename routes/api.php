@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 Route::get('/flocks/all', function(){
     return([
@@ -45,3 +43,4 @@ Route::get('/sheds/all',function(){
 });
 
 
+Route::get('/user/getuserinfo/{user}',[\App\Http\Controllers\Auth\UserController::class, 'getuserinfo'])->middleware(['permission:edit user','role:Super Admin','auth']);

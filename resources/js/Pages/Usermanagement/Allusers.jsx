@@ -51,13 +51,13 @@ export default function Allusers() {
     }  )
     return (
         <div className='w-full h-full z-50'>
-             {currentUser.currentUserId &&
              <AnimatePresence>
-                <Rightmodalwithbackdrop onClose={()=>setCurrentUser(cu=>cu={currentUsername: null, currentUserId:null})} title={`${currentUser.currentUsername} Edit`}>
-                    <Edituser />
+             {currentUser.currentUserId &&
+            <Rightmodalwithbackdrop onClose={()=>setCurrentUser(cu=>cu={currentUsername: null, currentUserId:null})} title={`${currentUser.currentUsername} Edit`}>
+                    <Edituser id={currentUser.currentUserId} closeModal={()=>setCurrentUser(cu=>cu={currentUsername: null, currentUserId:null})} />
             </Rightmodalwithbackdrop>
-             </AnimatePresence>
              }
+             </AnimatePresence>
             <SimpleBar className="  w-full overflow-x-scroll overflow-y-scroll h-full relative">
                 <nav className=' py-2'>
                     <div className='w-full md:w-[25rem] px-4'>
@@ -87,9 +87,6 @@ export default function Allusers() {
                                 role
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                profile
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 Action
                             </th>
 
@@ -116,13 +113,8 @@ export default function Allusers() {
 
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        <button onClick={()=>setCurrentUser(cu=>cu={currentUsername: user.name, currentUserId:user.id})} className='border-2 border-gray-300 p-2 px-4 rounded-full text-xs'>
-                                            <span>view </span>
-                                        </button>
-                                    </td>
-                                    <td className="py-2 px-6 ">
                                         <nav className='text-blue-500 flex items-center gap-2'>
-                                            <span >Edit</span>
+                                            <button onClick={()=>setCurrentUser(cu=>cu={currentUsername: user.name, currentUserId:user.id})}>Edit</button>
                                             <FontAwesomeIcon icon='arrow-right' className='text-blue-500' size='sm' />
                                         </nav>
                                     </td>

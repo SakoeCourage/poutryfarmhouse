@@ -12,6 +12,7 @@ export default function Createuser() {
     const formEl = useRef()
     const [defaultPasswordChecker, setDefaultPasswordChecker] = useState(true)
     const [roles, setRoles] = useState([])
+    const [resetform,setresetform] =useState(false)
     const [jobPositions, setJobPositions] = useState([])
     const { getRoles, getJobPositions } = getSelectItems
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -36,13 +37,11 @@ export default function Createuser() {
     function resetAllData(e) {
         reset()
         formEl.current.reset()
+        setresetform(!resetform)
     }
 
     let submit = (e) => {
         e.preventDefault()
-        console.log(data)
-
-
         post('/createuser', {
             onSuccess: () => resetAllData(),
         })
@@ -60,9 +59,7 @@ export default function Createuser() {
     useEffect(() => {
         fetchData()
     }, [])
-    useEffect(() => {
-        console.log(errors)
-    }, [errors])
+ 
 
 
     return (
@@ -71,29 +68,29 @@ export default function Createuser() {
             <main className=' max-w-4xl mx-auto'>
                 <form ref={formEl} onSubmit={submit} className=' class-name flex flex-col gap-5'>
                     <div className='flex md:flex-row items-center flex-col gap-10'>
-                        <Custominput error={errors.firstname} required getValue={(value) => setData('firstname', value)} label='first name' />
-                        <Custominput error={errors.lastname} required getValue={(value) => setData('lastname', value)} label='last name' />
-                        <Custominput error={errors.name} required getValue={(value) => setData('name', value)} label='user name' />
+                        <Custominput reset={resetform} error={errors.firstname} required getValue={(value) => setData('firstname', value)} label='first name' />
+                        <Custominput reset={resetform} error={errors.lastname} required getValue={(value) => setData('lastname', value)} label='last name' />
+                        <Custominput reset={resetform} error={errors.name} required getValue={(value) => setData('name', value)} label='user name' />
                     </div>
                     <div className='flex md:flex-row items-center flex-col gap-10'>
-                        <Custominput error={errors.email} getValue={(value) => setData('email', value)} label='email' />
+                        <Custominput reset={resetform} error={errors.email} getValue={(value) => setData('email', value)} label='email' />
                         <nav className='flex flex-col w-full'>
                             <nav className='flex gap-2 items-center'>
                                 <label className='font-semibold text-sm' htmlFor="" >use default password</label>
                                 <input type="checkbox" name="" id="" checked={defaultPasswordChecker} onChange={(e) => changeDefaultpasswordChecker(e) } />
                             </nav>
-                            <Custominput error={errors.password} placeholder="enter password " getValue={(value) => setData('password', value)} disabled={defaultPasswordChecker} type='password' />
+                            <Custominput reset={resetform} error={errors.password} placeholder="enter password " getValue={(value) => setData('password', value)} disabled={defaultPasswordChecker} readOnly={defaultPasswordChecker} type='password' />
                         </nav>
                     </div>
                     <div className='mt-5'>
-                        <Custominput required error={errors.contact} getValue={(value) => setData('contact', value)} label='contact' type='contact' min='0' />
+                        <Custominput reset={resetform} required error={errors.contact} getValue={(value) => setData('contact', value)} label='contact' type='contact' min='0' />
 
                     </div>
                     <div className='mt-5'>
-                        <Custominput error={errors.location} getValue={(value) => setData('location', value)} label='location' min='0' />
+                        <Custominput reset={resetform} error={errors.location} getValue={(value) => setData('location', value)} label='location' min='0' />
                     </div>
                     <div className='mt-5'>
-                        <Custominput error={errors.identification_number} getValue={(value) => setData('identification_number', value)} label='identification number'  />
+                        <Custominput reset={resetform} error={errors.identification_number} getValue={(value) => setData('identification_number', value)} label='identification number'  />
                     </div>
                     <div className='flex gap-10 mt-5'>
                         <span className="space-y-1 text-sm">

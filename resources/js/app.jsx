@@ -6,9 +6,9 @@ import Layout from './Pages/Layout'
 import 'simplebar-react/dist/simplebar.min.css';
 import '../css/native.css'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { faGrip,faMagnifyingGlass, faCaretUp,faCaretDown, faKiwiBird,faWarning, faLayerGroup, faPen, faClose, faTimes, faCheck, faArrowRight, faShop, faRightFromBracket, faCalendarDay, faListCheck, faAngleDown, faArrowTrendUp, faTent, faFileLines, faUserGroup } from '@fortawesome/free-solid-svg-icons'
+import { faGrip,faMagnifyingGlass ,faCaretUp,faCaretDown, faKiwiBird,faWarning, faLayerGroup, faPen, faClose, faTimes, faCheck, faArrowRight, faShop, faRightFromBracket, faCalendarDay, faListCheck, faAngleDown, faArrowTrendUp, faTent, faFileLines, faUserGroup } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
-library.add(faGrip,faMagnifyingGlass, faCaretUp,faCaretDown, faKiwiBird,faWarning, faLayerGroup, faPen, faClose, faTimes, faCheck, faArrowRight, faListCheck, faShop, faRightFromBracket, faCalendarDay, faAngleDown, faArrowTrendUp, faTent, faFileLines, faUserGroup)
+library.add(faGrip,faMagnifyingGlass ,faCaretUp,faCaretDown, faKiwiBird,faWarning, faLayerGroup, faPen, faClose, faTimes, faCheck, faArrowRight, faListCheck, faShop, faRightFromBracket, faCalendarDay, faAngleDown, faArrowTrendUp, faTent, faFileLines, faUserGroup)
 
 InertiaProgress.init({
     color: '#3730a3',

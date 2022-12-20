@@ -7,9 +7,11 @@ import { usePage } from '@inertiajs/inertia-react'
 import { useEffect } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Toastnotification from '../components/toastnotification';
+import { AnimatePresence } from 'framer-motion';
 
 export default function Layout({ children }) {
-    const { auth, flash } = usePage().props
+    const { auth } = usePage().props
     
     
     useEffect(() => {
@@ -17,22 +19,13 @@ export default function Layout({ children }) {
     }, [auth])
 
 
-    useEffect(() => {
-        if(flash.message?.type == 'sucess'){
-            toast.success(flash.message?.text, {
-                position: toast.POSITION.BOTTOM_RIGHT
-            });
-        }else{
-            toast.warn(flash.message?.text, {
-                position: toast.POSITION.BOTTOM_RIGHT
-            });
-        }
-       
-    }, [flash])
+
 
     return (
         <main className="w-screen h-screen flex overflow-hidden">
-            <ToastContainer />
+                <AnimatePresence>
+                <Toastnotification />
+                </AnimatePresence>
             <span className='w-0 md:w-[320px]   '>
                 <Sidebar />
             </span>
