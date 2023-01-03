@@ -22,6 +22,17 @@ Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'index
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', fn ()=> Inertia('Dashboard'));
     Route::post('/logout',[\App\Http\Controllers\Auth\LogoutController::class,'logout']);
+    Route::get('/salemanagement/newsale',[\App\Http\Controllers\SaleController::class, 'index']);
+
+    Route::group(['prefix'=>'sales'],function(){
+        Route::post('/new',[\App\Http\Controllers\SaleController::class,'store']);
+    });
+
+    Route::get('/expenses',[\App\Http\Controllers\ExpenseController::class, 'index']);
+    Route::put('/expenses/action/{expense}/{action}',[\App\Http\Controllers\ExpenseController::class,'action']);
+    Route::get('/expenses/all',[\App\Http\Controllers\ExpenseController::class, 'allExpenses']);
+    Route::post('/expenses/create',[\App\Http\Controllers\ExpenseController::class, 'store']);
+    
     
     Route::group(['middleware' => 'role:Super Admin'], function () {
         Route::get('/user/create',  [\App\Http\Controllers\Auth\UserController::class, 'showcreateuserform']);
@@ -29,27 +40,37 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/createuser', [\App\Http\Controllers\Auth\UserController::class, 'create']);
         Route::put('/user/edit/{user}', [\App\Http\Controllers\Auth\UserController::class, 'edit'])->middleware(['permission:edit user']);
         Route::delete('/user/delete/{user}', [\App\Http\Controllers\Auth\UserController::class, 'delete'])->middleware(['permission:delete user']);
-       
+        Route::get('/system/definitions',[\App\Http\Controllers\SystemdefinitionsContoller::class, 'index']);
+        Route::post('/definitions/product/create',[\App\Http\Controllers\ProductsdefinitionController::class,'create']);
     });
-
+    
     Route::group(['prefix' => 'flock'], function () {
+        Route::get('/all',[\App\Http\Controllers\FlockController::class, 'index']);
+        Route::put('/edit/{flock}/flockcontrol', [\App\Http\Controllers\FlockControlController::class, 'update'])->middleware('permission:edit flock control');
+        Route::delete('/delete/{flock}/flockcontrol', [\App\Http\Controllers\FlockControlController::class, 'destroy'])->middleware('permission:delete flock control');
         Route::get('/create', [\App\Http\Controllers\FlockController::class, 'showcreateflockform'])->middleware('permission:create flock');
         Route::post('/create', [\App\Http\Controllers\FlockController::class, 'createnewflock'])->middleware('permission:create flock');
-        Route::get('/control', [\App\Http\Controllers\FlockController::class, 'controlShowform'])->middleware('permission:create flock control');
-        Route::post('/control', [\App\Http\Controllers\FlockController::class, 'controlCreate'])->middleware('permission:create flock control');
+        Route::post('/control/create', [\App\Http\Controllers\FlockControlController::class, 'create'])->middleware('permission:create flock control');
         Route::get('/compare', [\App\Http\Controllers\FlockController::class, 'compare']);
         Route::get('/control/data',[\App\Http\Controllers\FlockControlController::class, 'index'])->middleware('permission:edit flock control');
+        
     });
 
     Route::group(['prefix' => 'stock'], function () {
         Route::get('/all', [\App\Http\Controllers\StockController::class, 'index']);
         Route::get('/add', [\App\Http\Controllers\StockController::class, 'showcreateform'])->middleware('permission:create stock');
         Route::post('/add', [\App\Http\Controllers\StockController::class, 'create'])->middleware('permission:create stock');
+        Route::put('/update/{stock}',[\App\Http\Controllers\StockController::class, 'update'])->middleware('permission:edit stock');
+        Route::delete('/delete/{stock}',[\App\Http\Controllers\StockController::class, 'destroy'])->middleware('permission:delete stock');
     });
 
     Route::group(['prefix' => 'shed'], function () {
         Route::get('/all', [\App\Http\Controllers\ShedController::class, 'index']);
         Route::get('/create', [\App\Http\Controllers\ShedController::class, 'showcreateform'])->middleware('permission:create shed');;
         Route::post('/create', [\App\Http\Controllers\ShedController::class, 'create'])->middleware('permission:create shed');;
+    });
+    Route::group(['prefix' => 'invoice'], function () {
+        Route::get('/create', [\App\Http\Controllers\InvoiceController::class, 'index']);
+        Route::post('/create', [\App\Http\Controllers\InvoiceController::class, 'create']);
     });
 });

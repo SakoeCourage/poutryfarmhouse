@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Breeds;
+use App\Models\Discountdefinition;
 use Illuminate\Http\Request;
 
-class BreedsController extends Controller
+class DiscountdefinitionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class BreedsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Breeds  $breeds
+     * @param  \App\Models\Discountdefinition  $discountdefinition
      * @return \Illuminate\Http\Response
      */
-    public function show(Breeds $breeds)
+    public function show(Discountdefinition $discountdefinition)
     {
         //
     }
@@ -52,10 +52,10 @@ class BreedsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Breeds  $breeds
+     * @param  \App\Models\Discountdefinition  $discountdefinition
      * @return \Illuminate\Http\Response
      */
-    public function edit(Breeds $breeds)
+    public function edit(Discountdefinition $discountdefinition)
     {
         //
     }
@@ -64,10 +64,10 @@ class BreedsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Breeds  $breeds
+     * @param  \App\Models\Discountdefinition  $discountdefinition
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Breeds $breeds)
+    public function update(Request $request, Discountdefinition $discountdefinition)
     {
         //
     }
@@ -75,10 +75,10 @@ class BreedsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Breeds  $breeds
+     * @param  \App\Models\Discountdefinition  $discountdefinition
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Breeds $breeds)
+    public function destroy(Discountdefinition $discountdefinition)
     {
         //
     }

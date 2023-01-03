@@ -53,12 +53,12 @@ export default function Allusers() {
         <div className='w-full h-full z-50'>
              <AnimatePresence>
              {currentUser.currentUserId &&
-            <Rightmodalwithbackdrop onClose={()=>setCurrentUser(cu=>cu={currentUsername: null, currentUserId:null})} title={`${currentUser.currentUsername} Edit`}>
+            <Rightmodalwithbackdrop onClose={()=>setCurrentUser(cu=>cu={currentUsername: null, currentUserId:null})} title={`${currentUser.currentUsername}`}>
                     <Edituser id={currentUser.currentUserId} closeModal={()=>setCurrentUser(cu=>cu={currentUsername: null, currentUserId:null})} />
             </Rightmodalwithbackdrop>
              }
              </AnimatePresence>
-            <SimpleBar className="  w-full overflow-x-scroll overflow-y-scroll h-full relative">
+            <SimpleBar className="  w-full  h-full relative">
                 <nav className=' py-2'>
                     <div className='w-full md:w-[25rem] px-4'>
                         <SearchBar />

@@ -1,29 +1,50 @@
 export let sidebarRoutes =
-[{
+[
+    {
+        title: 'Dashboard',
+        icon: 'grip',
+        link: '/',
+        Role: ['Super Admin','admin']
+    },
+    {
+        title: 'Expense',
+        icon: 'credit-card-alt',
+        link: '/expenses',
+        Role: ['Super Admin','admin']
+    },
+    
+{
+    title: "Shed management",
+    icon: "shop",
+    Role: ['Super Admin','admin'],
+    links: [{
+        title: 'sheds',
+        link: '/shed/all',
+        abilities: 'edit shed'
+
+    }]
+},
+    {
     title: "Flock management",
     icon: "list-check",
     Role: ['Super Admin','admin', 'data entry operator'],
-    links: [{
-        title: 'new flock',
-        link: '/flock/create',
+    links: [
+ 
+    {
+        title: 'flocks',
+        link: '/flock/all',
         abilities: 'create flock'
-
-    },
-    {
-        title: 'compare flock',
-        link: '/flock/compare',
-        abilities: 'compare flock'
-    },
-    {
-        title: 'flock control',
-        link: '/flock/control',
-        abilities: 'create flock control'
     },
     {
         title: 'flock control data',
         link: '/flock/control/data',
         abilities: 'edit flock control'
     },
+    {
+        title: 'compare flock',
+        link: '/flock/compare',
+        abilities: 'compare flock'
+    }
     ],
 },
 {
@@ -31,7 +52,7 @@ export let sidebarRoutes =
     icon: "arrow-trend-up",
     Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
-        title: 'all stock',
+        title: 'stocks',
         link: '/stock/all',
         abilities: 'edit stock'
 
@@ -42,22 +63,30 @@ export let sidebarRoutes =
         abilities: 'create stock'
     }]
 },
-{
-    title: "Shed management",
-    icon: "shop",
+{   title: "Sale management",
     Role: ['Super Admin','admin'],
+    icon: "tags",
     links: [{
-        title: 'all shed',
-        link: '/shed/all',
-        abilities: 'edit shed'
-
+            title: 'sale',
+            link: '/salemanagement/newsale',
+            abilities: 'create user'
     },
     {
-        title: 'new shed',
-        link: '/shed/create',
-        abilities: 'create shed'
-
-    }]
+        title: 'invoices',
+        link: '/invoice/all',
+        abilities: 'create user'
+    },
+    {
+        title: ' create invoice',
+        link: '/invoice/create',
+        abilities: 'create user'
+    },
+    {
+        title: 'reciepts',
+        link: '/receipts/all',
+        abilities: 'delete user'
+    }
+]
 },
 {
     title: "Report",
@@ -76,16 +105,24 @@ export let sidebarRoutes =
     Role: ['Super Admin'],
     icon: "user-group",
     links: [{
-        title: 'add new user',
+        title: ' create user',
         link: '/user/create',
         abilities: 'create user'
     },
     {
-        title: 'all users',
+        title: 'users',
         link: '/user/all',
         abilities: 'delete user'
-    }
+    },
+    
 ]
-}
+},
+{
+    title: 'System definition',
+    icon: 'gear',
+    link: '/system/definitions',
+    Role: ['Super Admin','admin']
+},
+
 ];
 

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Symfony\Component\HttpKernel\Profiler\Profile;
+use Carbon\Carbon;
 
 
 class User extends Authenticatable
@@ -45,6 +46,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function issuedtoday(){
+        return $this->hasMany(Expense::class)->whereDate('created_at',Carbon::today());
+    }
     public function profile(){
         return $this->hasOne(Userprofile::class);
     }

@@ -19,11 +19,10 @@ export default function Rightmodalwithbackdrop(props) {
       ,[])
   return (
     <motion.div
-    
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className='fixed bg-black/20 backdrop-blur-[1px] z-40 inset-0   '>
+      className='fixed bg-black/20 backdrop-blur-[1px] isolate z-40 inset-0   '>
       <div className='h-full w-full ' ref={backdrop}>
         <motion.div
           initial={{ opacity: 0, x: '100vw' }}
@@ -37,12 +36,12 @@ export default function Rightmodalwithbackdrop(props) {
           }}
           exit={{ opacity: 0, x: '100vw' }}
          
-          className='fixed top-0 right-0 rounded-tl-xl h-full w-full md:max-w-3xl bg-gray-50 '>
+          className='fixed z-40 top-0 right-0 rounded-tl-xl h-full w-full md:max-w-3xl bg-gray-50 isolate '>
           <div  className=' text-sm p-5 flex items-center gap-3  shadow-sm'>
             <FontAwesomeIcon icon="right-from-bracket" onClick={props.onClose} className='text-gray-800 cursor-pointer' size='sm' />
             <span>{props.title}</span>
           </div>
-          <SimpleBar className='h-full pb-20'>
+          <SimpleBar className='h-full pb-20 relative'>
           {props.children}
           </SimpleBar>
 

@@ -19,8 +19,8 @@ export default function Compareflocks() {
   return (
     <div className="  flex overflow-y-hidden" id="contraintHeight">
         <chartContext.Provider value={{chartData,setchartData}}>
-        <Flockcompareselection />
-        <Datalinkchart chartData={chartData} />
+          <Flockcompareselection />
+          <Datalinkchart chartData={chartData} />
         </chartContext.Provider>
        
     </div>

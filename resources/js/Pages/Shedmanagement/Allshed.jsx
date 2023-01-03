@@ -1,22 +1,37 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { usePage } from '@inertiajs/inertia-react';
 import Simplepagination from '../../components/Simplepagination';
 import { formatcurrency, dateReformat } from '../../api/Util';
+import Modal from '../../components/Modal';
+import Createshed from './Createshed';
 export default function Allshed() {
     const { sheds } = usePage().props
+    const [showModal, setShowModal] = useState(false)
     useEffect(() => {
         console.log(sheds)
     }, [])
 
     return (
         <div className='w-full h-full'>
-            <SimpleBar className="  w-full overflow-x-scroll overflow-y-scroll h-full ">
-
+            {showModal && <Modal closeModal={()=>setShowModal(false)} title="New shed">
+                <div>
+                    <Createshed closeModal={()=>setShowModal(false)} />
+                </div>
+            </Modal>}
+            <SimpleBar className="  w-full  h-full ">
+                <div className='flex items-center gap-5 my-5'>
+                    <button className='bg-gray-100 text-sm text-gray-500 font-bold p-1 px-3 rounded-md shadow-sm flex items-center gap-2'>
+                        <FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-gray-100 shadow-md  ' icon="list" />
+                        <span> All Sheds</span></button>
+                    <button onClick={()=>setShowModal(true)} className='bg-red-100 text-sm text-gray-500 font-bold p-1 px-3 rounded-md shadow-sm flex items-center gap-1'>
+                        <FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-gray-100 shadow-md  ' icon="plus" />
+                        <span>New Shed</span></button>
+                </div>
                 <table className="px-5 w-full text-sm text-left text-gray-500 relative">
-                    <thead className="text-xs text-gray-700 bg-blue-50 sticky top-0 shadow-sm ">
-                        <tr className=''>
+                    <thead className="sticky top-0 ">
+                        <tr className='text-xs text-gray-700 bg-blue-50  shadow-sm'>
                             <th scope="col" className="py-3  text-center  px-2 ">
                                 <input type="checkbox" name="" id="" />
                             </th>
@@ -24,7 +39,7 @@ export default function Allshed() {
                                 date created
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                shed id
+                                shed identification
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 number of flocks

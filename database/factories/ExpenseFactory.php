@@ -19,9 +19,8 @@ class ExpenseFactory extends Factory
     public function definition()
     {
         return [
-            'expense_name' => fake()->name(),
-            'amount' => fake()->numberBetween(200,30000),
-            'stock_id' =>rand(1,50)
+         
+        
         ];
     }
 }

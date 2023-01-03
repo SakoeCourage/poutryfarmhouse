@@ -28,8 +28,5 @@ class Stock extends Model
                 $query->orderBy('daily_production','asc') ;
             }
     });
-
-
-
     }
 }

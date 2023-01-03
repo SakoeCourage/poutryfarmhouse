@@ -16,6 +16,7 @@ export default function toastnotification() {
     useEffect(() => {
         if (flash.message) {
             setShowtoast(true)
+      
             dispose()
         }
     }, [flash])

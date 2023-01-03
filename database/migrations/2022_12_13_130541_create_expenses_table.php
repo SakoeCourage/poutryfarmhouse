@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('stock_id')->onstrained()->cascadeOnDelete();
-            $table->string('expense_name');
-            $table->integer('amount');
+            $table->string('description')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->smallInteger('status');
+            $table->bigInteger('total');
         });
     }
 

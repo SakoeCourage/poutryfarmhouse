@@ -14,4 +14,10 @@ export default {
     async getAllflockNames() {
         return Api.get("/flocks/all");
     },
-};
+    async getAllBreeds() {
+        return Api.get("/breed/all");
+    },
+    async generateinvoice(id) {
+        return Api.get(`invoice/${id}/store`)
+    }
+}

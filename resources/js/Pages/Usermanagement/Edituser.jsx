@@ -10,6 +10,7 @@ import Primarybutton from '../../components/Primarybutton'
 import Buttondelete from '../../components/Buttondelete'
 import Dialoge from '../../components/Dialoge'
 import { Inertia } from '@inertiajs/inertia'
+import Dotanimation from '../../components/Dotanimation'
 
 export default function Edituser(props) {
     const formEl = useRef()
@@ -38,6 +39,7 @@ export default function Edituser(props) {
     let getUser = () => {
         Api.get(`/user/getuserinfo/${props.id}`).then(res => {
             const { user, profile, role } = res.data;
+            console.log(res.data)
             setCurrentData(values => ({ ...values, name: user.name }))
             setCurrentData(values => ({ ...values, id: user.id }))
             setCurrentData(values => ({ ...values, email: user.email }))
@@ -90,9 +92,7 @@ export default function Edituser(props) {
     return (
         <div className=' relative isolate w-full h-full'>
 
-            {isLoading && <div className=' h-full w-full absolute inset-0 z-20 bg-gray-200/50 flex items-center justify-center'>
-                <Loadingspinner />
-            </div>
+            {isLoading && <Dotanimation/>
 
             }
             <main className=' w-full mx-auto px-10'>

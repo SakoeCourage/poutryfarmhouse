@@ -29,7 +29,7 @@ export default function Login() {
             <div className="py-6 lg:py-0 w-full md:w-8/12 lg:w-6/12 xl:w-4/12 relative">
               <div className="mb-8 text-center">
                 <h1 className="text-4xl font-bold text-gray-600  flex flex-col justify-center items-center mb-1 space-x-3">
-                  <span>Poulty</span>
+                  <span>Poultry</span>
                   <span className='text-sm block text-center'>Farm House</span>
                 </h1>
                 <p className="text-gray-500">

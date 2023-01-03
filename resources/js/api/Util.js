@@ -3,11 +3,12 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { Inertia } from "@inertiajs/inertia";
 dayjs.extend(relativeTime);
 
+
 export function diffForHumans(date) {
-    if (!date) {
-        return null
+    if (date) {
+        return dayjs(date).fromNow();
     }
-    return dayjs(date).fromNow();
+
 }
 
 export function setsort(sortbyvalue) {

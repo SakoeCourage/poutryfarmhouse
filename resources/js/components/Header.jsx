@@ -10,7 +10,7 @@ function Accountmenu() {
     const { auth } = usePage().props
     const { user } = auth
     return <div
-        className="mt-2 absolute min-w-[18rem]  right-16">
+        className="mt-2 absolute min-w-[18rem]   right-16">
         <div className="bg-white rounded overflow-hidden shadow-lg">
             <div className="text-center p-6  border-b">
                 <img
@@ -78,19 +78,19 @@ function Accountmenu() {
     </div>
 }
 
-export default function Header() {
+export default function Header(props) {
     const [isDropped, setisDropped] = useState(false)
     const { auth } = usePage().props
     const { user } = auth
     return (
-        <div className='relative z-20' id='header'>
-            <div className='flex justify-end  px-10 py-2'>
+        <div className=' h-14 z-20 sticky top-0 shadow-sm  basis-16 ' id='header'>
+            <div className='flex justify-between items-center  px-10 py-2'>
+                <FontAwesomeIcon className='text-[#0E121F]/90 cursor-pointer' onClick={props.toggleSidebar} icon="bars"/>
                 <nav className=' flex items-center gap-3'> <span className=' order-2 flex flex-col'>
                     <span>{user.user?.name ?? "Username"}</span>
                     <span className='text-xs text-gray-400'>{user.roles[0] ?? 'role'}</span>
                 </span>
                     <img className='h-8 w-8 aspect-square object-cover rounded-full order-1' src={profilepic} alt="" />
-
                     <FontAwesomeIcon onClick={() => setisDropped(!isDropped)} className='order-3 cursor-pointer  bg-gray-700 text-white h-2 w-2 p-1 rounded-full' icon='angle-down' />
                 </nav>
             </div>

@@ -25,9 +25,9 @@ class FlockControlController extends Controller
                 'record_date' => $cdata->record_date,
                 'flock_name' => $cdata->flock_name,
                 'shed' => $cdata->relatedshed->shed_identification_name,
-                'trays_produced' => $cdata->trays_produced,
+                'eggs_produced' => $cdata->eggs_produced,
                 'feeds_consumed' => $cdata->feeds_consumed,
-                'dead_killed'=>$cdata->dead_killed,
+                'dead'=>$cdata->dead,
                 'missing'=>$cdata->missing,
                 'culled' => $cdata->culled,
                 'canEdit' =>Request()->user()->can('edit flock control'),
@@ -36,15 +36,46 @@ class FlockControlController extends Controller
         ]);
     }
 
+
+    
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $request->validate([
+            'record_date' => ['required', 'date'],
+            'flock_name' => ['required', 'string', 'max:255'],
+            'shed_identification' => ['required'],
+            'eggs_produced' => ['required', 'numeric'],
+            'feeds_consumed' => ['required', 'numeric'],
+            'dead' => ['nullable', 'numeric'],
+            'missing' => ['nullable', 'numeric'],
+            'culled' => ['nullable', 'numeric'],
+
+        ]);
+        $record_date = date('Y-m-d H:i:s', strtotime($request->record_date));
+        FlockControl::Create([
+            'record_date' => $record_date,
+            'flock_name' => $request->flock_name,
+            'shed_id' => $request->shed_identification,
+            'eggs_produced' => $request->eggs_produced,
+            'feeds_consumed' => $request->feeds_consumed,
+            'dead' => $request->dead ?? null,
+            'missing' => $request->missing ?? null,
+            'culled' => $request->culled ?? null,
+        ]);
+        return redirect()->back()->with([
+            "message" => [
+                'type' => 'success',
+                'text' => 'created'
+            ]
+        ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -63,9 +94,12 @@ class FlockControlController extends Controller
      * @param  \App\Models\FlockControl  $flockControl
      * @return \Illuminate\Http\Response
      */
-    public function show(FlockControl $flockControl)
+    public function show(FlockControl $flock)
     {
-        //
+        return($flock
+        ->only(['eggs_produced','shed_id','record_date','id','flock_name','missing','feeds_consumed','dead','culled'
+    
+                 ]));
     }
 
     /**
@@ -86,9 +120,36 @@ class FlockControlController extends Controller
      * @param  \App\Models\FlockControl  $flockControl
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, FlockControl $flockControl)
+    public function update(Request $request, FlockControl $flock)
     {
-        //
+        $request->validate([
+            'record_date' => ['required', 'date'],
+            'flock_name' => ['required', 'string', 'max:255'],
+            'shed_identification' => ['required'],
+            'eggs_produced' => ['required', 'numeric'],
+            'feeds_consumed' => ['required', 'numeric'],
+            'dead' => ['nullable', 'numeric'],
+            'missing' => ['nullable', 'numeric'],
+            'culled' => ['nullable', 'numeric'],
+
+        ]);;
+        $record_date = date('Y-m-d H:i:s', strtotime($request->record_date));
+        $flock->update([
+            'record_date' => $record_date,
+            'flock_name' => $request->flock_name,
+            'shed_id' => $request->shed_identification,
+            'eggs_produced' => $request->eggs_produced,
+            'feeds_consumed' => $request->feeds_consumed,
+            'dead' => $request->dead ?? null,
+            'missing' => $request->missing ?? null,
+            'culled' => $request->culled ?? null,
+        ]);
+        return redirect()->back()->with([
+            "message" => [
+                'type' => 'success',
+                'text' => 'updated'
+            ]
+        ]);
     }
 
     /**
@@ -97,8 +158,15 @@ class FlockControlController extends Controller
      * @param  \App\Models\FlockControl  $flockControl
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FlockControl $flockControl)
+    public function destroy(FlockControl $flock)
     {
-        //
+        if ($flock->delete()) {
+            return redirect()->back()->with([
+                "message" => [
+                    'type' => 'success',
+                    'text' => 'deleted sucessful'
+                ]
+            ]);
+        }
     }
 }

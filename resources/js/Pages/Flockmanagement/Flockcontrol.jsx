@@ -6,7 +6,7 @@ import { useForm } from '@inertiajs/inertia-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import selectApi from '../../api/Getselectsitems'
 
-export default function Flockcontrol() {
+export default function Flockcontrol(props) {
     const form = useRef()
     const [sheds, setSheds] = useState([])
     const [flocknames, setFlocknames] = useState([]);
@@ -15,21 +15,22 @@ export default function Flockcontrol() {
       record_date : '',
       flock_name : '',
       shed_identification: '', 
-      trays_produced:'',
+      eggs_produced:'',
       feeds_consumed: '', 
-      dead_killed:'', 
+      dead:'', 
       missing : '',
       culled : '',
     })
     let resetData= () =>{
+        props.closeModal()
         form.current.reset()
-        reset('culled','dead_killed','feeds_consumed','flock_name','missing','shed_identification','trays_produced')
+        reset('culled','dead','feeds_consumed','flock_name','missing','shed_identification','eggs_produced')
         setresetinputNumber(!resetinputNumber)
       }
 
     let submit = (e) =>{
         e.preventDefault()
-        post('/flock/control',{
+        post('/flock/control/create',{
           onSuccess: ()=>resetData()
         })
 
@@ -52,8 +53,8 @@ export default function Flockcontrol() {
     },[])
 
   return (
-    <div className='mt-10'>
-      <form ref={form} onSubmit={submit} className='max-w-4xl mx-auto'>
+    <div className=''>
+      <form ref={form} onSubmit={submit} className='max-w-4xl mx-auto p-5'>
         <div className="flex flex-col gap-5">
         <nav className='flex flex-col gap-3'>
              <div className='flex items-center justify-between relative'>
@@ -81,7 +82,7 @@ export default function Flockcontrol() {
             <select onChange={(e) => setData('flock_name', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded leading-6 w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
               <option value='' >select flock name</option>
               {flocknames.map((flock )=><option 
-              key={flock.id} value={flock.flock_name}>{flock.flock_name}
+              key={flock.id} value={flock.flock_identification_name}>{flock.flock_identification_name}
               </option>
               )}
               
@@ -109,22 +110,28 @@ export default function Flockcontrol() {
             </select>
           </span>
           
-          <Custominput error={errors.trays_produced} getValue={(value)=>setData('trays_produced',value)} label='trays produced'  reset={resetinputNumber} type='number'/>
+          <Custominput error={errors.eggs_produced} getValue={(value)=>setData('eggs_produced',value)} label='eggs produced'  reset={resetinputNumber} type='number'/>
           </nav>
           <Custominput error={errors.feeds_consumed} getValue={(value)=>setData('feeds_consumed',value)} label='feeds consumed'  reset={resetinputNumber} type='number' />
             <fieldset className='border py-4 px-2'>
               <legend className='text-sm ml-3 px-1'>Mortality</legend>
               <nav className='flex flex-col md:flex-row  md:items-center gap-5 justify-between md:gap-2'>
-                <Custominput error={errors.dead_killed} getValue={(value)=>setData('dead_killed',value)}  reset={resetinputNumber} type='number' label='dead,killed' placeholder='enter dead or killed ' />
+                <Custominput error={errors.dead} getValue={(value)=>setData('dead',value)}  reset={resetinputNumber} type='number' label='dead,killed' placeholder='enter dead or killed ' />
                 <Custominput error={errors.missing} getValue={(value)=>setData('missing',value)}  reset={resetinputNumber} type='number' label='missing' />
                 <Custominput error={errors.culled} getValue={(value)=>setData('culled',value)} reset={resetinputNumber} type='number' label='culled' />
               </nav>
             </fieldset>
-           <nav className="self-end">
-              <Buttonsubmit text='create' processing={processing}/>
-           </nav>
+        
         </div>        
         </form>
+        <div className=' sticky bottom-0 rounded-b-lg flex justify-end items-center p-5 bg-gray-100 '>
+        <nav className='flex items-center gap-3'>
+          <button onClick={() => props.closeModal()} className='px-4 py-1 border-2 text-gray-600 font-semibold rounded-lg'>
+            {props.decline ?? 'cancel'}
+          </button>
+          <Buttonsubmit onClick={submit} processing={processing} text="create" className="rounded-lg" />
+        </nav>
+      </div>
     </div>
   )
 }

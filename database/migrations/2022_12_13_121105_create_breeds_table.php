@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('breeds', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('breed_name');
-            $table->foreignId('flock_id')->onstrained()->cascadeOnDelete();
+            $table->string('name');
         });
     }
 
