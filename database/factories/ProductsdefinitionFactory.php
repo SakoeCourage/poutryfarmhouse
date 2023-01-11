@@ -17,8 +17,9 @@ class ProductsdefinitionFactory extends Factory
     public function definition()
     {
         return [
-            'name' =>fake()->name(),
-            'unit_price' => fake()->numberBetween(20,6000)
+            'name' =>fake()->word(),
+            'unit_price' => fake()->numberBetween(20,100),
+            'quantity_in_stock' => 0
         ];
     }
 }

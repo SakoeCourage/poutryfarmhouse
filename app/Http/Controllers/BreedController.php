@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Breed;
 use App\Http\Requests\StoreBreedRequest;
 use App\Http\Requests\UpdateBreedRequest;
+use Illuminate\Http\Request;
 
 class BreedController extends Controller
 {
@@ -20,14 +21,31 @@ class BreedController extends Controller
         ]);
     }
 
+
+    public function breedsForSelect(){
+        return([
+            'breeds' => Breed::latest()->get(['id','type'])
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
+    public function create(Request $request)
+    {   
+        $data=$request->validate([
+            'type' =>['required','string','max:255']
+        ]);
+        Breed::create($data);
+        return redirect()->back()->with([
+            'message' =>[
+                'type' => 'sucess',
+                'text' => 'new breed added'
+            ]
+            ]);
+        
     }
 
     /**

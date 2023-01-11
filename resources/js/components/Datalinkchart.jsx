@@ -63,7 +63,6 @@ export default function Datalinkchart(props) {
           });
         }
       });
-    
       myChart.setOption(option);
     });
   }
@@ -74,6 +73,7 @@ export default function Datalinkchart(props) {
   
   let refinedChartData = () => {
     if(props.chartData.length){
+      console.log(props.chartData)
       Object.values(props.chartData).forEach(item => {
         const { name, data } = item
         option.dataset.source.push([name, ...data])
@@ -89,7 +89,6 @@ export default function Datalinkchart(props) {
   }
 
   useMemo(() => { refinedChartData() }, [props.chartData])
-  
   return (
     <div className='w-full pt-5 '>
       <div id='main' className=' h-[38rem] w-[50rem] mx-auto    ' >

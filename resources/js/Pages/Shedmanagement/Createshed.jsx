@@ -18,7 +18,7 @@ export default function Createshed(props) {
 
   let submit = (e) => {
     e.preventDefault()
-    post('/shed/create', {
+    post('/pen/create', {
       onSuccess: () => handlereset()
     })
   }
@@ -27,7 +27,7 @@ export default function Createshed(props) {
     <form onSubmit={submit} ref={form} className='flex flex-col gap-10 max-w-4xl mx-auto pt-10 '>
       <div className='p-5 w-full '>
         <nav className='flex flex-col  gap-5 md:gap-8'>
-          <Custominput required error={errors.identification_name} getValue={(value) => setData('identification_name', value)} label='shed identification name' />
+          <Custominput required error={errors.identification_name} getValue={(value) => setData('identification_name', value)} label='pen identification name' />
           <Custominput error={errors.number_of_flocks} getValue={(value) => setData('number_of_flocks', value)} label='number of flocks' type='number' />
         </nav>
       </div>

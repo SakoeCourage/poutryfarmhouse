@@ -17,11 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->biginteger('opening_stock');
-            $table->biginteger('closing_stock');
-            $table->biginteger('birds_sold')->nullable(); 
-            $table->biginteger('eggs_sold')->nullable(); 
-            $table->biginteger('broken')->nullable();
-            $table->biginteger('other_defects')->nullable();
+            $table->biginteger('closing_stock')->nullable();
             $table->biginteger('daily_production')->nullable(); 
         });
     }

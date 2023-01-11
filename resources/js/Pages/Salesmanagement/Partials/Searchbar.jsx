@@ -20,12 +20,14 @@ export default function SearchBar(props) {
 
     const handleFilterByDate = (date) =>{
       if(date){
-        Api.get(`/sales/allsales?day=${date}`).then(res => {
+        let Ndate = new Date(date)
+        let dateString = `${Ndate.getFullYear()}-${Ndate.getUTCMonth()+1}-${Ndate.getDate()}`
+        Api.get(`/sales/allsales?day=${dateString}`).then(res => {
           setSearchResults(res.data)
           setProcessing(false)
         }).catch(err => console.log(err))
       }
-    }
+    }  
   
     const handlesearchrequest = (searchKey) => {
       setProcessing(true)
@@ -42,9 +44,9 @@ export default function SearchBar(props) {
       <div className='flex items-center gap-2'>
       <nav className='flex items-center gap-2 text-sm'>
         <span className='bg-blue-100 p-1 px-2  rounded-xl w-max'>filter by date</span>
-        <Datepicker placeholder="select record date" getdateData={(data)=>handleFilterByDate(data)} />
+        <Datepicker format="yyyy-MM-dd" placeholder="select record date" getdateData={(data)=>handleFilterByDate(data)} />
       </nav>
-      <Customsearchinput value={searchKey ?? ''} processing={processing}  getValue={(value) => { handlesearchrequest(value) }} placeholder="enter customer name here" />
+      <Customsearchinput   value={searchKey ?? ''} processing={processing}  getValue={(value) => { handlesearchrequest(value) }} placeholder="enter customer name here" />
       </div>
     )
   }

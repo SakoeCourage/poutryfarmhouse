@@ -19,12 +19,10 @@ class StockFactory extends Factory
     public function definition()
     {
         return [
-            'opening_stock' => fake()->numberBetween(200,30000),
+            'opening_stock' => fake()->numberBetween(200,5000),
+            'created_at' => fake()->date(),
+            'updated_at' => fake()->date(),
             'closing_stock' => fake()->numberBetween(200,30000),
-            'birds_sold' => fake()->numberBetween(200,30000),
-            'eggs_sold' => fake()->numberBetween(200,30000),
-            'broken' => fake()->numberBetween(200,30000),
-            'other_defects' => fake()->numberBetween(200,30000),
             'daily_production' => fake()->numberBetween(200,30000),
         ];
     }

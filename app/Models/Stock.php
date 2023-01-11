@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Stock extends Model
 {
@@ -13,6 +14,8 @@ class Stock extends Model
     public function expenses(){
        return $this->hasMany(Expense::class);
     }
+
+
 
     public function scopeFilter($query, array $filters){
         $query->when($filters['sort'] ?? false, function($query,$sort){

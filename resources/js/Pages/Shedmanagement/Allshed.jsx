@@ -15,7 +15,7 @@ export default function Allshed() {
 
     return (
         <div className='w-full h-full'>
-            {showModal && <Modal closeModal={()=>setShowModal(false)} title="New shed">
+            {showModal && <Modal closeModal={()=>setShowModal(false)} title="New pen">
                 <div>
                     <Createshed closeModal={()=>setShowModal(false)} />
                 </div>
@@ -24,10 +24,10 @@ export default function Allshed() {
                 <div className='flex items-center gap-5 my-5'>
                     <button className='bg-gray-100 text-sm text-gray-500 font-bold p-1 px-3 rounded-md shadow-sm flex items-center gap-2'>
                         <FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-gray-100 shadow-md  ' icon="list" />
-                        <span> All Sheds</span></button>
+                        <span> All pens</span></button>
                     <button onClick={()=>setShowModal(true)} className='bg-red-100 text-sm text-gray-500 font-bold p-1 px-3 rounded-md shadow-sm flex items-center gap-1'>
                         <FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-gray-100 shadow-md  ' icon="plus" />
-                        <span>New Shed</span></button>
+                        <span>New pen</span></button>
                 </div>
                 <table className="px-5 w-full text-sm text-left text-gray-500 relative">
                     <thead className="sticky top-0 ">
@@ -39,7 +39,7 @@ export default function Allshed() {
                                 date created
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                shed identification
+                                pen identification name
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 number of flocks

@@ -19,6 +19,7 @@ class ProductsdefinitionController extends Controller
         ]);
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -30,6 +31,7 @@ class ProductsdefinitionController extends Controller
         Request()->validate([
             'name' => ['required','string','max:255','unique:productsdefinitions'],
             'unit_price'=> ['required','numeric'],
+            'automated_stocking' => ['nullable','boolean']
         ]);
         Productsdefinition::create(Request()->all());
         return redirect()->back()->with([

@@ -40,7 +40,7 @@ export default function Slideover(props) {
             <span className='font-semibold'>{props.title}</span>
             <FontAwesomeIcon icon="times" size="lg" onClick={props.onClose} className='text-gray-800 cursor-pointer'  />
           </div>
-          <SimpleBar className=' pb-20 relative h-full'>
+          <SimpleBar className='relative h-full w-full flex-items-center justify-center '>
             {props.children}
           </SimpleBar>
 

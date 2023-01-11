@@ -22,8 +22,11 @@ class FlockControlFactory extends Factory
             'record_date'=> fake()->date(),
             'flock_name' =>fake()->name(),
             'shed_id' => rand(1,30),
-            'eggs_produced'=>fake()->numberBetween(2000,9000),
-            'feeds_consumed' => fake()->numberBetween(2000,9000),
+          
+            'vaccination'=>fake()->words(2,true),
+            'medication'=>fake()->words(2,true),
+            'time'=>fake()->time(),
+
             'dead' => fake()->numberBetween(2000,9000),
             'missing' => fake()->numberBetween(2000,9000),
             'culled' => fake()->numberBetween(2000,9000)

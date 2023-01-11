@@ -9,6 +9,7 @@ use App\Models\Expenseitem;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Services\StockService;
 
 class ExpenseController extends Controller
 {
@@ -107,10 +108,13 @@ class ExpenseController extends Controller
 
 
     public function action(Expense $expense,$action){
+          
+        $stock = new StockService();
         if($action === 'accept'){
             $expense->update([
                 'status' => 1
             ]);
+            $stock->decreaseproduction($expense);
         }elseif($action === 'decline'){
             $expense->update([
                 'status' => 0

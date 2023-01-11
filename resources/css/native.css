@@ -73,3 +73,20 @@
     width: 1.5rem;
     @apply text-sm
 }
+
+.productitem.active {
+    @apply bg-indigo-50
+}
+
+.productitem:hover .iconforward {
+    display: inline;
+}
+
+.productitem.active::before {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    left: 0;
+    @apply bg-indigo-600 inset-y-0 rounded-l-md;
+}

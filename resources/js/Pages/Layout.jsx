@@ -38,7 +38,7 @@ export default function Layout({ children }) {
             </span>
             <span className='bg-white grow h-full overflow-x-hidden flex flex-col' id='documentPage'>
                 <Header toggleSidebar={toggleSidebar}/>
-                <nav className='w-full h-full    relative   mx-auto overflow-x-hidden px-5 md:px-2 grow pb-5  bg-blue-50/20' id='outlet'>
+                <nav className='w-full h-full    relative   mx-auto overflow-x-hidden px-5 md:px-2 grow pb-5  bg-gray-50/50' id='outlet'>
                     {children}
                 </nav>
             </span>

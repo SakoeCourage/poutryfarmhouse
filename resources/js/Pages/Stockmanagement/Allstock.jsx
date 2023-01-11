@@ -10,12 +10,16 @@ import Editstock from './Editstock';
 import Editexpenses from './Editexpenses';
 
 export default function Allstock() {
-    const { stocks } = usePage().props
+    const { stocks ,product_sales} = usePage().props
     const [currentData,setCurrentData]=useState({
         id: null,
         toggle: null,
     
     })
+    useEffect(() => {
+        console.log(stocks)
+    }, [stocks])
+    
     return (
         <div className='w-full h-full'>
                <AnimatePresence>
@@ -32,12 +36,12 @@ export default function Allstock() {
              </AnimatePresence>
             <SimpleBar className="  w-full  h-full   flex flex-col justify-between ">
                 <table className="px-5 w-full text-sm text-left text-gray-500 relative flex-grow ">
-                    <thead className="text-xs text-gray-700 bg-blue-50 sticky top-0 shadow-sm ">
+                    <thead className="text-xs text-gray-700 bg-blue-50 sticky top-0 shadow-sm z-10  ">
                         <tr className=''>
                             <th scope="col" className="py-3  text-center  px-2 ">
                                 <input type="checkbox" name="" id="" />
                             </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem] flex items-center justify-between">
+                            <th scope="col" className="py-3 px-6 min-w-[10rem] flex items-center justify-between sticky left-0 backdrop-blur-md">
                                 date <span className='flex flex-col'>
                                     <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('created_asc')} icon='caret-up' />
                                     <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('created_desc')} icon='caret-down' />
@@ -45,9 +49,6 @@ export default function Allstock() {
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 opening stock
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                closing stock
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem] flex items-center justify-between">
                                 daily production
@@ -58,22 +59,18 @@ export default function Allstock() {
 
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                birds sold
+                                Expense
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                broken
+                                closing stock
                             </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                defect
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                eggs sold
-                            </th>
-                        
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                <span>Action</span>
-                                <span className="sr-only">Action</span>
-                            </th>
+                          {stocks.data[0]?.product_sales.map((product,i)=>{
+                                return(
+                                    <th key={i} scope="col" className="py-3 px-6 min-w-[10rem]">
+                                        {product.name}
+                                </th>
+                                )
+                          })}
                         </tr>
                     </thead>
                     <tbody>
@@ -85,38 +82,29 @@ export default function Allstock() {
                                         <input type="checkbox" name="" id="" />
                                     </td>
 
-                                    <td className="py-2 px-6">
+                                    <td className="py-2 px-6 sticky left-0 backdrop-blur-md z-0">
                                         {dateReformat(stock.date)}
                                     </td>
                                     <td className="py-2 px-6 ">
                                         {formatcurrency(stock.opening_stock)}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        {formatcurrency(stock.closing_stock)}
-                                    </td>
-                                    <td className="py-2 px-6 ">
                                         {formatcurrency(stock.daily_production)}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        {new Intl.NumberFormat().format(stock.birds_sold)}
+                                        {formatcurrency(stock.expenses)}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        {new Intl.NumberFormat().format(stock.broken)}
+                                        {formatcurrency(stock.closing_stock)}
                                     </td>
-                                    <td className="py-2 px-6 ">
-                                        {new Intl.NumberFormat().format(stock.other_defects)}
-                                    </td>
-                                    <td className="py-2 px-6 ">
-                                        {new Intl.NumberFormat().format(stock.eggs_sold)}
-                                    </td>
-                               
-
-                                    <td className="py-2 px-6 ">
-                                        <button onClick={()=>setCurrentData({id:stock.id,toggle:"editStock"})} className='text-blue-500 flex items-center gap-2'>
-                                            <span >Edit</span>
-                                            <FontAwesomeIcon icon='arrow-right' className='text-blue-500' size='sm' />
-                                        </button>
-                                    </td>
+                                    {stock.product_sales.map((product,i)=>{
+                                        return(
+                                            <th key={i} scope="col" className="py-3 px-6 min-w-[10rem]">
+                                                {product.sale_quantity}
+                                        </th>
+                                        )
+                                    })}
+                            
                                 </tr>
 
                             )

@@ -11,11 +11,10 @@ import Rightmodalwithbackdrop from '../../components/Rightmodalwithbackdrop'
 import { AnimatePresence } from 'framer-motion'
 import Edituser from './Edituser'
 
-
-function SearchBar(props) {
+export function SearchBar(props) {
     const [searchKey, setsearchKey] = useState(null)
     const [processing, setProcessing] = useState(false)
-    const [sendSearchRequest, setsendSearchRequest] = useDebounce(false, 300)
+    const [sendSearchRequest, setsendSearchRequest] = useDebounce(false, 700)
     const { filters } = usePage().props
     const sendRequest = () => {
         let CurrentRoute = () => location.href.toString()
@@ -38,7 +37,7 @@ function SearchBar(props) {
     }, [sendSearchRequest])
 
     return (
-        <Customsearchinput processing={processing} value={filters.search ?? ''} getValue={(value) => { handlesearchrequest(value) }} placeholder="enter search item here" />
+        <Customsearchinput processing={processing} value={filters.search ?? ''} getValue={(value) => { handlesearchrequest(value) }} placeholder={props.placeholder} />
     )
 }
 
@@ -61,7 +60,7 @@ export default function Allusers() {
             <SimpleBar className="  w-full  h-full relative">
                 <nav className=' py-2'>
                     <div className='w-full md:w-[25rem] px-4'>
-                        <SearchBar />
+                        <SearchBar placeholder="enter username  here" />
                     </div>
                 </nav>
                 <table className="px-5 w-full text-sm text-left text-gray-500 relative">

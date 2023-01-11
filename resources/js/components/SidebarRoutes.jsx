@@ -14,12 +14,12 @@ export let sidebarRoutes =
     },
     
 {
-    title: "Shed management",
+    title: "Pen management",
     icon: "shop",
     Role: ['Super Admin','admin'],
     links: [{
-        title: 'sheds',
-        link: '/shed/all',
+        title: 'pens',
+        link: '/pen/all',
         abilities: 'edit shed'
 
     }]
@@ -52,13 +52,13 @@ export let sidebarRoutes =
     icon: "arrow-trend-up",
     Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
-        title: 'stocks',
+        title: 'tabular view',
         link: '/stock/all',
         abilities: 'edit stock'
 
     },
     {
-        title: 'new stock',
+        title: 'manage stock',
         link: '/stock/add',
         abilities: 'create stock'
     }]
@@ -67,23 +67,18 @@ export let sidebarRoutes =
     Role: ['Super Admin','admin'],
     icon: "tags",
     links: [{
-            title: 'sale',
+            title: 'generate invoice',
             link: '/salemanagement/newsale',
             abilities: 'create user'
     },
     {
-        title: 'invoices',
+        title: 'make payment',
         link: '/invoice/all',
         abilities: 'create user'
     },
     {
-        title: ' create invoice',
-        link: '/invoice/create',
-        abilities: 'create user'
-    },
-    {
-        title: 'reciepts',
-        link: '/receipts/all',
+        title: 'payments history',
+        link: '/payments/all',
         abilities: 'delete user'
     }
 ]

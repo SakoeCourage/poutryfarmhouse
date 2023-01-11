@@ -5,16 +5,17 @@ import { formatcurrency } from '../../../api/Util'
 import Buttonsubmit from '../../../components/Buttonsubmit'
 import { printContext } from '../context/Printcontext'
 import getInvoiceRoute from '../../../api/Getselectsitems'
+import Toastnotification from '../../../components/toastnotification'
 export default function Viewsaleitems(props) {
     const [isLoading, setIsLoading] = useState(true)
     const [saleItems, setSaleItems] = useState([])
+    const [invoiceErrors,setInvoiceError] = useState(null)
     const [loadingInvoice,setLoaingInvoice] =useState(false)
     const {printdata, setPrintdata} = useContext(printContext)
     const fetchItems = () => {
         Api.get(`/saleitems/${props.id}/view`).then(res => {
             setSaleItems(res.data.saleitems)
             setIsLoading(false)
-
         }).catch(err => console.log(err))
     }
     
@@ -24,7 +25,14 @@ export default function Viewsaleitems(props) {
             setLoaingInvoice(false)
              setPrintdata(res.data)
              props.closeModal()
-        }).catch(err => console.log(err))
+        }).catch(err =>{
+            if(err.response.status == 422){
+                setLoaingInvoice(false)
+                setInvoiceError(err.response.data.errors.invoice[0])
+            }else{
+                console.log(err)
+            }
+        })
     }
 
     useEffect(() => {
@@ -33,7 +41,7 @@ export default function Viewsaleitems(props) {
 
     return (
         <div className=" min-h-full mx-auto ">
-           
+            <Toastnotification message={invoiceErrors} />
             {isLoading && <Dotanimation />}
             <div className='flex flex-col gap-5 p-1  mx-auto mt-5 justify-between   '>
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 leading-3 ">

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->bigInteger('unit_price');
+            $table->bigInteger('quantity_in_stock')->nullable()->default(0);
+            $table->boolean('automated_stocking')->nullable()->default(false);
             $table->timestamps();
         });
     }

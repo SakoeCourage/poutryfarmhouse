@@ -23,6 +23,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', fn ()=> Inertia('Dashboard'));
     Route::post('/logout',[\App\Http\Controllers\Auth\LogoutController::class,'logout']);
     Route::get('/salemanagement/newsale',[\App\Http\Controllers\SaleController::class, 'index']);
+    
+    Route::post('/breed/create',[\App\Http\Controllers\BreedController::class,'create']);
+    
+    Route::post('feed/create',[\App\Http\Controllers\FeedController::class,'create']);
 
     Route::group(['prefix'=>'sales'],function(){
         Route::post('/new',[\App\Http\Controllers\SaleController::class,'store']);
@@ -57,6 +61,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'stock'], function () {
+        Route::get('/products/manage',[\App\Http\Controllers\ManageProductsController::class,'index']);
+        Route::get('/feeds/manage',[\App\Http\Controllers\FeedController::class,'showFeedStockPage']);
         Route::get('/all', [\App\Http\Controllers\StockController::class, 'index']);
         Route::get('/add', [\App\Http\Controllers\StockController::class, 'showcreateform'])->middleware('permission:create stock');
         Route::post('/add', [\App\Http\Controllers\StockController::class, 'create'])->middleware('permission:create stock');
@@ -64,13 +70,17 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/delete/{stock}',[\App\Http\Controllers\StockController::class, 'destroy'])->middleware('permission:delete stock');
     });
 
-    Route::group(['prefix' => 'shed'], function () {
+    Route::group(['prefix' => 'pen'], function () {
         Route::get('/all', [\App\Http\Controllers\ShedController::class, 'index']);
         Route::get('/create', [\App\Http\Controllers\ShedController::class, 'showcreateform'])->middleware('permission:create shed');;
         Route::post('/create', [\App\Http\Controllers\ShedController::class, 'create'])->middleware('permission:create shed');;
     });
     Route::group(['prefix' => 'invoice'], function () {
+        Route::get('/all',[\App\Http\Controllers\InvoiceController::class, 'index']);
         Route::get('/create', [\App\Http\Controllers\InvoiceController::class, 'index']);
         Route::post('/create', [\App\Http\Controllers\InvoiceController::class, 'create']);
+        Route::post('process',[\App\Http\Controllers\InvoiceController::class,'processinvoice']);
     });
+
+    Route::get('/payments/all',[App\Http\Controllers\PaymentController::class,'index']);
 });

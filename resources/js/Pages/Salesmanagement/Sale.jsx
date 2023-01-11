@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext,useRef } from 'react'
+import React, { useState, useEffect,useRef,useMemo } from 'react'
 import { searchContext } from './context/SearchContext'
 import Printinvoice from './Printinvoice'
 import { printContext } from './context/Printcontext'
@@ -6,6 +6,8 @@ import SearchBar from './Partials/Searchbar'
 import Pill, { PillTabs } from './Partials/Pilltabs'
 import {useReactToPrint} from 'react-to-print'
 import Scrollablemodal from '../../components/Scrollablemodal'
+import getInvoiceRoute from '../../api/Getselectsitems'
+import { usePage } from '@inertiajs/inertia-react'
 
 
 export default function Sale() {
@@ -13,19 +15,31 @@ export default function Sale() {
   const [searchResults, setSearchResults] = useState(null)
   const [searchKey, setSearchKey] = useState(null)
   const [printdata, setPrintdata] = useState(null)
+  const [autoGenerateInvoice, setAutoGenerateInvoice] = useState(true)
   const PrintinvoiceRef = useRef()
+  let { flash } = usePage().props
   const handlePrint = useReactToPrint({
     content: ()=> PrintinvoiceRef.current,
     documentTitle: printdata?.invoice[0].invoice_number,
     onAfterPrint: () => setPrintdata(null)
   })
+
+
+  useMemo(() => {
+    if (flash.message?.invoice_sale_id && autoGenerateInvoice) {
+      getInvoiceRoute.generateinvoice(flash.message?.invoice_sale_id).then(res => {
+        setPrintdata(res.data)
+      }).catch(err => console.log(err))
+    }
+  }, [flash])
+
   useEffect(() => {
     console.log(searchResults)
   }, [searchResults])
   
   return (
     <div className='md:px-10 py-2 container mx-auto relative'>
-      <printContext.Provider value={{ printdata, setPrintdata }}>
+      <printContext.Provider value={{ printdata, setPrintdata,autoGenerateInvoice,setAutoGenerateInvoice }}>
         {printdata && <Scrollablemodal closeModal={()=>setPrintdata(null)} title={printdata?.invoice[0].invoice_number}>
           <Printinvoice  printInvoice={()=>handlePrint()} ref={PrintinvoiceRef}  />
         </Scrollablemodal>}

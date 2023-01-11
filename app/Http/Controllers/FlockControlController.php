@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\FlockControl;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use App\Services\ProductStockService;
+use App\Services\FeedStockService;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class FlockControlController extends Controller
 {
@@ -30,6 +34,9 @@ class FlockControlController extends Controller
                 'dead'=>$cdata->dead,
                 'missing'=>$cdata->missing,
                 'culled' => $cdata->culled,
+                'time'=> $cdata->time,
+                'vaccination' =>$cdata->vaccination,
+                'medication'=>$cdata->medication,
                 'canEdit' =>Request()->user()->can('edit flock control'),
                 ]),
             'filters' => request()->only('sort'),
@@ -46,34 +53,53 @@ class FlockControlController extends Controller
      */
     public function create(Request $request)
     {
+                 // dd($request->all());
         $request->validate([
             'record_date' => ['required', 'date'],
             'flock_name' => ['required', 'string', 'max:255'],
-            'shed_identification' => ['required'],
-            'eggs_produced' => ['required', 'numeric'],
-            'feeds_consumed' => ['required', 'numeric'],
+            'pen_identification' => ['required'],
+            'feeds' => ['nullable', 'array'],
+            'feeds.*.feed_id' => ['required', 'distinct',],
+            'feeds.*.quantity' => ['required', 'numeric'],
+            'products' => ['required', 'array'],
+            'products.*.productsdefinition_id' => ['required', 'distinct'],
+            'products.*.quantity' => ['required', 'numeric'],
             'dead' => ['nullable', 'numeric'],
+            'medication' => ['nullable','string','max:255'],
+            'vaccination' => ['required','string','max:255'],
             'missing' => ['nullable', 'numeric'],
             'culled' => ['nullable', 'numeric'],
-
+            'time' => ['date_format:H:i']
+            
         ]);
+      
         $record_date = date('Y-m-d H:i:s', strtotime($request->record_date));
-        FlockControl::Create([
-            'record_date' => $record_date,
-            'flock_name' => $request->flock_name,
-            'shed_id' => $request->shed_identification,
-            'eggs_produced' => $request->eggs_produced,
-            'feeds_consumed' => $request->feeds_consumed,
-            'dead' => $request->dead ?? null,
-            'missing' => $request->missing ?? null,
-            'culled' => $request->culled ?? null,
-        ]);
-        return redirect()->back()->with([
-            "message" => [
-                'type' => 'success',
-                'text' => 'created'
-            ]
-        ]);
+        $productservice = new ProductStockService();
+        $feedservice = new FeedStockService();
+
+        DB::transaction(function()use($request,$record_date,$productservice,$feedservice,){
+            $newflockdata = FlockControl::Create([
+                'record_date' => $record_date,
+                'flock_name' => $request->flock_name,
+                'shed_id' => $request->pen_identification,
+                'production' => $request->products,
+                'feeds' => $request->feeds,
+                'dead' => $request->dead ?? null,
+                'vaccination' => $request->vaccination ?? null,
+                'time' => $request->time ?? null,
+                'medication' => $request->medication ?? null,
+                'missing' => $request->missing ?? null,
+                'culled' => $request->culled ?? null,
+            ]);
+            collect($newflockdata->production)->each(function($value,$key) use($productservice){
+                $productservice->increasestock((Object)$value);
+            });
+     
+            collect($newflockdata->feeds)->each(function($value,$key) use($feedservice){
+                $feedservice->decreasestock((Object)$value);
+            });
+        });
+        // return response();
     }
 
 

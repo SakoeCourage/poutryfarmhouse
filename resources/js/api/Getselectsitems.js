@@ -15,9 +15,18 @@ export default {
         return Api.get("/flocks/all");
     },
     async getAllBreeds() {
-        return Api.get("/breed/all");
+        return Api.get("/breed/all/select");
     },
     async generateinvoice(id) {
         return Api.get(`invoice/${id}/store`)
+    },
+    async getPaymentMethods() {
+        return Api.get('/payment/methods/all')
+    },
+    async getFeeds() {
+        return Api.get('/feed/select/all')
+    },
+    async getAutoStockableProducts() {
+        return Api.get('/product/stockable')
     }
 }

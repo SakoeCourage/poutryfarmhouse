@@ -3,12 +3,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { Inertia } from "@inertiajs/inertia";
 dayjs.extend(relativeTime);
 
-
 export function diffForHumans(date) {
     if (date) {
         return dayjs(date).fromNow();
     }
-
 }
 
 export function setsort(sortbyvalue) {
@@ -18,10 +16,16 @@ export function setsort(sortbyvalue) {
         replace: true
     })
 }
-
+export function setfilter(filter) {
+    let CurrentRoute = () => location.href.toString()
+    Inertia.get(CurrentRoute(), { filter: filter }, {
+        preserveState: true,
+        replace: true
+    })
+}
 
 export function formatcurrency(amount) {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'GHS' }).format(amount)
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'GHS' }).format(amount)
 }
 
 export function dateReformat(date) {

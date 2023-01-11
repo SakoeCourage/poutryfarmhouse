@@ -10,8 +10,8 @@ class Flock extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function shed(){
-        return $this->belongsTo(Shed::class);
+    public function pen(){
+        return $this->belongsTo(Shed::class,'shed_id');
     }
     
     public function breed(){

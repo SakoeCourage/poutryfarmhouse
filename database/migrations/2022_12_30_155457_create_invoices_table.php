@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_number');
+            $table->boolean('payment_verified')->default(false)->nullable();
+            $table->foreignId('paymentmethod')->default(0)->nullable();
             $table->foreignId('sale_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

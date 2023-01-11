@@ -99,10 +99,7 @@ export default function Createinvoice() {
                         <label htmlFor="lastname" className="font-medium text-gray-500 text-sm">invoice name</label>
                         <nav className="block bg-gray-50 relative border border-gray-200  rounded leading-6 w-full  " >
                             <input className="px-5 py-3 text-sm bg-inherit w-full border-none focus:border-none focus:outline-none " />
-                            {/* <nav className="cursor-pointer  gap-1 font-awesome flex items-center absolute right-2 inset-y-0">
-          <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
-          <span className="  text-sm text-red-400 backdrop-blur-sm bg-white/30 error ">error message here</span>
-        </nav> */}
+         
                         </nav>
                     </div>
                 </section>

@@ -10,6 +10,8 @@ use App\Models\Productsdefinition;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\StockService;
+use App\Services\ProductStockService;
 
 class SaleController extends Controller
 {
@@ -34,12 +36,8 @@ class SaleController extends Controller
         }else{
             $date = null;
         }
-        
         return ([
-            'sales' => $sale->filter(request()->only('search','day'))->with('salerepresentative:id,name')->latest()->paginate(10),
-                'created_at'=>Carbon::today(),
-                'from request' => $date,
-                'original' => request()->day
+            'sales' => $sale->filter(request()->only('search','day'))->with('salerepresentative:id,name')->latest()->paginate(10)
         ]);
     }
 
@@ -60,13 +58,11 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    //  total_payable: 0,
-    //  customer_name: '',
-    //  customer_contact: '',
-    //  customer_purchases: null,
+ 
     public function store(Request $request,$sale_id = null)
     {
-        
+    
+      
         $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
             'customer_contact' => ['required', 'numeric', 'digits:10'],
@@ -87,14 +83,19 @@ class SaleController extends Controller
             $sale_id = $newsale->id;
             $saleitems = collect($request->customer_purchases);
             $saleitems->each(function ($item, $key) use ($newsale) {
-                Saleitem::create([
+               $newsale =  Saleitem::create([
                     'sale_id' => $newsale->id,
                     'productsdefinition_id' => $item['product_id'],
                     'price' => $item['price'],
                     'amount' => $item['amount'],
                     'quantity' => $item['quantity']
                 ]);
+            
+                // $productstockservice->decreasestock($newsale);
+                
             });
+          
+       
             return redirect()->back()->with([
                 'message' => [
                     'type' => 'sucess',

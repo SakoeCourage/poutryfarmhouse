@@ -19,7 +19,6 @@ export default function Productdefinition() {
     let fetchProducts = () => {
         setisLoading(true)
         Api.get('/definitions/product/all').then(res => {
-            console.log(res.data)
             setisLoading(false)
             setProducts(res.data.products?.data)
             setNextPage(cv => res.data.products?.next_page_url)
@@ -27,8 +26,6 @@ export default function Productdefinition() {
 
     }
     let fetchMoreProducts = (np) => {
-       
-
             setisLoading(true)
             axios.get(np).then(res => {
                 setisLoading(false)
@@ -71,18 +68,18 @@ export default function Productdefinition() {
                 <Productform closeModal={handleCloseModal} />
             </Modal>
             }
-            <div className='flex items-center flex-col md:flex-row'>
-                <nav className=' basis-4/12'>
-                    <nav className='flex flex-col justify-between'>
+            <div className='flex items-start flex-auto flex-col md:flex-row  justify-center'>
+                <nav className={`w-[100%] transition-all md:w-4/12 ${!Boolean(products.length) && 'md:w-[100%]'}`}>
+                    <nav className={`flex flex-col justify-start ${!Boolean(products.length) && 'items-center'} `}>
                         <h1 className='font-semibold'>Poultry products</h1>
-                        <span className='mt-10 text-sm text-gray-500'>
+                        <span className='mt-10 text-sm text-gray-500 max-w-md'>
                             Define poulty products  each with unit prices
                             in the colum provided. Click on define new product to new product
                         </span>
                         <Primarybutton onClick={() => setShowForm(true)} className="w-full mt-10" text="Define new product" />
                     </nav>
                 </nav>
-                {products.length ? <SimpleBar scrollableNodeProps={{ ref: documentPage }} className='w-full basis-8/12 min-h-full bg-indigo-100 max-h-[30rem]  rounded-md'>
+                {Boolean(products.length) && <SimpleBar scrollableNodeProps={{ ref: documentPage }} className='w-full basis-8/12 min-h-full bg-indigo-100   rounded-md'>
                     <table className="px-5 w-full text-sm text-left text-gray-500 relative rounded-md">
                         <thead className="sticky top-0 bg-indigo-100 ">
                             <tr className='text-xs text-gray-700   shadow-sm'>
@@ -134,9 +131,7 @@ export default function Productdefinition() {
                     </div>}
 
                 </SimpleBar>
-                :
-                <Emptyresults onClick={()=>setShowForm(true)} inscription="add new product" className="mt-10" />
-}
+               }
             </div>
 
         </div>

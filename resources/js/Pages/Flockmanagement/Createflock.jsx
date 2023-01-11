@@ -162,7 +162,7 @@ export default function Createflock(props) {
 
             <span className="space-y-1 text-sm w-full">
               <div className='flex items-center justify-between relative'>
-                <label htmlFor="lastname" className="font-medium">shed number</label>
+                <label htmlFor="lastname" className="font-medium">pen identification name</label>
                 {errors.shed_id && <div className=' mt-2'>
                   <nav className="cursor-pointer font-awesome  gap-1  flex items-center absolute right-2 inset-y-0">
                     <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
@@ -171,7 +171,7 @@ export default function Createflock(props) {
                 </div>}
               </div>
               <select onChange={(e) => setData('shed_id', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded leading-6 w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
-                <option value='' >select shed</option>
+                <option value='' >select pen</option>
                 {sheds.map((shed) => <option
                   key={shed.id} value={shed.id}>{shed.shed_identification_name}
                 </option>

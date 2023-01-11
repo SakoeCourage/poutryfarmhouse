@@ -49,13 +49,7 @@ export default function Flockcontroldata() {
                             <th scope="col" className="py-3  text-center  px-2 ">
                                 <input type="checkbox" name="" id="" />
                             </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem] flex items-center justify-between">
-                                date created
-                                <span className='flex flex-col'>
-                                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('created_asc')} icon='caret-up' />
-                                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('created_desc')} icon='caret-down' />
-                                </span>
-                            </th>
+                       
                             <th scope="col" className="py-3 px-6 min-w-[10rem] ">
                                <div className='flex items-center justify-between w-full'>
                                    record date
@@ -66,16 +60,19 @@ export default function Flockcontroldata() {
                                </div>
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                collection time
+                            </th>
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 flock name
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 shed name
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                eggs produced
+                                productions
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                feeds consumed
+                                feed consumption
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 dead
@@ -85,6 +82,12 @@ export default function Flockcontroldata() {
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 culled
+                            </th>
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                vaccination
+                            </th>
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                medication
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 Action
@@ -100,12 +103,11 @@ export default function Flockcontroldata() {
                                     <td scope="col" className="py-3  text-center  ">
                                         <input type="checkbox" name="" id="" />
                                     </td>
-
-                                    <td className="py-2 px-6">
-                                        {dateReformat(data.date_created)}
-                                    </td>
                                     <td className="py-2 px-6 ">
                                         {dateReformat(data.record_date)}
+                                    </td>
+                                    <td className="py-2 px-6 ">
+                                        {data.time}
                                     </td>
                                     <td className="py-2 px-6 ">
                                         {data.flock_name}
@@ -114,10 +116,14 @@ export default function Flockcontroldata() {
                                         {data.shed}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        {new Intl.NumberFormat().format(data.eggs_produced)}
+                                    <button  className='border border-gray-500 p-2 rounded-full text-xs'>
+                                           <span>view</span>
+                                        </button>
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        {new Intl.NumberFormat().format(data.feeds_consumed)}
+                                    <button  className='border border-gray-500 p-2 rounded-full text-xs'>
+                                           <span>view</span>
+                                        </button>
                                     </td>
                                     <td className="py-2 px-6 ">
                                         {new Intl.NumberFormat().format(data.dead)}
@@ -127,6 +133,14 @@ export default function Flockcontroldata() {
                                     </td>
                                     <td className="py-2 px-6 ">
                                         {new Intl.NumberFormat().format(data.culled)}
+                                    </td>
+                                    <td className="py-2 px-6 ">
+                                    {data.vaccination}
+
+                                    </td>
+                                    <td className="py-2 px-6 ">
+                                    {data.medication}
+
                                     </td>
                                     <td className="py-2 px-6 ">
                                         <button onClick={()=>setCurrentData({id:data.id})} className='text-blue-500 flex items-center gap-2'>

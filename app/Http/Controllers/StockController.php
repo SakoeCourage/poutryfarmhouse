@@ -7,6 +7,12 @@ use App\Models\Expense;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreStockRequest;
+use App\Models\Feed;
+use App\Models\Productsdefinition;
+use App\Models\Saleitem;
+use Carbon\Carbon;
+
 
 
 class StockController extends Controller
@@ -17,8 +23,7 @@ class StockController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Stock $stock)
-    {   
-
+    {       
         return Inertia('Stockmanagement/Allstock',[
                 'stocks' =>fn () => $stock->filter(request()->only('sort'))
                 ->latest()->paginate(10)
@@ -26,16 +31,23 @@ class StockController extends Controller
                 -> through(fn($cstock)=>[
                     'id'=> $cstock->id,
                     'date' => $cstock->created_at,
-                    'opening_stock' => $cstock->opening_stock,
-                    'closing_stock' => $cstock->closing_stock,
-                    'broken' => $cstock->broken,
-                    'other_defects' => $cstock->other_defects,
-                    'birds_sold' => $cstock->birds_sold,
-                    'eggs_sold'=>$cstock->eggs_sold,
-                    'daily_production'=>$cstock->daily_production,
-                    'canEdit' =>Request()->user()->can('edit stock'),
+                    'opening_stock' => $cstock->opening_stock/100,
+                    'closing_stock' => $cstock->closing_stock/100,
+                    'daily_production'=>$cstock->daily_production/100,
+                    'expenses' =>Expense::query()->where('status',1)->whereDate('created_at',$cstock->created_at)->get()->sum('total'),
+                    'product_sales' => Productsdefinition::get()->map(function($item)use($cstock){
+                        return([
+                            'id' => $item->id,
+                            'name' => $item->name,
+                            'sale_quantity' => Saleitem::query()->where('productsdefinition_id',$item->id)
+                            ->whereDate('created_at',$cstock->created_at)
+                            ->sum('quantity')
+                        ]);
+
+                }),
                     ]),
-                'filters' => request()->only('sort'),
+                'filters' => request()->only('sort')
+              
         ]);
     }
 
@@ -44,38 +56,9 @@ class StockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(StoreStockRequest $request)
     {
-       $request->validate([
-            'opening_stock' => ['required', 'numeric'],
-            'closing_stock' => ['required', 'numeric'],
-            'birds_sold' => ['nullable', 'numeric'],
-            'eggs_sold' => ['nullable', 'numeric'],
-            'broken' => ['nullable', 'numeric'],
-            'other_defects' => ['nullable', 'numeric'],
-            'daily_production' => ['required', 'numeric'],
-            
-        ]);
-
-        DB::transaction(function () use ($request) {
-            $newstock = Stock::Create([
-                'opening_stock' => $request->opening_stock,
-                'closing_stock' =>$request->closing_stock ,
-                'birds_sold' => $request->birds_sold,
-                'eggs_sold' => $request->eggs_sold,
-                'broken' => $request->broken,
-                'other_defects' => $request->other_defects,
-                'daily_production' =>$request->daily_production 
-            ]);
-          
-        });
-        return redirect()->back()->with([
-            "message" => [
-                'type' => 'success',
-                'text' => 'added'
-            ]
-
-        ]);
+        
     }
 
     /**
@@ -84,7 +67,18 @@ class StockController extends Controller
 
     public function showcreateform()
     {
-        return Inertia('Stockmanagement/Newstock');
+        return Inertia('Stockmanagement/Newstock',[
+            'product_stock'=>[
+                'value_in_stock' => Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock')),
+                'number_of_products' => Productsdefinition::count(),
+                'quantity_of_products' => Productsdefinition::sum('quantity_in_stock')
+            ],
+            'feed_stock'=>[
+                'value_in_stock' => Feed::sum(DB::raw('(cost_per_kg/100) * (quantity_in_stock/100)')),
+                'number_of_feeds' => Feed::count(),
+                'quantity_of_feeds_left' => Feed::sum(DB::raw('quantity_in_stock/100'))
+            ]
+        ]);
     }
 
     /**
@@ -106,7 +100,6 @@ class StockController extends Controller
      */
     public function show(Stock $stock)
     {
-
         return([
             'stock' => $stock->only(['birds_sold','closing_stock','opening_stock','daily_production','broken','eggs_sold','other_defects']),
             'expenses' => $stock->expenses

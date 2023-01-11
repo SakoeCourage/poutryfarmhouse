@@ -44,7 +44,6 @@ export default function Itemslist(props) {
 
   let calculateAmount = (i) => {
     if (items[i].price && items[i].quantity) {
-
       return ((Number(items[i].price) * Number(items[i].quantity)).toFixed(2))
     }else{
         return ''
@@ -55,7 +54,6 @@ export default function Itemslist(props) {
   }
   useEffect(() => {
     setItems([{ product_id: '', quantity: '', price: '', amount: '' }])
-    console.log('reset')
   }, [props.reset])
 
 

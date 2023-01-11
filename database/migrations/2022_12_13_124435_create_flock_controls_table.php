@@ -19,8 +19,11 @@ return new class extends Migration
             $table->dateTime('record_date');
             $table->string('flock_name');
             $table->foreignId('shed_id');
-            $table->integer('eggs_produced')->nullable();
-            $table->integer('feeds_consumed')->nullable();
+            $table->json('production')->nullable();
+            $table->json('feeds')->nullable();
+            $table->time('time')->nullable();
+            $table->string('vaccination')->nullable();
+            $table->string('medication')->nullable();
             $table->integer('dead')->nullable();
             $table->integer('missing')->nullable();
             $table->integer('culled')->nullable();

@@ -1,50 +1,62 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React,{useState} from 'react'
 import Productdefinition from './Productdefinition';
 import Discountdefinition from './Discountdefinition';
 import Userdefinition from './Userdefinition';
+import FeedDefinition from './FeedDefinition';
+import BreedDefinition from './BreedDefinition';
 import {
   Tabs,
   TabsHeader,
   TabsBody,
-  Tab,
-  TabPanel,
+  Tab
 } from "@material-tailwind/react";
 
 function Tablist() {
+  const [currentValue,setCurrentValue]= useState('pd');
   const data = [
     {
       label: "product definition",
       value: "pd",
-      desc: <Productdefinition/>
+      comp: <Productdefinition/>
+    },
+    {
+      label: "feed definition",
+      value: "fd",
+      comp: <FeedDefinition/>
+    },
+    {
+      label: "breed definition",
+      value: "bd",
+      comp: <BreedDefinition/>
     },
     {
       label: "discount definition",
       value: "dd",
-      desc: <Discountdefinition />
+      comp: <Discountdefinition />
     },
 
     {
       label: "user definition",
       value: "ud",
-      desc: <Userdefinition />
+      comp: <Userdefinition />
     }
   ];
 
   return (
     <Tabs value="pd" className="">
-      <TabsHeader className="bg-gray-200/30 text-sm isolate ">
+      <TabsHeader  className="bg-gray-200/30 text-sm isolate ">
         {data.map(({ label, value }) => (
-          <Tab key={value} value={value}>
+          <Tab className='text-sm ' onClick={()=>setCurrentValue(value)} key={value} value={value}>
             {label}
           </Tab>
         ))}
       </TabsHeader>
       <TabsBody>
-        {data.map(({ value, desc }) => (
-          <TabPanel key={value} value={value}>
-            {desc}
-          </TabPanel>
+        {data.map(({ value, comp }) => (
+          <div className='mx-2 pt-4' key={value}>
+              {currentValue == value && comp}
+          </div>
         ))}
       </TabsBody>
     </Tabs>

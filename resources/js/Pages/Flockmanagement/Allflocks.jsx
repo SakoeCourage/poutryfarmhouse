@@ -100,7 +100,7 @@ export default function Allflocks() {
                                    
                                  
                                     <td className="py-2 px-6 ">
-                                        {flock.shed.shed_identification_name}
+                                        {flock.pen.shed_identification_name}
                                     </td>
                                     <td className="py-2 px-6 ">
                                        {flock.breed?.name}

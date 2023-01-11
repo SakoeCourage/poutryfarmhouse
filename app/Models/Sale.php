@@ -21,6 +21,13 @@ class Sale extends Model
             set: fn ($amount) => $amount * 100,
         );
     }
+    public function saleitems(){
+        return $this->hasMany(Saleitem::class,'sale_id');
+    } 
+
+    public function invoice(){
+        return $this->hasOne(Invoice::class,'sale_id');
+    }
 
     public function scopeFilter($query, array $filters){
         $query->when($filters['search'] ?? false, function($query, $search){

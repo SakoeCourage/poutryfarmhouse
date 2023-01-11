@@ -4,7 +4,6 @@ import { usePage, useForm } from '@inertiajs/inertia-react'
 import Buttonsubmit from '../../../components/Buttonsubmit'
 import { formatcurrency } from '../../../api/Util'
 import Itemslist from './Itemslist'
-import getInvoiceRoute from '../../../api/Getselectsitems'
 import { printContext } from '../context/Printcontext'
 
 
@@ -12,9 +11,7 @@ import { printContext } from '../context/Printcontext'
 export default function Newsale() {
   const { products } = usePage().props
   const [resetform, setResetForm] = useState(false)
-  const [autoGenerateInvoice, setAutoGenerateInvoice] = useState(true)
-  const { setPrintdata } = useContext(printContext)
-  const { flash } = usePage().props
+  const { setPrintdata,autoGenerateInvoice, setAutoGenerateInvoice } = useContext(printContext)
 
   const { data, setData, processing, errors, reset, post } = useForm({})
   const [formData, setFormData] = useState({
@@ -23,17 +20,6 @@ export default function Newsale() {
     customer_contact: '',
     customer_purchases: null,
   })
-
-  useMemo(() => {
-    if (flash.message?.invoice_sale_id && autoGenerateInvoice) {
-      getInvoiceRoute.generateinvoice(flash.message?.invoice_sale_id).then(res => {
-        setPrintdata(res.data)
-        
-        
-      }).catch(err => console.log(err))
-    }
-
-  }, [flash])
 
 
   let handlereset = () => {
