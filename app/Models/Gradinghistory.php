@@ -5,13 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Gradinghistory extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    
-    public function definitions(){
-        return $this->hasMany(Productsdefinition::class,'product_id','id');
-    }
-
 }

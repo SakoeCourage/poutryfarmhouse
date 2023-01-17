@@ -33,7 +33,6 @@ export default function Newsale() {
     })
   }
 
-
   useEffect(
     () => setData(formData)
     , [formData])
@@ -52,7 +51,7 @@ export default function Newsale() {
         <Custominput error={errors.customer_name} value={formData.customer_name} label="customer full name" getValue={(value) => setFormData((cd) => cd = { ...cd, customer_name: value })} />
         <Custominput error={errors.customer_contact} value={formData.customer_contact} label="customer contact number" placeholder="(000) 000 0000" getValue={(value) => setFormData((cd) => cd = { ...cd, customer_contact: value })} />
       </nav>
-      <Itemslist reset={resetform} errors={errors} products={products} getTotal={(value) => setFormData((cd) => cd = { ...cd, total_amount: value })} getData={(data) => setFormData((cd) => cd = { ...cd, customer_purchases: data })} />
+      <Itemslist reset={resetform} errors={errors}  getTotal={(value) => setFormData((cd) => cd = { ...cd, total_amount: value })} getData={(data) => setFormData((cd) => cd = { ...cd, customer_purchases: data })} />
       <nav className='self-end  flex items-center gap-5 user-select-none pointer-events-none '>
         <span>Total</span>
         <span className='bg-white p-1 px-2 min-w-[12rem] '>{formatcurrency(data.total_amount)}</span>

@@ -88,7 +88,14 @@ class InvoiceController extends Controller
                         'unit_price' => $item->price,
                         'amount' => $item->amount,
                         'quantity' => $item->quantity,
-                        'name' => Productsdefinition::where('id', $item->productsdefinition_id)->pluck('name')[0]
+                        'name' => Productsdefinition::where('id', $item->productsdefinition_id)->with('product')->get()
+                            ->map(function ($item) {
+                                return ([
+                                    'definition_name' => $item->name,
+                                    'product_name' => $item->product->name
+                                ]);
+                            })
+
                     ]
                     );
                 })
@@ -115,12 +122,12 @@ class InvoiceController extends Controller
                         'paymentmethod' => $item->paymentmethod->method ?? $item->paymentmethod,
                         'amount_payable' => $item->sale->total_amount,
                         'sale_id' => $item->sale->id,
-                        'sale_items' => $item->sale->saleitems->map(function($value,$key){
-                            return([
+                        'sale_items' => $item->sale->saleitems->map(function ($value, $key) {
+                            return ([
                                 "amount" => $value->amount,
-                                'price' =>$value->price,
+                                'price' => $value->price,
                                 'quantity' => $value->quantity,
-                                'name' => Productsdefinition::where('id',$value->productsdefinition_id)->pluck('name')[0]
+                                'name' => Productsdefinition::where('id', $value->productsdefinition_id)->pluck('name')[0]
                             ]);
                         })
                     ]);
@@ -139,17 +146,18 @@ class InvoiceController extends Controller
         //
     }
 
-    function handleOutofStock(Collection $errors, Collection $sales_collection,ProductStockService $productStockService){
-        if($errors->count()){
+    function handleOutofStock(Collection $errors, Collection $sales_collection, ProductStockService $productStockService)
+    {
+        if ($errors->count()) {
             throw \Illuminate\Validation\ValidationException::withMessages([
                 'out_of_stock' => $errors
             ]);
-        }else{
-            $sales_collection->each(function($value,$key)use($productStockService){
-                 $productStockService->decreasestock($value);
-            });     
+        } else {
+            $sales_collection->each(function ($value, $key) use ($productStockService) {
+                $productStockService->decreasestock($value);
+            });
         }
-    } 
+    }
 
 
 
@@ -166,21 +174,21 @@ class InvoiceController extends Controller
         $sale = \App\Models\Sale::find($request->sale_id);
         $stockservice = new StockService();
         DB::transaction(function ()
-         use ($sale, $stockservice, $request, $productStockService,$errors,$sales_collection) 
-         {
-            $sale->saleitems->each(function ($value, $key) use ($productStockService,$errors,$sales_collection) {
-                    if($value->product->quantity_in_stock < $value->quantity){
-                      $errors->push( [
-                        'name' => $value->product->name,
-                        'quantity_in_stock' => $value->product->quantity_in_stock,
+        use ($sale, $stockservice, $request, $productStockService, $errors, $sales_collection) {
+            $sale->saleitems->each(function ($value, $key) use ($productStockService, $errors, $sales_collection) {
+
+                if ($value->definitions->quantity_in_stock < $value->quantity) {
+                    $errors->push([
+                        'name' => $value->definitions->name,
+                        'quantity_in_stock' => $value->definitions->quantity_in_stock,
                         'quantity' => $value->quantity
-                      ]);   
-                    }else{
-                        $sales_collection->push($value);
-                    }
+                    ]);
+                } else {
+                    $sales_collection->push($value);
+                }
             });
 
-            $this->handleOutofStock($errors,$sales_collection,$productStockService);
+            $this->handleOutofStock($errors, $sales_collection, $productStockService);
 
             $sale->invoice->update([
                 'payment_verified' => true,

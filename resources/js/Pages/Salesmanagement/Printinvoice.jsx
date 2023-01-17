@@ -70,11 +70,11 @@ import Primarybutton from '../../components/Primarybutton'
                     </nav>
                     {products && products.map((product,i)=>{
                       return(
-                        <nav key={i} className='flex items-center gap-1 font-semibold text-sm'>
-                        <span className=' basis-[40%]'>{product.name}</span>
+                      <nav key={i} className='flex items-center gap-1 font-semibold text-sm'>
+                        <span className=' basis-[40%]'>{product.name[0].product_name} <span className='text-text-gray-500'>{product.name[0].definition_name}</span> </span>
                         <span className=' basis-[20%]'>{formatcurrency(product.unit_price)}</span>
                         <span className=' basis-[20%] text-center' >{new Intl.NumberFormat().format(product.quantity)}</span>
-                        <span className=' basis-[20%]  ' >{formatcurrency(product.amount)}</span>
+                        <span className=' basis-[20%]' >{formatcurrency(product.amount)}</span>
                       </nav>
                       )
                     })}

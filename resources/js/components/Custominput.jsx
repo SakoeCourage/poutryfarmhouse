@@ -9,7 +9,7 @@ const TextField = ((props) => {
     setValue(onchangeValue)
     props.getValue(onchangeValue)
   }
-  useEffect(()=>{
+  useEffect(() => {
     handleonchange(props.value ?? '')
   }
     , [props.value])
@@ -23,7 +23,7 @@ const TextField = ((props) => {
       </nav>
       }
       <nav className={`block relative border border-gray-200 focus-within:border-none rounded leading-6 w-full ring-offset-1 focus-within:ring-2 transition-all ease-out duration-150 ${props.readOnly && 'focus-within:none border-none ring-0 ring-offset-0 outline-none'}`} >
-        <input value={value} type={props.type === 'number' ? 'text' : props.type} onChange={(e) => handleonchange(e.target.value)} readOnly={props.readOnly} min='0' className={`px-5 py-3 text-sm  w-full border-none focus:border-none focus:outline-none `} placeholder={props.placeholder ?? `enter ${props.label ?? ''}`} />
+        <input value={props.value ?? value} type={props.type === 'number' ? 'text' : props.type} onChange={(e) => handleonchange(e.target.value)} readOnly={props.readOnly} min='0' className={`px-5 py-3 text-sm  w-full border-none focus:border-none focus:outline-none `} placeholder={props.placeholder ?? `enter ${props.label ?? ''}`} />
         {props.error && <nav className="cursor-pointer  gap-1 font-awesome flex items-center absolute right-2 inset-y-0">
           <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
           <span className="  text-sm text-red-400 backdrop-blur-sm bg-white/30 error ">{props.error}</span>
@@ -46,12 +46,18 @@ const Custominput = ((props) => {
   useEffect(() => {
     handleChangeinValues('')
   }, [props.reset])
+
   useEffect(
-     () => {
-      if (props.number) {
-        setValue(props.number)
-        props.getValue(Number(value.replaceAll(',', '')))
+    () => {
+      try {
+        if (props.number!==null && typeof(props.number) !== 'undefined' ) {
+          setValue(props.number)
+          props.getValue(Number(value.replaceAll(',', '')))
+        }
+      } catch (error) {
+        console.log(error)
       }
+
     }
     , [props.number])
   return (

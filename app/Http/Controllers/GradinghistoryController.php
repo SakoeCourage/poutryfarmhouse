@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Saleitem;
+use App\Models\Gradinghistory;
 use Illuminate\Http\Request;
 
-class SaleitemController extends Controller
+class GradinghistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -42,35 +41,21 @@ class SaleitemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\Gradinghistory  $gradinghistory
      * @return \Illuminate\Http\Response
      */
-    public function show($saleid)
-    {     
-        $sale_items = Saleitem::where('sale_id',$saleid);
-        return([
-            'saleitems' => $sale_items->with(['definitions:id,name,product_id','sale:id,total_amount'])->get()->map(function($item){
-                return([
-                
-                    'amount' => $item->amount,
-                    'definition' =>    $item->definitions->name,
-                    'product'=>Product::where('id',$item->definitions->product_id)->pluck('name')[0],
-                
-                    'price' =>$item->price,
-                    'quantity' =>$item->quantity,
-                    'total'=>$item->sale->total_amount
-                ])  ;
-            })
-        ]);
+    public function show(Gradinghistory $gradinghistory)
+    {
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\Gradinghistory  $gradinghistory
      * @return \Illuminate\Http\Response
      */
-    public function edit(Saleitem $saleitem)
+    public function edit(Gradinghistory $gradinghistory)
     {
         //
     }
@@ -79,10 +64,10 @@ class SaleitemController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\Gradinghistory  $gradinghistory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Saleitem $saleitem)
+    public function update(Request $request, Gradinghistory $gradinghistory)
     {
         //
     }
@@ -90,10 +75,10 @@ class SaleitemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\Gradinghistory  $gradinghistory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Saleitem $saleitem)
+    public function destroy(Gradinghistory $gradinghistory)
     {
         //
     }

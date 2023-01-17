@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\FlockControl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
-use App\Services\ProductStockService;
 use App\Services\FeedStockService;
-use PhpParser\Node\Expr\Cast\Object_;
+use App\Models\Grading;
+
 
 class FlockControlController extends Controller
 {
@@ -53,7 +52,7 @@ class FlockControlController extends Controller
      */
     public function create(Request $request)
     {
-                 // dd($request->all());
+            
         $request->validate([
             'record_date' => ['required', 'date'],
             'flock_name' => ['required', 'string', 'max:255'],
@@ -62,7 +61,7 @@ class FlockControlController extends Controller
             'feeds.*.feed_id' => ['required', 'distinct',],
             'feeds.*.quantity' => ['required', 'numeric'],
             'products' => ['required', 'array'],
-            'products.*.productsdefinition_id' => ['required', 'distinct'],
+            'products.*.product_id' => ['required', 'distinct'],
             'products.*.quantity' => ['required', 'numeric'],
             'dead' => ['nullable', 'numeric'],
             'medication' => ['nullable','string','max:255'],
@@ -74,10 +73,9 @@ class FlockControlController extends Controller
         ]);
       
         $record_date = date('Y-m-d H:i:s', strtotime($request->record_date));
-        $productservice = new ProductStockService();
         $feedservice = new FeedStockService();
 
-        DB::transaction(function()use($request,$record_date,$productservice,$feedservice,){
+        DB::transaction(function()use($request,$record_date,$feedservice,){
             $newflockdata = FlockControl::Create([
                 'record_date' => $record_date,
                 'flock_name' => $request->flock_name,
@@ -90,16 +88,14 @@ class FlockControlController extends Controller
                 'medication' => $request->medication ?? null,
                 'missing' => $request->missing ?? null,
                 'culled' => $request->culled ?? null,
+            ]);     
+            \App\Models\Grading::create([
+                'flock_control_id' =>$newflockdata->id,
+                'is_graded' =>false,
+                'defected' => 0
             ]);
-            collect($newflockdata->production)->each(function($value,$key) use($productservice){
-                $productservice->increasestock((Object)$value);
-            });
-     
-            collect($newflockdata->feeds)->each(function($value,$key) use($feedservice){
-                $feedservice->decreasestock((Object)$value);
-            });
         });
-        // return response();
+        return response('ok');
     }
 
 

@@ -41,7 +41,7 @@ export default function Newstock() {
             
             <nav className='mt-auto bg-pink-300/90 border border-pink-200 rounded-md p-5 text-sm'>
               <nav className='flex items-center gap-2'><FontAwesomeIcon className='text-pink-100' icon='check-double'/><span>{new Intl.NumberFormat().format(product_stock.number_of_products)} products found</span></nav>
-              <nav className='flex items-center gap-2'><FontAwesomeIcon className='text-pink-100' icon='check-double'/><span>{new Intl.NumberFormat().format(product_stock.quantity_of_products)} products items found</span></nav>
+              <nav className='flex items-center gap-2'><FontAwesomeIcon className='text-pink-100' icon='check-double'/><span>{new Intl.NumberFormat().format(product_stock.quantity_of_products)} products quantity in stock</span></nav>
             </nav>
 
             <Link as='button' href='/stock/products/manage' className=' flex ring-1 ring-pink-400 ring-offset-1 p-2 bg-pink-600 mt-auto text-xl rounded-md text-white items-center justify-center gap-2'>

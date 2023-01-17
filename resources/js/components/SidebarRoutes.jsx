@@ -31,18 +31,23 @@ export let sidebarRoutes =
     links: [
  
     {
-        title: 'flocks',
+        title: 'Flocks',
         link: '/flock/all',
         abilities: 'create flock'
     },
     {
-        title: 'flock control data',
+        title: 'Flock control data',
         link: '/flock/control/data',
         abilities: 'edit flock control'
     },
     {
-        title: 'compare flock',
+        title: 'Compare flock',
         link: '/flock/compare',
+        abilities: 'compare flock'
+    },
+    {
+        title: 'Grading',
+        link: '/flock/products/grade?filter=ungraded',
         abilities: 'compare flock'
     }
     ],
@@ -52,13 +57,13 @@ export let sidebarRoutes =
     icon: "arrow-trend-up",
     Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
-        title: 'tabular view',
+        title: 'Tabular view',
         link: '/stock/all',
         abilities: 'edit stock'
 
     },
     {
-        title: 'manage stock',
+        title: 'Manage stock',
         link: '/stock/add',
         abilities: 'create stock'
     }]
@@ -67,17 +72,17 @@ export let sidebarRoutes =
     Role: ['Super Admin','admin'],
     icon: "tags",
     links: [{
-            title: 'generate invoice',
+            title: 'Product orders',
             link: '/salemanagement/newsale',
             abilities: 'create user'
     },
     {
-        title: 'make payment',
-        link: '/invoice/all',
+        title: 'Make payment',
+        link: '/invoice/all/?filter=unpaid',
         abilities: 'create user'
     },
     {
-        title: 'payments history',
+        title: 'Payments history',
         link: '/payments/all',
         abilities: 'delete user'
     }
@@ -88,11 +93,11 @@ export let sidebarRoutes =
     icon: "file-lines",
     Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
-        title: 'tabular',
+        title: 'Tabular',
         link: '/report/tabular'
     },
     {
-        title: 'grapical',
+        title: 'Grapical',
         link: '/report/graphical'
     }]
 },
@@ -100,12 +105,12 @@ export let sidebarRoutes =
     Role: ['Super Admin'],
     icon: "user-group",
     links: [{
-        title: ' create user',
+        title: ' Create user',
         link: '/user/create',
         abilities: 'create user'
     },
     {
-        title: 'users',
+        title: 'Users',
         link: '/user/all',
         abilities: 'delete user'
     },

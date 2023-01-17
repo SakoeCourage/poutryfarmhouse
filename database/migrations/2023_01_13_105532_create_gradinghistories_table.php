@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('productsdefinitions', function (Blueprint $table) {
+        Schema::create('gradinghistories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('product_id');
-            $table->bigInteger('unit_price');
-            $table->bigInteger('quantity_in_stock')->nullable()->default(0);
-            $table->boolean('automated_stocking')->nullable()->default(false);
             $table->timestamps();
+            $table->foreignId('grading_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('productsdefinition_id');
+            $table->string('description');
+            $table->integer('quantity');
+
         });
     }
 
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('productsdefinitions');
+        Schema::dropIfExists('gradinghistories');
     }
 };

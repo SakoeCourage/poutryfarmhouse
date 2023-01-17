@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Product;
 use App\Models\Productsdefinition;
 
 use Illuminate\Http\Request;
@@ -14,27 +16,36 @@ class ManageProductsController extends Controller
      */
     public function index()
     {
-       return Inertia('Stockmanagement/Productstock');
+        return Inertia('Stockmanagement/Productstock');
     }
 
 
-    public function allProducts(){
-        return(
-         [  
-             'products' => Productsdefinition::latest()->paginate(15)->through(function($item){
-                return([
-                    'id'=>$item->id,
-                    'name' => $item->name
-                ]);
-             })
-             ]
+    public function allProducts()
+    {
+        return ([
+                'products' => Product::latest()->with('definitions')->get()->map(function ($item) {
+                    return ([
+                        'product' => $item->name,
+                        'id' => $item->id,
+                        'definitions' => $item->definitions->map(function ($item) {
+                            return ([
+                                'name' => $item->name,
+                                'id' => $item->id
+                            ]);
+                        })
+                    ]);
+                })
+
+            ]
         );
     }
-    public function stockableProducts(){
-        return(
-         [  
-             'products' => Productsdefinition::where('automated_stocking',1)->get(['name','id'])
-         ]
+    public function stockableProducts()
+    {
+        return ([
+                'products' => Product::with('definitions')->latest()->whereHas('definitions',function($query){
+                    $query->where('automated_stocking','=',1);
+                })->get(['id','name'])
+                 ]
         );
     }
 
@@ -45,7 +56,6 @@ class ManageProductsController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -67,8 +77,8 @@ class ManageProductsController extends Controller
      */
     public function show($id)
     {
-        return([
-            'product' => Productsdefinition::where('id',$id)->firstorFail()
+        return ([
+            'definition' => Productsdefinition::where('id', $id)->with('product:id,name')->firstorFail()
         ]);
     }
 

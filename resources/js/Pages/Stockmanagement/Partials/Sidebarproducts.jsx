@@ -18,24 +18,13 @@ export function Loader(){
 export default function Sidebarproducts(props) {
   const [products,setProducts] = useState([])
   const [currentId, setCurrentId] = useState(null)
-  const [nextPage,setNextPage] = useState(null)
+  
   const [isLoading,setIsLoading] = useState(true)
   const [total,setTotal] = useState(null)
   const getProducts = () =>{
     Api.get('/product/all').then(res=>{
-      console.log(res.data)
-      setProducts(res.data.products.data)
-      setNextPage(res.data.products.next_page_url)
-      setTotal(res.data.products.total)
-      setIsLoading(false)
-    }).catch(err=>console.log(err))
-  }
-  const getMoreProducts = () =>{
-    setIsLoading(true)
-    axios.get(nextPage).then(res=>{
-      console.log(res.data)
-      setProducts((cp)=>cp=[...cp,...res.data.products.data])
-      setNextPage(res.data.products.next_page_url)
+      setProducts(res.data.products)
+      setTotal(res.data.products.length)
       setIsLoading(false)
     }).catch(err=>console.log(err))
   }
@@ -58,14 +47,19 @@ export default function Sidebarproducts(props) {
         </nav>
         { products.map(product=>{
           return(
-            <nav onClick={()=>handleProductChange(product.id)} key={product.id} className={`cursor-pointer hover:shadow-md z-10 bg-gray-100 shadow-sm rounded-md px-7 py-2  truncate flex items-center gap-2 relative productitem ${currentId == product.id && 'active'}  `}  >
-            <span>{product.name}</span>
-            <FontAwesomeIcon className='text-indigo-600 absolute right-2 hidden iconforward' size='xs' icon='arrow-right'/>
+            <div key={product.id}>
+              <nav  className="cursor-pointer  bg-indigo-100 z-20 shadow-sm rounded-md px-7 py-2  truncate flex items-center gap-2    ">
+               <span className='font-semibold flex items-center justify-between'><span>{product.product}</span>  <span className='text-xs text-gray-400 ml-3'>  {total && "found " + product.definitions.length}</span></span>
             </nav>
+              {product.definitions.map((definition)=>{
+                  return(<nav onClick={()=>handleProductChange(definition.id)} key={definition.id} className={`cursor-pointer hover:shadow-md z-10 bg-gray-100 shadow-sm rounded-md px-7 py-2  truncate flex items-center gap-2 relative productitem ${currentId == definition.id && 'active'}  `}  >
+                  <span>{definition.name}</span>
+                  <FontAwesomeIcon className='text-indigo-600 absolute right-2 hidden iconforward' size='xs' icon='arrow-right'/>
+                  </nav>
+)              })}
+            </div>
             )
           })}
-          {!isLoading && nextPage && <Primarybutton onClick={()=>getMoreProducts()} text=" more " className="self-center text-sm w-full rounded-md"/>}
-
           {isLoading && <Loader />}
           {isLoading && <Loader />}
           {isLoading && <Loader />}

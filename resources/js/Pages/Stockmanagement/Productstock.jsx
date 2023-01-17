@@ -31,7 +31,7 @@ export default function Productstock() {
         const product = Api.get(`/product/get/${id}`)
         const productHistory = Api.get(`/product/history/${id}`)
         axios.all([product, productHistory]).then(axios.spread(function (res_products, res_productHistory) {
-            setProductData(res_products.data.product)
+            setProductData(res_products.data.definition)
             setProductHistoryData(res_productHistory.data.product_history?.data)
             setNextPage(res_productHistory.data.product_history?.next_page_url)
             console.log(res_products, res_productHistory.data.product_history);
@@ -42,10 +42,10 @@ export default function Productstock() {
             })
     }
 
-    const handleOnUpdateFinish = (id) =>{
+    const handleOnUpdateFinish = (id) => {
         setShowForm(false)
         getProduct(id)
-    } 
+    }
 
     const MoreHistory = () => {
         setLoadingMore(true)
@@ -70,7 +70,7 @@ export default function Productstock() {
     return (
         <div className='flex items-center relative overflow-hidden w-full h-full '>
             {showform && <Modal closeModal={() => setShowForm(false)}>
-                <Addtostockform handleOnSucess={(id)=>handleOnUpdateFinish(id)} productDetails={{
+                <Addtostockform handleOnSucess={(id) => handleOnUpdateFinish(id)} productDetails={{
                     'id': productData.id,
                     'quantity': productData.quantity_in_stock,
                 }} />
@@ -85,7 +85,7 @@ export default function Productstock() {
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-10 py-2'>
                                 <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm'>
                                     <nav className='text-sm text-gray-400'>product</nav>
-                                    <nav className='font-semibold text-indigo-900 text-2xl'>{productData.name}</nav>
+                                    <nav className='font-semibold text-indigo-900 text-2xl '><span>{productData.product?.name}</span><span className='text-indigo-700 text-xl ml-2'>{productData.name}</span></nav>
                                 </nav>
                                 <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm'>
                                     <nav className='text-sm text-gray-400'>unit price</nav>
@@ -142,8 +142,8 @@ export default function Productstock() {
                                             <tr key={i} className={` border-b hover:bg-gray-200 ${i % 2 == 0 ? 'bg-gray-50' : 'white'}`}>
                                                 <td scope="col" className="py-3  text-center  ">
                                                     {item.action == 'addition' ? <FontAwesomeIcon icon="arrow-up" className='text-green-300' />
-                                                        : <FontAwesomeIcon icon="arrow-down" className='text-red-300' />    
-                                                }
+                                                        : <FontAwesomeIcon icon="arrow-down" className='text-red-300' />
+                                                    }
 
                                                 </td>
                                                 <td className="py-2 px-6">
@@ -153,7 +153,7 @@ export default function Productstock() {
                                                     {item.time}
                                                 </td>
                                                 <td className="py-2 px-6 ">
-                                                {item.action == 'addition' ? <span className='text-green-300 font-bold'>+</span >: <span className='text-red-300 font-bold'>-</span> } {item.quantity}
+                                                    {item.action == 'addition' ? <span className='text-green-300 font-bold'>+</span > : <span className='text-red-300 font-bold'>-</span>} {item.quantity}
                                                 </td>
                                                 <td className="py-2 px-6 ">
                                                     {new Intl.NumberFormat().format(item.net_quantity)}

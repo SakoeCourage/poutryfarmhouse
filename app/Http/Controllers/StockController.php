@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreStockRequest;
 use App\Models\Feed;
+use App\Models\Product;
 use App\Models\Productsdefinition;
 use App\Models\Saleitem;
 use Carbon\Carbon;
@@ -70,7 +71,7 @@ class StockController extends Controller
         return Inertia('Stockmanagement/Newstock',[
             'product_stock'=>[
                 'value_in_stock' => Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock')),
-                'number_of_products' => Productsdefinition::count(),
+                'number_of_products' => Product::count(),
                 'quantity_of_products' => Productsdefinition::sum('quantity_in_stock')
             ],
             'feed_stock'=>[

@@ -19,7 +19,8 @@ class ProductsdefinitionFactory extends Factory
         return [
             'name' =>fake()->word(),
             'unit_price' => fake()->numberBetween(20,100),
-            'quantity_in_stock' => 0
+            'quantity_in_stock' => 0,
+            'product_id'=> rand(1,3)
         ];
     }
 }

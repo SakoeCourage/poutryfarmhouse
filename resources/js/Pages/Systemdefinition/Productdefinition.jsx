@@ -20,6 +20,7 @@ export default function Productdefinition() {
         setisLoading(true)
         Api.get('/definitions/product/all').then(res => {
             setisLoading(false)
+            console.log(res.data.products)
             setProducts(res.data.products?.data)
             setNextPage(cv => res.data.products?.next_page_url)
         })
@@ -91,6 +92,9 @@ export default function Productdefinition() {
                                     product name
                                 </th>
                                 <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                    type
+                                </th>
+                                <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                     unit price
                                 </th>
                                 <th scope="col" className="py-3 px-6 min-w-[10rem]">
@@ -106,6 +110,9 @@ export default function Productdefinition() {
 
                                         <td className="py-2 px-6">
                                             {dateReformat(product.created_at)}
+                                        </td>
+                                        <td className="py-2 px-6 ">
+                                            {product.product?.name}
                                         </td>
                                         <td className="py-2 px-6 ">
                                             {product.name}

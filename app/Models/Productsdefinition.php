@@ -16,6 +16,9 @@ class Productsdefinition extends Model
     public function saleitems(){
         return $this->hasMany(Saleitem::class,'productsdefinition_id');
     }
+    public function product(){
+        return $this->belongsTo(Product::class,'product_id');
+    }
 
     public function unitPrice(): Attribute {
         return Attribute::make(

@@ -15,6 +15,7 @@ export default function Viewsaleitems(props) {
     const fetchItems = () => {
         Api.get(`/saleitems/${props.id}/view`).then(res => {
             setSaleItems(res.data.saleitems)
+            console.log(res.data)
             setIsLoading(false)
         }).catch(err => console.log(err))
     }
@@ -65,7 +66,7 @@ export default function Viewsaleitems(props) {
                     <tbody>
                         {saleItems?.map((item, i) => <tr key={i} className="bg-white dark:bg-gray-800">
                             <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.product}
+                                {item.product} <span>{item.definition}</span>
                             </th>
                             <td className="py-4 px-6">
                                 {item.quantity}

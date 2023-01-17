@@ -11,9 +11,12 @@ class Saleitem extends Model
     protected $guarded = [];
 
     
-    public function product(){
+    public function definitions(){
         return $this->belongsTo(Productsdefinition::class,'productsdefinition_id');
     }
+
+  
+
     public function sale(){
         return $this->belongsTo(sale::class,'sale_id');
     }

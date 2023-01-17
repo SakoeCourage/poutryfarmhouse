@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Getselectsitems from '../../../api/Getselectsitems'
 export default function Controlproducts(props) {
     const [data, setData] = useState([{
-        productsdefinition_id: "",
+        product_id: "",
         quantity: 0,
         description: 'from flock control'
     }])
@@ -13,7 +13,7 @@ export default function Controlproducts(props) {
     let addNewItem = (e) => {
         e.preventDefault()
         setData((ci => ci = [...ci, {
-            productsdefinition_id: "",
+            product_id: "",
             quantity: 0,
             description: 'from flock control'
         }]))
@@ -34,6 +34,7 @@ export default function Controlproducts(props) {
 
     let getStockableProducts = () =>{
         Getselectsitems.getAutoStockableProducts().then(res=>{
+            console.log(res.data)
             setProducts(res.data.products)
         }).catch(err=>console.log(err))
     } 
@@ -59,13 +60,13 @@ export default function Controlproducts(props) {
                     {data.map((item, i) => <div className={`flex items-center gap-1  salelist `} data-index={i + 1} key={i}>
                         <nav className='text-gray-500 basis-6/12 '>
                             <span className="space-y-1 text-sm">
-                                {props.errors[`products.${i}.productsdefinition_id`] && <div className=' mt-2 relative '>
-                                    <nav className="cursor-pointer z-30 font-awesome  gap-1  flex items-center absolute right-2 top-3">
+                                {props.errors[`products.${i}.product_id`] && <div className=' mt-2 relative '>
+                                    <nav className="cursor-pointer z-10 font-awesome  gap-1  flex items-center absolute right-2 top-3">
                                         <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
-                                        <span className="  text-sm text-red-400 backdrop-blur-sm bg-white/30 error ">{props.errors[`products.${i}.productsdefinition_id`]}</span>
+                                        <span className="  text-sm text-red-400 backdrop-blur-sm bg-white/30 error ">{props.errors[`products.${i}.product_id`]}</span>
                                     </nav>
                                 </div>}
-                                <select onChange={(e) => handleValueChange(i, 'productsdefinition_id', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
+                                <select onChange={(e) => handleValueChange(i, 'product_id', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
                                     <option value='' >select product</option>
                                     {products.map(product=><option value={product.id} key={product.id}>{product.name}</option>)}
                                 </select>

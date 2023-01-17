@@ -10,7 +10,7 @@ export const PillTabs = [
       icon: 'pen-to-square'
     },
     {
-      title: 'sale history',
+      title: 'history',
       element: Salehistory,
       icon: 'history'
     }

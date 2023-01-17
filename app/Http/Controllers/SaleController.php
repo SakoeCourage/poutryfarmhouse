@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Saleitem;
 use Illuminate\Http\Request;
@@ -22,22 +23,31 @@ class SaleController extends Controller
      */
     public function index()
     {
+ 
         return Inertia::render('Salesmanagement/Sale', [
-            'products' => Productsdefinition::get(['id', 'name', 'unit_price'])
+            'productsData' => DB::table('products')->join('productsdefinitions', 'products.id', '=', 'product_id')
+                ->selectRaw(
+                    'products.id as id,
+                    products.name as productname,
+                    productsdefinitions.id as definition_id,
+                    productsdefinitions.name as definition_name,
+                    ROUND(productsdefinitions.unit_price/100,2)  as unit_price,
+                    productsdefinitions.quantity_in_stock as quantity_in_stock'      
+                )
+                ->get(),
+                'products' => Product::get(['id','name'])
         ]);
     }
 
-
-
     public function saleHistory(Sale $sale)
     {
-        if(isset(request()->day)){ 
+        if (isset(request()->day)) {
             $date = date('Y-m-d H:i:s', strtotime(request()->day));
-        }else{
+        } else {
             $date = null;
         }
         return ([
-            'sales' => $sale->filter(request()->only('search','day'))->with('salerepresentative:id,name')->latest()->paginate(10)
+            'sales' => $sale->filter(request()->only('search', 'day'))->with('salerepresentative:id,name')->latest()->paginate(10)
         ]);
     }
 
@@ -58,22 +68,23 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
 
- 
-    public function store(Request $request,$sale_id = null)
+
+    public function store(Request $request, $sale_id = null)
     {
-    
-      
+
+
         $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
             'customer_contact' => ['required', 'numeric', 'digits:10'],
             'total_amount' => ['required'],
             'customer_purchases' => ['required', 'array', 'min:1'],
-            'customer_purchases.*.product_id' => ['required', 'distinct'],
+            'customer_purchases.*.product_id' => ['required', ],
+            'customer_purchases.*.definition_id' => ['required', 'distinct'],
             'customer_purchases.*.quantity' => ['required', 'numeric']
         ]);
-        
 
-        DB::transaction(function () use($request,$sale_id) {
+
+        DB::transaction(function () use ($request, $sale_id) {
             $newsale = Sale::create([
                 'customer_name' => $request->customer_name,
                 'total_amount' => $request->total_amount,
@@ -83,29 +94,23 @@ class SaleController extends Controller
             $sale_id = $newsale->id;
             $saleitems = collect($request->customer_purchases);
             $saleitems->each(function ($item, $key) use ($newsale) {
-               $newsale =  Saleitem::create([
+                $newsale =  Saleitem::create([
                     'sale_id' => $newsale->id,
-                    'productsdefinition_id' => $item['product_id'],
+                    'productsdefinition_id' => $item['definition_id'],
                     'price' => $item['price'],
                     'amount' => $item['amount'],
                     'quantity' => $item['quantity']
                 ]);
-            
-                // $productstockservice->decreasestock($newsale);
-                
+
             });
-          
-       
             return redirect()->back()->with([
                 'message' => [
                     'type' => 'sucess',
                     'text' => 'sale added',
-                    'invoice_sale_id'=> $sale_id
+                    'invoice_sale_id' => $sale_id
                 ]
             ]);
-            
         });
-       
     }
 
     /**

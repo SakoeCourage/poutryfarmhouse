@@ -85,4 +85,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/saleitems/{saleid}/view',[\App\Http\Controllers\SaleitemController::class,'show']);
     Route::get('/invoice/{saleid}/store',[\App\Http\Controllers\InvoiceController::class,'store']);
     Route::get('/invoice/{invoice}/show',[\App\Http\Controllers\InvoiceController::class,'show']);
+    Route::get('/grading/{flockcontrol}/show',[\App\Http\Controllers\GradingController::class,'show']);
+    Route::post('/grading/update',[\App\Http\Controllers\GradingController::class,'update']);
+
 });

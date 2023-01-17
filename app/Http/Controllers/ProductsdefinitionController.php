@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Productsdefinition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductsdefinitionController extends Controller
 {
@@ -14,8 +15,8 @@ class ProductsdefinitionController extends Controller
      */
     public function index()
     {
-        return([
-            'products' => Productsdefinition::latest()->paginate(15)
+        return ([
+            'products' => Productsdefinition::with(['product:id,name'])->latest()->paginate(15)
         ]);
     }
 
@@ -27,20 +28,35 @@ class ProductsdefinitionController extends Controller
      */
     public function create()
     {
-        // dd(request()->all());
+
         Request()->validate([
-            'name' => ['required','string','max:255','unique:productsdefinitions'],
-            'unit_price'=> ['required','numeric'],
-            'automated_stocking' => ['nullable','boolean']
+            'name' => ['required', 'string', 'max:255', 'unique:productsdefinitions', 'unique:products,name'],
+            'definitions' => ['required', 'array', 'min:1'],
+            'definitions.*.name' => ['required', 'string', 'max:255', 'distinct'],
+            'definitions.*.unit_price' => ['required', 'numeric'],
+            'automated_stocking' => ['nullable', 'boolean']
         ]);
-        Productsdefinition::create(Request()->all());
+        DB::transaction(function () {
+            $newProduct = \App\Models\Product::create([
+                'name'  => Request()->name
+            ]);
+
+            // dd(collect(Request()->definitions));
+                collect(Request()->definitions)->each(function($value, $key) use ($newProduct) {
+                Productsdefinition::create([
+                    'product_id' => $newProduct->id,
+                    'name' => $value['name'],
+                    'unit_price' => $value['unit_price'],
+                    'automated_stocking' => Request()->automated_stocking
+                ]);
+            });
+        });
         return redirect()->back()->with([
             "message" => [
                 'type' => 'success',
                 'text' => 'product created succesfully'
             ]
         ]);
-
     }
 
     /**

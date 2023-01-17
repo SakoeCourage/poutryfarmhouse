@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::group(['prefix' => 'flock'], function () {
         Route::get('/all',[\App\Http\Controllers\FlockController::class, 'index']);
+        Route::get('/products/grade',[\App\Http\Controllers\GradingController::class,'index']);
         Route::put('/edit/{flock}/flockcontrol', [\App\Http\Controllers\FlockControlController::class, 'update'])->middleware('permission:edit flock control');
         Route::delete('/delete/{flock}/flockcontrol', [\App\Http\Controllers\FlockControlController::class, 'destroy'])->middleware('permission:delete flock control');
         Route::get('/create', [\App\Http\Controllers\FlockController::class, 'showcreateflockform'])->middleware('permission:create flock');

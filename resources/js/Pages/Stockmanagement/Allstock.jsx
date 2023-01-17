@@ -20,108 +20,59 @@ export default function Allstock() {
         console.log(stocks)
     }, [stocks])
     
-    return (
-        <div className='w-full h-full'>
-               <AnimatePresence>
-             {(currentData.id && currentData.toggle === 'editStock') &&
-            <Rightmodalwithbackdrop onClose={()=>setCurrentData({id:null,toggle:null})} title={`Edit stock data`}>
-             <Editstock id={currentData.id} closeModal={()=>setCurrentData({id:null,toggle:null})} />
-            </Rightmodalwithbackdrop>
-             }
-             {(currentData.id && currentData.toggle === 'expenses') &&
-            <Rightmodalwithbackdrop onClose={()=>setCurrentData({id:null,toggle:null})} title={`Edit stock expenses`}>
-                    <Editexpenses id={currentData.id} closeModal={()=>setCurrentData({id:null,toggle:null})} />
-            </Rightmodalwithbackdrop>
-             }
-             </AnimatePresence>
-            <SimpleBar className="  w-full  h-full   flex flex-col justify-between ">
-                <table className="px-5 w-full text-sm text-left text-gray-500 relative flex-grow ">
-                    <thead className="text-xs text-gray-700 bg-blue-50 sticky top-0 shadow-sm z-10  ">
-                        <tr className=''>
-                            <th scope="col" className="py-3  text-center  px-2 ">
-                                <input type="checkbox" name="" id="" />
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem] flex items-center justify-between sticky left-0 backdrop-blur-md">
-                                date <span className='flex flex-col'>
-                                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('created_asc')} icon='caret-up' />
-                                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('created_desc')} icon='caret-down' />
-                                </span>
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                opening stock
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem] flex items-center justify-between">
-                                daily production
-                                <span className='flex flex-col'>
-                                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('prod_asc')} icon='caret-up' />
-                                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setsort('prod_desc')} icon='caret-down' />
-                                </span>
+    return (<div className='h-full bg-gray-100 flex '>
+        <main className='mx-auto max-w-4xl p-5  '>
+            <nav className=' flex  items-center  gap-5   '>
+                <nav className='text-slate-800 w-full flex flex-col p-8 px-10 bg-white shadow-lg rounded-lg gap-2 items-center justify-center'>
+                    <nav className='my-2 font-bold'>opening stock</nav>
+                    <nav className='font-bold text-2xl'>GHS 72,889.00</nav>
+                    <nav className='flex items-center justify-center text-sm text-green-500 gap-1'>
+                    <span>+16%</span>
+                    <FontAwesomeIcon icon="circle-arrow-up"/>
+                    </nav>
+                </nav>
+                <nav className='text-slate-800 w-full flex flex-col p-8 px-10 bg-white shadow-lg rounded-lg gap-2 items-center justify-center'>
+                    <nav className='my-2 font-bold'>daily production</nav>
+                    <nav className='font-bold text-2xl'>GHS 72,889.00</nav>
+                    <nav className='flex items-center justify-center text-sm text-green-500 gap-1'>
+                    <span>+16%</span>
+                    <FontAwesomeIcon icon="circle-arrow-up"/>
+                    </nav>
+                </nav>
+                <nav className='text-slate-800 w-full flex flex-col p-8 px-10 bg-white shadow-lg rounded-lg gap-2 items-center justify-center'>
+                    <nav className='my-2 font-bold'>closing stock</nav>
+                    <nav className='font-bold text-2xl'>GHS 72,889.00</nav>
+                    <nav className='flex items-center justify-center text-sm text-green-500 gap-1'>
+                    <span>+16%</span>
+                    <FontAwesomeIcon icon="circle-arrow-up"/>
+                    </nav>
+                </nav>
+            </nav>
+           <div className='text-gray-800 font-bold flex items-center justify-between my-10'>
+             <span className='text-lg'>Sales</span>
+             <span className='text-indigo-900 text-sm font-normal font-semibold flex items-center gap-2'><span>Manage Products </span> <FontAwesomeIcon icon="arrow-right"/> </span>
+           </div>
 
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                Expense
-                            </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                closing stock
-                            </th>
-                          {stocks.data[0]?.product_sales.map((product,i)=>{
-                                return(
-                                    <th key={i} scope="col" className="py-3 px-6 min-w-[10rem]">
-                                        {product.name}
-                                </th>
-                                )
-                          })}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {stocks.data.map((stock, i) => {
-                            return (
-                                <tr key={i} className={` border-b hover:bg-gray-200 ${i % 2 == 0 ? 'bg-gray-50' : 'white'}`}>
-
-                                    <td scope="col" className="py-3  text-center  ">
-                                        <input type="checkbox" name="" id="" />
-                                    </td>
-
-                                    <td className="py-2 px-6 sticky left-0 backdrop-blur-md z-0">
-                                        {dateReformat(stock.date)}
-                                    </td>
-                                    <td className="py-2 px-6 ">
-                                        {formatcurrency(stock.opening_stock)}
-                                    </td>
-                                    <td className="py-2 px-6 ">
-                                        {formatcurrency(stock.daily_production)}
-                                    </td>
-                                    <td className="py-2 px-6 ">
-                                        {formatcurrency(stock.expenses)}
-                                    </td>
-                                    <td className="py-2 px-6 ">
-                                        {formatcurrency(stock.closing_stock)}
-                                    </td>
-                                    {stock.product_sales.map((product,i)=>{
-                                        return(
-                                            <th key={i} scope="col" className="py-3 px-6 min-w-[10rem]">
-                                                {product.sale_quantity}
-                                        </th>
-                                        )
-                                    })}
-                            
-                                </tr>
-
-                            )
-                        })}
-
-                    </tbody>
-                </table>
-                <Simplepagination
-                    from={stocks.from}
-                    to={stocks.to}
-                    next_page_url={stocks.next_page_url}
-                    prev_page_url={stocks.prev_page_url}
-                    total={stocks.total}
-                    only='stocks'
-                />
-            </SimpleBar>
-
+           <div className='flex items-center gap-5'>
+                <nav className='bg-white shadow-lg rounded-lg p-3 w-40 h-44 flex flex-col'>
+                    <nav className='flex items-center gap-3 rounded-lg w-full p-1 px-2 bg-indigo-50'>
+                        <FontAwesomeIcon className='text-indigo-700' icon="tag"/>
+                        <span>Eggs</span>
+                    </nav> 
+                    <nav className=' my-auto flex '>
+                        <span className='text-xs text-gray-500'>GHS</span>
+                        <span className='pl-2 leading-5 font-semibold text-2xl text-gray-900'>20,000</span>
+                    </nav>
+                    <nav className=' h-auto block w-full mt-auto  flex items-center justify-between  text-semibold'>
+                    <span>40,999 <span className='text-xs text-gray-500'>units</span></span>
+                    <span className=' text-xs text-red-500'>-16.2% </span>
+                    </nav>     
+                </nav>
+           </div>
+        </main>
+        <div className='max-w-md'>
+                hello
         </div>
+    </div>
     )
 }
