@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\FeedStockService;
 use App\Models\Grading;
-
+use PhpParser\Node\Expr\Cast\Object_;
 
 class FlockControlController extends Controller
 {
@@ -92,8 +92,12 @@ class FlockControlController extends Controller
             \App\Models\Grading::create([
                 'flock_control_id' =>$newflockdata->id,
                 'is_graded' =>false,
-                'defected' => 0
+                'remainder_description'=> ''
             ]);
+            foreach($request->feeds as $feed ){
+                $feedservice->decreasestock((Object)$feed);
+            }
+            
         });
         return response('ok');
     }

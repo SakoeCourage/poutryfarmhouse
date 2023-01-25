@@ -19,7 +19,7 @@ class FlockController extends Controller
     public function index(Flock $flock)
     {
         return inertia('Flockmanagement/Allflocks', [
-            'flocks' => fn () => $flock->with(['pen:id,shed_identification_name','breed:id,name'])->filter(request()->only('sort'))
+            'flocks' => fn () => $flock->with(['pen:id,shed_identification_name','breed:id,type'])->filter(request()->only('sort'))
                 ->latest()->paginate(10)
                 ->withQueryString()
 
@@ -47,11 +47,9 @@ class FlockController extends Controller
             'shed_id'    => ['required', 'max:255'],
             'start_date' => ['required', 'date'],
             'age_of_flocks' => ['nullable', 'numeric'],
-            'vaccination' =>['nullable','string','max:255'],
-            'medication' => ['nullable','string','max:255'],
             'opening_birds' => ['required', 'numeric'],
             'breed' => ['required'],
-            'time' => ['nullable']
+           
 
         ]);
         $startdate = date('Y-m-d H:i:s', strtotime($request->start_date));
@@ -59,10 +57,8 @@ class FlockController extends Controller
             'flock_identification_name' => $data['flock_identification_name'],
             'start_date' => $startdate,
             'shed_id' => $data['shed_id'],
-            'breed_id' => $data['breed'],
-            'vaccination' => $data['vaccination'],
-            'medication' => $data['medication'],
-            'time' => $data['time']
+            'breed_id' => $data['breed']
+            
         ]);
 
         return redirect()->back()->with([

@@ -68,7 +68,7 @@ export default function Allflocks() {
                             </th>
                          
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                              in shed
+                              in pen
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                               breed
@@ -103,7 +103,7 @@ export default function Allflocks() {
                                         {flock.pen.shed_identification_name}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                       {flock.breed?.name}
+                                       {flock.breed?.type}
                                     </td>
                                     <td className="py-2 px-6 ">
                                         <nav className='text-blue-500 flex items-center gap-2'>

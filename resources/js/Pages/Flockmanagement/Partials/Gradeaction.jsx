@@ -15,7 +15,8 @@ export default function Gradeaction(props) {
     const [data, setData] = useState({
         'flock_control_id': null,
         'grading': [],
-        'defected': 0
+        'remainder_description': null,
+        'remainder_quantity': null
     })
 
     let GetProductData = () => {
@@ -35,7 +36,7 @@ export default function Gradeaction(props) {
         }
     }, [productData])
 
-    let AutoCalculateDefected = useMemo(() => {
+    let AutoCheckAnomality = useMemo(() => {
         let Total = 0
         for (const { quantity } of gradeList) {
             Total += quantity
@@ -57,34 +58,40 @@ export default function Gradeaction(props) {
 
 
     let submit = () =>{
-        if(data.defected >= 0 ){
+      
             setProcessing(true)
             Api.post('/grading/update',data).then((res)=>{
                 props.onSucess()
             }).catch(error=>{
+                console.log(error.response)
                 if(error && error?.response?.status == 422){
                     setErrors(error.response.data.errors)
                     setProcessing(false)
                 }
             })
-        }
     }
     useEffect(() => {
-      console.log(errors)
-    }, [errors])
+      console.log(data)
+    }, [data])
     
-
     return (
-        <div className=''>
+        <div className='min-h-full'>
             {isLoadingData && 
             <Dotanimation />
             }
-            <nav className=' flex items-center bg-indigo-700/60 text-white p-3 px-5 gap-2 h-12 text-xl'>
+            <nav className='flex items-center justify-between bg-indigo-700/60 text-white p-3 px-5 gap-2 h-12 text-xl'>
+                <nav className='flex items-center gap-1'>
                 <span className='p-1 px-2 rounded-full flex items-center gap-1 border border-white text-xs'>
                     <FontAwesomeIcon icon='tag' /> <span>product</span>
                 </span>
                 <nav className='w-max p-1 '>
                     <span>{productData?.name ?? ''}</span>
+                </nav>
+                </nav>
+                <nav className='text-sm'>
+                    {quantity && <nav className='text-xs'>
+                         <span className='font-bold'>{quantity} </span> items collected from flock control
+                    </nav> }
                 </nav>
             </nav>
 
@@ -93,10 +100,10 @@ export default function Gradeaction(props) {
                 <span>The following types where defined for this products</span>
             </nav>
             <nav >
-                <dt className=' max-w-md mx-auto p-1'>
+                <nav className=' max-w-md mx-auto p-1'>
                     <nav className='flex items-center flex-auto'>
-                        <dl className='basis-full text-center'>Type</dl>
-                        <dl className='basis-full text-center'>Qty Graded</dl>
+                        <nav className='basis-full text-center'>Grade</nav>
+                        <nav className='basis-full text-center'>Qty </nav>
                     </nav>
                     {Boolean(gradeList.length) && gradeList.map((definition, i) => {
                         return (<nav key={i} className='flex items-center gap-1 my-1 flex-auto'>
@@ -105,15 +112,28 @@ export default function Gradeaction(props) {
                         </nav>)
                     })}
 
-                    <nav className='flex items-center gap-1 my-1 flex-auto'>
+                    {/* <nav className='flex items-center gap-1 my-1 flex-auto'>
                         <Custominput readOnly={true} type="text" value='defected' getValue={() => void (0)} />
-                        <Custominput readOnly={true} error={(AutoCalculateDefected < 0) && 'values do not tally'} placeholder="enter quantity" type="number" number={AutoCalculateDefected} getValue={(value) => setData(cd => cd = { ...cd, 'defected': value })} />
-                    </nav>
+                        <Custominput readOnly={true} error={(AutoCheckAnomality < 0) && 'values do not tally'} placeholder="enter quantity" type="number" number={AutoCheckAnomality} getValue={(value) => setData(cd => cd = { ...cd, 'defected': value })} />
+                    </nav> */}
 
+                    <nav className='text-indigo-600 text-sm flex items-center gap-1 mb-4 p-5  bg-indigo-50'>
+                           State  if any remainder where found
+                    </nav>
+                       <nav className='flex items-center gap-1 my-1 flex-auto'>
+                        <Custominput  type="text" placeholder='enter description' error={errors['remainder_description']} getValue={(value) => setData(cd => cd = { ...cd, 'remainder_description': value })} />
+                        <Custominput   placeholder="enter quantity" type="number" error={errors['remainder_quantity']}  getValue={(value) => setData(cd => cd = { ...cd, 'remainder_quantity': value })} />
+                    </nav>
+                    {/* {AutoCheckAnomality < 0 &&
+                    <nav className='text-red-600 text-sm flex items-center gap-1 mb-4 p-5  bg-red-50 mt-10'>
+                            entries exceeds amount recorded from flock control
+                    </nav>
+                    } */}
+                  
                     <nav className='flex items-center justify-end mt-10'>
                         <Buttonsubmit processing={processing} onClick={()=>submit()} text="grade" className=" w-full" />
                     </nav>
-                </dt>
+                </nav>
 
             </nav>
 

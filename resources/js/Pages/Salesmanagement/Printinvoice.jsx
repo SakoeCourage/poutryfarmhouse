@@ -9,7 +9,7 @@ import Primarybutton from '../../components/Primarybutton'
     const {printdata, setPrintdata} = useContext(printContext)
     useEffect(() => {
         if(printdata){
-          const {invoice,products}= printdata
+          const {invoice,products} = printdata
           setInvoiceData(invoice[0])
           setProducts(products)
         }
@@ -70,7 +70,7 @@ import Primarybutton from '../../components/Primarybutton'
                     </nav>
                     {products && products.map((product,i)=>{
                       return(
-                      <nav key={i} className='flex items-center gap-1 font-semibold text-sm'>
+                      <nav key={i} className='flex items-center gap-1 font-semibold text-gray-500 text-sm'>
                         <span className=' basis-[40%]'>{product.name[0].product_name} <span className='text-text-gray-500'>{product.name[0].definition_name}</span> </span>
                         <span className=' basis-[20%]'>{formatcurrency(product.unit_price)}</span>
                         <span className=' basis-[20%] text-center' >{new Intl.NumberFormat().format(product.quantity)}</span>
@@ -80,9 +80,21 @@ import Primarybutton from '../../components/Primarybutton'
                     })}
                  
                  </nav>
+                 <nav className='flex items-center justify-end mt-10 text-gray-700 font-semibold'>
+                      <nav className='flex items-center gap-2'>
+                        <span className='text-sm'>Sub Total:</span>
+                        <span>{formatcurrency(invoiceData.sub_total)}</span>
+                      </nav>
+                 </nav>
+                 <nav className='flex items-center justify-between mt-5 p-3 rounded-md bg-gray-100'>
+                    <nav className='flex items-center w-max'>
+                        discount rate
+                    </nav>
+                    <nav className='w-max text-gray-500'> {invoiceData.discount_rate} %</nav>
+                 </nav>
                  <nav className='flex items-center justify-end mt-10 text-grey-700 font-semibold'>
-                      <nav className='flex items-center gap-1'>
-                        <span>Total</span>
+                      <nav className='flex items-center gap-2'>
+                        <span className='text-sm'>Total:</span>
                         <span>{formatcurrency(invoiceData.total_amount)}</span>
                       </nav>
                  </nav>

@@ -29,6 +29,7 @@ class InvoiceController extends Controller
                     return ([
                         'id' => $item->id,
                         'invoice_number' => $item->invoice_number,
+                        'sale_id' => $item->sale->id,
                         'date_created' => $item->created_at,
                         'customer_contact' => $item->sale->customer_contact,
                         'payment' => $item->payment_verified,
@@ -65,7 +66,7 @@ class InvoiceController extends Controller
                 ['invoice' => 'invoice already generated']
             );
         }
-        $invoice_number = IdGenerator::generate(['table' => 'invoices', 'field' => 'invoice_number', 'length' => 14, 'prefix' => 'INV-' . date('ymd')]);
+        $invoice_number = IdGenerator::generate(['table' => 'invoices', 'field' => 'invoice_number', 'length' => 14, 'prefix' => 'INV-' . date('ymd')]); 
         $newinvoice = Invoice::create([
             'sale_id' => $request->saleid,
             'invoice_number' => $invoice_number
@@ -77,6 +78,8 @@ class InvoiceController extends Controller
                         'invoice_number' => $item->invoice_number,
                         'customer_name' => $item->sale->customer_name,
                         'customer_contact' => $item->sale->customer_contact,
+                        'discount_rate' => $item->sale->discount_rate,
+                        'sub_total' => $item->sale->sub_total,
                         'total_amount' => $item->sale->total_amount,
                         'date' => $item->created_at
                     ]);
@@ -113,13 +116,17 @@ class InvoiceController extends Controller
     {
         return ([
             'invoice' => Invoice::where('id', $invoice)->with(['sale', 'paymentmethod'])->get()
+            
                 ->map(function ($item) {
                     return ([
                         'sale_representative' => User::find($item->sale->user_id)->name,
+                         'invoice_id' => $item->id,
                         'invoice_number' => $item->invoice_number,
                         'customer_name' => $item->sale->customer_name,
                         'payment_verified' => $item->payment_verified,
                         'paymentmethod' => $item->paymentmethod->method ?? $item->paymentmethod,
+                        'discount_rate' => $item->sale->discount_rate,
+                        'sub_total' => $item->sale->sub_total,
                         'amount_payable' => $item->sale->total_amount,
                         'sale_id' => $item->sale->id,
                         'sale_items' => $item->sale->saleitems->map(function ($value, $key) {
@@ -127,7 +134,13 @@ class InvoiceController extends Controller
                                 "amount" => $value->amount,
                                 'price' => $value->price,
                                 'quantity' => $value->quantity,
-                                'name' => Productsdefinition::where('id', $value->productsdefinition_id)->pluck('name')[0]
+                                'name' => Productsdefinition::where('id', $value->productsdefinition_id)->with('product')->get()
+                                ->map(function ($item) {
+                                    return ([
+                                        'definition_name' => $item->name,
+                                        'product_name' => $item->product->name
+                                    ]);
+                                })->first()
                             ]);
                         })
                     ]);
@@ -176,7 +189,6 @@ class InvoiceController extends Controller
         DB::transaction(function ()
         use ($sale, $stockservice, $request, $productStockService, $errors, $sales_collection) {
             $sale->saleitems->each(function ($value, $key) use ($productStockService, $errors, $sales_collection) {
-
                 if ($value->definitions->quantity_in_stock < $value->quantity) {
                     $errors->push([
                         'name' => $value->definitions->name,
@@ -189,7 +201,6 @@ class InvoiceController extends Controller
             });
 
             $this->handleOutofStock($errors, $sales_collection, $productStockService);
-
             $sale->invoice->update([
                 'payment_verified' => true,
                 'paymentmethod' => $request->payment_method

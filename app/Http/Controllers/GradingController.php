@@ -53,6 +53,12 @@ class GradingController extends Controller
 
     }
 
+    public function gradingHistory(){
+        return Grading::with(['history','flockcontroldata:id,production'])
+        ->whereHas('history')
+        ->latest()->paginate(10);
+    } 
+
     /**
      * Store a newly created resource in storage.
      *
@@ -113,24 +119,27 @@ class GradingController extends Controller
         $stockservice = new ProductStockService();
         $request->validate([
             'flock_control_id' => ['required'],
-            'defected' => ['required','numeric'],
+            'remainder_quantity' => ['required','numeric'],
+            'remainder_description' => ['required','string','max:255'],
             'grading' =>['required','array','min:1'],
             'grading.*.quantity' =>['required','numeric'],
-            'grading.*.productsdefinition_id' =>['required','numeric']
+            'grading.*.productsdefinition_id' =>['required','numeric'],
         ]);
         $gradeModel = Grading::where('flock_control_id','=',$request->flock_control_id)->firstorFail();
-
         DB::transaction(function()use($request,$gradeModel,$stockservice){
             $gradeModel->update([
                 'is_graded' => true,
-                'defected'=>$request->defected
+                'remainder_quantity' => $request->remainder_quantity,
+                'remainder_description' => $request->remainder_description,
+                
             ]);
             collect($request->grading)->each(function($value,$key)use($gradeModel,$request,$stockservice){
                     Gradinghistory::create([
                         'grading_id' => $gradeModel->id,
                         'productsdefinition_id' =>$value['productsdefinition_id'],
                         'quantity' => $value['quantity'],
-                        'description' => 'from product grading'
+                        'description' => 'from product grading',
+
                     ]);
                     $stockservice->increasestock((Object)$value);
             });

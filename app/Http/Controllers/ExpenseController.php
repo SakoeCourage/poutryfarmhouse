@@ -20,8 +20,8 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        return inertia('Expensesmanagement/index',[
-            'today' => Expense::whereDate('created_at',Carbon::today())->count(),
+        return inertia('Expensesmanagement/index', [
+            'today' => Expense::whereDate('created_at', Carbon::today())->count(),
             'submission_today' => Auth::user()->issuedtoday->count()
 
         ]);
@@ -29,12 +29,12 @@ class ExpenseController extends Controller
 
 
 
-    public function allExpenses(){
-        return inertia('Expensesmanagement/Allexpense',[
-            'expenses' => fn()=> Expense::with('author:id,name')->
-            filter(request()->only('sort'))
-            ->latest()->paginate(10)
-            ->withQueryString()
+    public function allExpenses()
+    {
+        return inertia('Expensesmanagement/Allexpense', [
+            'expenses' => fn () => Expense::with('author:id,name')->filter(request()->only('sort'))
+                ->latest()->paginate(10)
+                ->withQueryString()
         ]);
     }
 
@@ -45,7 +45,6 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -57,37 +56,36 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'description' => ['required','max:255'],
-            'items' => ['required','array','min:1'],
-            'items.*.item'=> ['required','string','distinct'],
-            'items.*.amount'=> ['required']
+            'description' => ['required', 'max:255'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.item' => ['required', 'string', 'distinct'],
+            'items.*.amount' => ['required']
         ]);
-      
-      
 
-        DB::transaction(function()use($request){
+
+
+        DB::transaction(function () use ($request) {
             $newexpense = Expense::create([
                 'description' => $request->description,
                 'total' => $request->total,
                 'user_id' => $request->user()->id,
                 'status' => 2
-            ]); 
+            ]);
             $item_collection = collect($request->items);
-            $item_collection->each(function($expense,$key) use($newexpense)
-            {  
+            $item_collection->each(function ($expense, $key) use ($newexpense) {
                 Expenseitem::create([
                     'expense_id' => $newexpense->id,
                     'item' => $expense['item'],
                     'amount' => $expense['amount']
                 ]);
-            }); 
+            });
         });
-         return redirect()->back()->with([
-            'message' =>[
-                'type'=> 'sucess',
+        return redirect()->back()->with([
+            'message' => [
+                'type' => 'sucess',
                 'text' => 'expense submitted'
             ]
-         ]);
+        ]);
     }
 
     /**
@@ -97,35 +95,47 @@ class ExpenseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Expense $expense)
-    {   
-        return([
+    {
+        return ([
             'expense' => $expense,
-            'author' =>$expense->author->only(['id','name']),
+            'author' => $expense->author->only(['id', 'name']),
             'items' => $expense->expenseitems
         ]);
-        
     }
 
 
-    public function action(Expense $expense,$action){
-          
+    public function action(Expense $expense, $action)
+    {
+
         $stock = new StockService();
-        if($action === 'accept'){
-            $expense->update([
-                'status' => 1
-            ]);
-            $stock->decreaseproduction($expense);
-        }elseif($action === 'decline'){
-            $expense->update([
-                'status' => 0
+
+        try {
+            if ($action === 'accept') {
+                if ($stock->decreaseproduction($expense)) {
+                    $expense->update([
+                        'status' => 1
+                    ]);
+                }
+            } elseif ($action === 'decline') {
+                $expense->update([
+                    'status' => 0
+                ]);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message' => [
+                    'type' => 'sucess',
+                    'text' => $e->getMessage()
+                ]
             ]);
         }
+
         return redirect()->back()->with([
-            'message'=>[
+            'message' => [
                 'type' => 'sucess',
                 'text' => 'action taken'
             ]
-            ]);
+        ]);
     }
 
 
@@ -134,13 +144,12 @@ class ExpenseController extends Controller
      * 
      * @param \App\Models\Stock 
      */
-    public function getexpensesfromstockid(Stock $stock){
-   
-        return([
+    public function getexpensesfromstockid(Stock $stock)
+    {
+
+        return ([
             'expenses' => $stock->expenses
         ]);
-     
-
     }
 
     /**
@@ -162,13 +171,13 @@ class ExpenseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Expense $expense)
-    {   
+    {
         $request->validate([
-            'name' => ['required','max:255'],
-            'amount' => ['required','numeric']
+            'name' => ['required', 'max:255'],
+            'amount' => ['required', 'numeric']
         ]);
         $expense->update($request->all());
-        return response('ok',200);
+        return response('ok', 200);
     }
 
     /**
@@ -179,8 +188,8 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-       if($expense->delete()){
-        return response('ok',200);
-       }
+        if ($expense->delete()) {
+            return response('ok', 200);
+        }
     }
 }

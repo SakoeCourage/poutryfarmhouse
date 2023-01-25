@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gradings', function (Blueprint $table) {
+        Schema::create('receipts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('flock_control_id');
-            $table->boolean('is_graded');
-            $table->integer('remainder_quantity')->default(0);
-            $table->string('remainder_description');
             $table->timestamps();
+            $table->foreignId('invoice_id');
+            $table->string('receipt_number');
+            $table->foreignId('sale_id');
         });
     }
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gradings');
+        Schema::dropIfExists('receipts');
     }
 };

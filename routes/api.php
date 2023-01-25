@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,11 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
             return \App\Models\Paymentmethods::get(['id','method']);
     });
 
-    Route::get('/roles/all', function () {
-        return ([
-            'roles' => \Spatie\Permission\Models\Role::get(['id', 'name'])->except('3')
-        ]);
-    });
+    Route::get('/roles/all', [\App\Http\Controllers\RolesController::class,'index']);
 
 
     Route::get('/jobpositions/all', function () {
@@ -53,24 +50,29 @@ Route::group(['middleware' => 'auth'], function () {
         ]);
     });
 
-
+    Route::get('/permission/all',function(){
+        return([
+            'permissions' => \Spatie\Permission\Models\Permission::all()
+        ]);
+    });
 
     Route::post('flock/control/create', [\App\Http\Controllers\FlockControlController::class, 'create'])->middleware('permission:create flock control');
 
     Route::post('/stock/productstock/add',[\App\Http\Controllers\ProductstockController::class, 'addToStock']);
+    Route::get('/stock/get', [\App\Http\Controllers\StockController::class, 'getStockPerGivenDay']);
     Route::post('/stock/productstock/remove',[\App\Http\Controllers\ProductstockController::class, 'removeFromStock']);
     Route::get('/product/history/{product}',[\App\Http\Controllers\ProductstockController::class, 'getProductHistory']);
     Route::get('/product/all',[\App\Http\Controllers\ManageProductsController::class,'allProducts']);
     Route::get('/product/stockable',[\App\Http\Controllers\ManageProductsController::class,'stockableProducts']);
     Route::get('/product/get/{id}',[\App\Http\Controllers\ManageProductsController::class,'show']);
-    
+    Route::get('/grading/history',[\App\Http\Controllers\GradingController::class, 'gradingHistory']);
     Route::get('/feed/all',[\App\Http\Controllers\FeedController::class,'index']);
     Route::get('/feed/select/all',[\App\Http\Controllers\FeedController::class,'feedsToSelect']);
     Route::get('/feed/get/{id}',[\App\Http\Controllers\FeedController::class,'show']);
     Route::get('/feed/history/{feed}',[\App\Http\Controllers\FeedController::class, 'getFeedHistory']);
     Route::post('/stock/feedstock/add',[\App\Http\Controllers\FeedController::class, 'addToStock']);
     Route::post('/stock/feedstock/remove',[\App\Http\Controllers\FeedController::class, 'removeFromStock']);
-   
+    
     Route::get('/definitions/product/all',[\App\Http\Controllers\ProductsdefinitionController::class, 'index'])->middleware('role:Super Admin');
     Route::get('/breed/all',[\App\Http\Controllers\BreedController::class, 'index']);
     Route::get('/breed/all/select',[\App\Http\Controllers\BreedController::class,'breedsForSelect']);
@@ -87,5 +89,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/invoice/{invoice}/show',[\App\Http\Controllers\InvoiceController::class,'show']);
     Route::get('/grading/{flockcontrol}/show',[\App\Http\Controllers\GradingController::class,'show']);
     Route::post('/grading/update',[\App\Http\Controllers\GradingController::class,'update']);
-
+    Route::get('/receipt/process/{invoice_id}/{sale_id}',[\App\Http\Controllers\ReceiptController::class,'store']);
+    Route::post('/stock/create/new',[\App\Http\Controllers\StockController::class,'create']);
 });

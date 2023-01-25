@@ -14,7 +14,8 @@ class GradinghistoryController extends Controller
      */
     public function index()
     {
-        //
+    
+        
     }
 
     /**

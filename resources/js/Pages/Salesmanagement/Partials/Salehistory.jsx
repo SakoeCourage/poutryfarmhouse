@@ -75,7 +75,7 @@ export default function Salehistory() {
                                 customer contact
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                amount paid
+                                amount payable
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 sale representative

@@ -10,6 +10,7 @@ import { useDebounce } from '@react-hook/debounce'
 import Rightmodalwithbackdrop from '../../components/Rightmodalwithbackdrop'
 import { AnimatePresence } from 'framer-motion'
 import Edituser from './Edituser'
+import Api from '../../api/Api'
 
 export function SearchBar(props) {
     const [searchKey, setsearchKey] = useState(null)
@@ -48,6 +49,9 @@ export default function Allusers() {
          currentUserId : null,
          currentUsername: null,
     }  )
+
+ 
+
     return (
         <div className='w-full h-full z-50'>
              <AnimatePresence>

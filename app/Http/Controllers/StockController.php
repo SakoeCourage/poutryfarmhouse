@@ -9,9 +9,13 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreStockRequest;
 use App\Models\Feed;
+use App\Models\FlockControl;
+use App\Models\Grading;
 use App\Models\Product;
 use App\Models\Productsdefinition;
+use App\Models\Sale;
 use App\Models\Saleitem;
+use App\Services\StockService;
 use Carbon\Carbon;
 
 
@@ -23,33 +27,12 @@ class StockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Stock $stock)
-    {       
-        return Inertia('Stockmanagement/Allstock',[
-                'stocks' =>fn () => $stock->filter(request()->only('sort'))
-                ->latest()->paginate(10)
-                ->withQueryString()
-                -> through(fn($cstock)=>[
-                    'id'=> $cstock->id,
-                    'date' => $cstock->created_at,
-                    'opening_stock' => $cstock->opening_stock/100,
-                    'closing_stock' => $cstock->closing_stock/100,
-                    'daily_production'=>$cstock->daily_production/100,
-                    'expenses' =>Expense::query()->where('status',1)->whereDate('created_at',$cstock->created_at)->get()->sum('total'),
-                    'product_sales' => Productsdefinition::get()->map(function($item)use($cstock){
-                        return([
-                            'id' => $item->id,
-                            'name' => $item->name,
-                            'sale_quantity' => Saleitem::query()->where('productsdefinition_id',$item->id)
-                            ->whereDate('created_at',$cstock->created_at)
-                            ->sum('quantity')
-                        ]);
+ 
 
-                }),
-                    ]),
-                'filters' => request()->only('sort')
-              
-        ]);
+    public function index()
+    {
+        
+        return Inertia('Stockmanagement/Allstock');
     }
 
     /**
@@ -57,8 +40,19 @@ class StockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(StoreStockRequest $request)
-    {
+    public function create(Request $request)
+    {   
+        $request->validate([
+            'amount' => ['required','numeric']
+        ]);
+
+        Stock::create([
+            'opening_stock' => $request->amount*100,
+            'daily_production' => 0,
+            'closing_stock' => $request->amount*100
+        ]);
+
+        return response('ok');
         
     }
 
@@ -68,18 +62,94 @@ class StockController extends Controller
 
     public function showcreateform()
     {
-        return Inertia('Stockmanagement/Newstock',[
-            'product_stock'=>[
+        return Inertia('Stockmanagement/Newstock', [
+            'product_stock' => [
                 'value_in_stock' => Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock')),
                 'number_of_products' => Product::count(),
                 'quantity_of_products' => Productsdefinition::sum('quantity_in_stock')
             ],
-            'feed_stock'=>[
+            'feed_stock' => [
                 'value_in_stock' => Feed::sum(DB::raw('(cost_per_kg/100) * (quantity_in_stock/100)')),
                 'number_of_feeds' => Feed::count(),
                 'quantity_of_feeds_left' => Feed::sum(DB::raw('quantity_in_stock/100'))
             ]
         ]);
+    }
+
+
+    public function getStockPerGivenDay(Stock $stock)
+    {
+       if(Stock::all()->isEmpty()){
+        return [
+            'empty_stock' => true
+        ];
+       }
+
+        new StockService();
+        $productSale = DB::table('invoices')->where('payment_verified', '=', 1)
+            ->whereDate('invoices.updated_at', Request()->date ?? Carbon::today())
+            ->join('sales', 'invoices.sale_id', '=', 'sales.id')
+            ->join('saleitems', 'sales.id', '=', 'saleitems.sale_id')
+            ->join('productsdefinitions', 'saleitems.productsdefinition_id', '=', 'productsdefinitions.id')
+            ->join('products', 'productsdefinitions.product_id', '=', 'products.id')
+            ->selectRaw('invoices.*,productsdefinitions.name as definition_name,products.name as name,productsdefinitions.unit_price, saleitems.*
+        ')->get();
+        $mappedProductSales = $productSale
+            ->groupBy(['name', 'definition_name'])
+            ->map(function ($collection, $ckey) use ($productSale) {
+                return ($collection->mapWithKeys(function ($group, $key) use ($productSale, $ckey) {
+                    return [
+                        $key => [
+                            'units' =>  $group->sum('quantity'),
+                            'amount' => $group->sum('amount') / 100
+                        ]
+                    ];
+                })
+                );
+            });
+
+            $usuableGradedProducts = DB::table('gradinghistories')
+            ->whereDate('gradinghistories.updated_at', Request()->date ?? Carbon::now())
+            ->join('productsdefinitions','gradinghistories.productsdefinition_id','=','productsdefinitions.id')
+            ->join('products', 'productsdefinitions.product_id', '=', 'products.id')
+            ->selectRaw('productsdefinitions.name as definition_name,products.name as name,gradinghistories.quantity as quantity')
+            ->get()
+            ->groupBy(['name','definition_name']);
+         
+            $usuableGradedProducts=$usuableGradedProducts->map(function ($collection, $ckey)  {
+                return ($collection->mapWithKeys(function ($group, $key) use ( $ckey) {
+                    return [
+                        $key => [
+                            'quantity' =>  $group->sum('quantity'),
+                        ]
+                    ];
+                })
+                );
+            });
+
+
+        return [
+           
+            'stocks' =>  $stock->whereDate('created_at', Request()->date ?? Carbon::now())
+                ->get()
+                ->map(fn ($cstock) => [
+                    'opening_stock' => $cstock->opening_stock / 100,
+                    'closing_stock' => $cstock->closing_stock / 100,
+                    'daily_production' => $cstock->daily_production / 100,
+                    'expenses' => Expense::query()
+                    ->where('status', 1)
+                    ->whereDate('created_at', Request()->date ?? Carbon::now())
+                    ->get()->sum('total'),
+                ])->first(),
+            'sales' => $mappedProductSales,
+            'usablegradedProducts' => $usuableGradedProducts,
+            'defected_unusable' => Grading::where('is_graded',1)
+            ->whereDate('updated_at',Request()->date ?? Carbon::now())
+            ->sum('remainder_quantity'),
+            'dead' => FlockControl::whereDate('record_date',Request()->date ?? Carbon::now())->sum('dead'),
+            'missing' => FlockControl::whereDate('record_date',Request()->date ?? Carbon::now())->sum('missing'),
+            'culled' => FlockControl::whereDate('record_date',Request()->date ?? Carbon::now())->sum('culled')
+        ];
     }
 
     /**
@@ -101,8 +171,8 @@ class StockController extends Controller
      */
     public function show(Stock $stock)
     {
-        return([
-            'stock' => $stock->only(['birds_sold','closing_stock','opening_stock','daily_production','broken','eggs_sold','other_defects']),
+        return ([
+            'stock' => $stock->only(['birds_sold', 'closing_stock', 'opening_stock', 'daily_production', 'broken', 'eggs_sold', 'other_defects']),
             'expenses' => $stock->expenses
         ]);
     }
@@ -156,13 +226,13 @@ class StockController extends Controller
      */
     public function destroy(Stock $stock)
     {
-        if($stock->delete()){
+        if ($stock->delete()) {
             return redirect()->back()->with([
                 "message" => [
                     'type' => 'success',
                     'text' => 'record deleted'
                 ]
-    
+
             ]);
         }
     }

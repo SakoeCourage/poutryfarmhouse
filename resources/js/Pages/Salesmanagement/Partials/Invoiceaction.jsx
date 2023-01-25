@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo,useContext } from 'react'
 import Primarybutton from '../../../components/Primarybutton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Buttonsubmit from '../../../components/Buttonsubmit'
@@ -9,6 +9,7 @@ import { formatcurrency } from '../../../api/Util'
 import Getselectsitems from '../../../api/Getselectsitems'
 import Modal from '../../../components/Modal'
 import SimpleBar from 'simplebar-react'
+import { printReceiptContext } from '../context/printReceiptContext'
 
 
 
@@ -134,6 +135,7 @@ export default function Invoiceaction(props) {
     const [invoiceData, setInvoiceData] = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const [outOfStock, setOutOfStock] = useState(null);
+    const {setReceiptData} = useContext(printReceiptContext)
 
     const { data, reset, setData, processing, post, errors, clearErrors } = useForm({
         'payment_method': null,
@@ -154,7 +156,10 @@ export default function Invoiceaction(props) {
 
     const submit = () => {
         post('/invoice/process', {
-            onSuccess: () => props.closeModal(),
+            onSuccess: () => {
+                setReceiptData({invoice_id:invoiceData.invoice_id,sale_id:invoiceData.sale_id})
+                props.closeModal()
+            },
         })
     }
 
@@ -217,9 +222,10 @@ export default function Invoiceaction(props) {
                     <tbody>
                     {isLoading &&  <SaleListLoader />}
                     {isLoading &&  <SaleListLoader />}
-                        {invoiceData.sale_items?.map((item, i) => <tr key={i} className="bg-white dark:bg-gray-800">
-                            <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.name}
+                        {invoiceData.sale_items?.map((item, i) => <tr key={i} className="bg-white ">
+                            <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap flex items-center gap-2 ">
+                                <span>{item.name.product_name} </span>
+                               <span className='text-gray-500'> {item.name.definition_name}</span>
                             </th>
                             <td className="py-4 px-6">
                                 {item.quantity}
@@ -235,13 +241,22 @@ export default function Invoiceaction(props) {
 
 
                     </tbody>
-                    <tfoot>
-                        <tr className="font-semibold text-gray-900 dark:text-white">
-                            <th scope="row" className="py-3 px-6 text-base">Total</th>
-                            <td className="py-3 px-6">{formatcurrency(invoiceData.amount_payable ?? 0)}</td>
-                        </tr>
-                    </tfoot>
+                 
                 </table>
+                <div className=' mt-5'>
+                        <div className="font-semibold text-gray-900 flex items-center justify-between bg-indigo-50 ">
+                            <div  className="py-3 px-6 text-sm text-gray-700">Sub Total</div>
+                            <div className="py-3 px-6">{formatcurrency(invoiceData.sub_total ?? 0)}</div>
+                        </div>
+                        <div className="font-semibold text-gray-900 flex items-center justify-between bg-indigo-50 ">
+                            <div  className="py-3 px-6 text-sm text-gray-700">Sale discount</div>
+                            <div className="py-3 px-6">{invoiceData.discount_rate} %</div>
+                        </div>
+                        <div className="font-semibold text-gray-900 flex items-center justify-between bg-indigo-50 ">
+                            <div  className="py-3 px-6 text-base">Total</div>
+                            <div className="py-3 px-6">{formatcurrency(invoiceData.amount_payable ?? 0)}</div>
+                        </div>
+                    </div>
             </div>
             
 
@@ -256,8 +271,6 @@ export default function Invoiceaction(props) {
                 {data.payment_method && <Buttonsubmit onClick={submit} processing={processing} className="rounded-none py-3 mt-5 self-end" text="done" />}
 
             </nav>}
-
-
 
             {!isLoading && Boolean(invoiceData.payment_verified) ? <nav className=' self-center flex items-center justify-center gap-1 p-2 border text-sm border-green-800 text-green-800 w-max  rounded-full'>
                 <span>Payment Verified</span> <FontAwesomeIcon icon='check' /> 

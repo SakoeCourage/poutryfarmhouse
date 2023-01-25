@@ -10,69 +10,7 @@ import Buttonsubmit from '../../components/Buttonsubmit'
 
 
 
-export function BreadList(props) {
-  const inputNewBreedref = useRef()
-  const [newBreed, setNewBreed] = useState('')
-  const [breedList, setBreedList] = useState([])
 
-  let addtoBreedList = () => {
-    setBreedList((values) => values = [...values, newBreed])
-    console.log(breedList)
-    inputNewBreedref.current.value = ''
-    setNewBreed('')
-  }
-  let removeItemat = (i) => {
-    setBreedList((List) => List.filter((Listitem, index) => index !== i))
-  }
-  let addnewBreadList = () => {
-    if (newBreed) {
-      addtoBreedList()
-    }
-    else {
-      return
-    }
-  }
-
-
-  useEffect(() => {
-    setBreedList([])
-  }, [props.reset])
-  useEffect(() => {
-    props.getData(breedList)
-  }, [breedList])
-
-  useEffect(() => {
-    window.addEventListener("process-flockcreate-submit", () => {
-      console.log('event received')
-    });
-  }, [])
-
-
-  return <div className='my-3' >
-    <label htmlFor="" className='font-medium text-sm'>Breed type</label>
-    <div onClick={() => { inputNewBreedref.current.focus() }} className="text-gray-400 grid grid-cols-3 pt-2 rounded-md  bg-indigo-100/50 ring-indigo-200 ring-offset-1 focus-within:ring-2 transition-all ease-out duration-150">
-      <ul className="  col-span-3 px-1 min-h-[10rem]  w-full   flex  py-1 gap-2 flex-wrap">
-        {breedList.map((breed, i) => <li onDoubleClick={() => removeItemat(i)} key={i} className="border-gray-300 select-none cursor-pointer border shadow-sm min-h-min leading-tight flex items-center gap-1 bg-transparent text-red-400 p-1 px-3 rounded-md h-min text-sm relative hover:shadow-md">
-          {breed}
-          <FontAwesomeIcon onClick={() => { removeItemat(i) }} icon='times' className='text-red-500' />
-        </li>)}
-      </ul>
-      <div className=" col-span-3 flex items-center w-full  pb-1 rounded-md " >
-        <div className='w-full text-sm px-1'>
-          <nav className='flex items-center bg-white gap-3 border border-none focus-within:border-none rounded px-1  leading-6 w-full'>
-            <FontAwesomeIcon icon='kiwi-bird' className='text-gray-500' />
-            <input ref={inputNewBreedref} onChange={e => setNewBreed(e.target.value)} onKeyUp={(e) => { e.key == 'Enter' && addnewBreadList() }} className=" grow focus:border-none focus:outline-none py-2" type='text' placeholder='Enter breed name here click add' />
-            <span onClick={addnewBreadList} className=' cursor-pointer border p-1 rounded-md hover:text-indigo-500 bg-indigo-50 hover:bg-indigo-100'>add</span>
-          </nav>
-        </div>
-      </div>
-
-
-
-    </div>
-  </div>
-
-}
 export default function Createflock(props) {
   const [resetBreeds, setresetBreeds] = useState(false)
   const [sheds, setSheds] = useState([])
@@ -108,8 +46,7 @@ export default function Createflock(props) {
       console.log(sheds)
     }).then(() => {
       selectApi.getAllBreeds().then(res => {
-        console.log(res.data.breeds?.data)
-        setBreeds(res.data.breeds?.data)
+        setBreeds(res.data.breeds)
       })
     })
 
@@ -139,11 +76,11 @@ export default function Createflock(props) {
             <Custominput type="number" error={errors.opening_birds} getValue={(value) => setData('opening_birds', value)} label='opening birds' />
           </nav>
       
-          {/* <BreadList reset={resetBreeds} getData={(data) => setData('breed', data)} /> */}
+    
           <nav className='flex flex-col md:flex-row gap-10 items-center'>
             <span className="space-y-1 text-sm w-full">
               <div className='flex items-center justify-between relative'>
-                <label htmlFor="lastname" className="font-medium">breed name</label>
+                <label htmlFor="lastname" className="font-medium">breed type</label>
                 {errors.shed_id && <div className=' mt-2'>
                   <nav className="cursor-pointer font-awesome  gap-1  flex items-center absolute right-2 inset-y-0">
                     <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
@@ -154,7 +91,7 @@ export default function Createflock(props) {
               <select onChange={(e) => setData('breed', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded leading-6 w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
                 <option value=' ' >select breed</option>
                 {breeds.map((breed) => <option
-                  key={breed.id} value={breed.id}>{breed.name}
+                  key={breed.id} value={breed.id}>{breed.type}
                 </option>
                 )}
               </select>

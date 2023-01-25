@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useForm } from '@inertiajs/inertia-react'
 import Buttonsubmint from '../../components/Buttonsubmit'
 import selectApi from '../../api/Getselectsitems'
-import { BreadList } from './Createflock'
+
 
 
 
@@ -54,7 +54,6 @@ export default function Editflock() {
             <Datepicker getdateData={() => null} disabled={true} />
             </span>
             <Custominput error={errors.flock_name} getValue={(value)=>setData('flock_name',value)} label='flock name' />
-            <BreadList reset={resetBreeds} getData={(data) => setData('breed_types', data)} />
             <div className='flex flex-col md:flex-row gap-10 items-center'>
             <span className="space-y-1 text-sm w-full">
               <div className='flex items-center justify-between relative'>

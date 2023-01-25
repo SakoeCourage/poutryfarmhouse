@@ -21,9 +21,9 @@ export default function Layout({ children }) {
         // client width
         let c_w = sideBarRef.current.getBoundingClientRect().width
         if(c_w === 0){
-            sideBarRef.current.style.width = "290px"
+            sideBarRef.current.style.minWidth  = "290px"
         }else{
-            sideBarRef.current.style.width = "0"
+            sideBarRef.current.style.minWidth = "0"
         }
        
     }
@@ -33,7 +33,7 @@ export default function Layout({ children }) {
                 <AnimatePresence>
                 <Toastnotification />
                 </AnimatePresence>
-            <span className='w-0 md:w-[290px] transition-[width] duration-300 ease-in-out  ' ref={sideBarRef} >
+            <span className='min-w-0 md:min-w-[290px] transition-[min-width] duration-300 ease-in-out  ' ref={sideBarRef} >
                 <Sidebar />
             </span>
             <span className='bg-white grow h-full overflow-x-hidden flex flex-col' id='documentPage'>

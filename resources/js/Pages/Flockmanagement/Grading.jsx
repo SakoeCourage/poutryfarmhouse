@@ -7,6 +7,7 @@ import Simplepagination from '../../components/Simplepagination'
 import Slideover from '../../components/Slideover'
 import Gradeaction from './Partials/Gradeaction'
 import { Inertia } from '@inertiajs/inertia'
+import Gradinghistory from './Partials/Gradinghistory'
 export default function Grading() {
     const [flockControlId, setFlockControlId] = useState(null)
     const { records, graded, ungraded, all, filter } = usePage().props
@@ -25,7 +26,10 @@ export default function Grading() {
             {flockControlId && <Slideover onClose={()=>setFlockControlId(null)}  title="Action">
                 <Gradeaction onSucess={()=>handleOnsucess()} id={flockControlId} />
             </Slideover>}
-            <nav className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full p-5 max-w-xl">
+            {/* <Slideover>
+                <Gradinghistory/>
+            </Slideover> */}
+            <nav className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full p-5 max-w-xl">
                 <button onClick={() => setfilter('all')} className={`flex items-center justify-center gap-1 p-3 border rounded-md shadow-md   min-h-[5rem] ${Boolean(filter.filter === 'all') && 'bg-red-100/20'} `}>
                     <span className='p-1 px-3 bg-red-300 text-sm text-white rounded-full '>{new Intl.NumberFormat('en', { notation: 'compact' }).format(all)}   </span>
                     <span>All</span>
@@ -37,6 +41,10 @@ export default function Grading() {
                 <button onClick={() => setfilter('graded')} className={`flex items-center justify-center gap-1 p-3 border rounded-md shadow-md  min-h-[5rem] ${Boolean(filter.filter === 'graded') && 'bg-red-100/20'}  `}>
                     <span className='p-1 px-3 bg-red-300 text-sm text-white rounded-full '>{new Intl.NumberFormat('en', { notation: 'compact' }).format(graded)}  </span>
                     <span>Graded</span>
+                </button>
+                <button  className={`flex items-center justify-center gap-1 p-3 border rounded-md shadow-md  min-h-[5rem] ${Boolean(filter.filter === 'graded') && 'bg-red-100/20'}  `}>
+                 <span>
+                        Grading History</span>
                 </button>
             </nav>
             <div>

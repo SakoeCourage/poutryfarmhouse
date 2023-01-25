@@ -20,6 +20,12 @@ class Sale extends Model
             get: fn ($amount) => $amount / 100,
             set: fn ($amount) => $amount * 100,
         );
+    } 
+    public function subTotal(): Attribute {
+        return Attribute::make(
+            get: fn ($amount) => $amount / 100,
+            set: fn ($amount) => $amount * 100,
+        );
     }
     public function saleitems(){
         return $this->hasMany(Saleitem::class,'sale_id');

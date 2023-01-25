@@ -76,6 +76,8 @@ class SaleController extends Controller
         $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
             'customer_contact' => ['required', 'numeric', 'digits:10'],
+            'sub_total' => ['required'],
+            'discount_rate' => ['nullable'],
             'total_amount' => ['required'],
             'customer_purchases' => ['required', 'array', 'min:1'],
             'customer_purchases.*.product_id' => ['required', ],
@@ -89,6 +91,8 @@ class SaleController extends Controller
                 'customer_name' => $request->customer_name,
                 'total_amount' => $request->total_amount,
                 'customer_contact' => $request->customer_contact,
+                'sub_total' => $request->sub_total,
+                'discount_rate' => $request->discount_rate ?? 0,
                 'user_id' => Auth::user()->id
             ]);
             $sale_id = $newsale->id;

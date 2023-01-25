@@ -13,6 +13,10 @@ class Grading extends Model
     public function flockcontroldata(){
         return $this->belongsTo(FlockControl::class,'flock_control_id');
     }
+    
+    public function history(){
+        return $this->hasOne(Gradinghistory::class,'grading_id','id');
+    }
     public function scopeFilter($query, array $filters){
         $query->when($filters['sort'] ?? false, function($query,$sort){
             if($sort === 'created_asc'){
@@ -31,4 +35,7 @@ class Grading extends Model
             }
     });
     }
+
+
+    
 }

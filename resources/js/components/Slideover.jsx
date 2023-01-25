@@ -30,7 +30,8 @@ export default function Slideover(props) {
             transition: {
               type: 'spring',
               mass: 0.1,
-              damping: 8
+              damping: 8,
+               
             }
           }}
           exit={{ opacity: 0, x: '100vw' }}

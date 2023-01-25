@@ -20,7 +20,7 @@ export let sidebarRoutes =
     links: [{
         title: 'pens',
         link: '/pen/all',
-        abilities: 'edit shed'
+        abilities: 'edit pen'
 
     }]
 },
@@ -57,7 +57,7 @@ export let sidebarRoutes =
     icon: "arrow-trend-up",
     Role: ['Super Admin','admin', 'data entry operator'],
     links: [{
-        title: 'Tabular view',
+        title: 'Daily overview',
         link: '/stock/all',
         abilities: 'edit stock'
 
@@ -104,16 +104,18 @@ export let sidebarRoutes =
 {   title: "User management",
     Role: ['Super Admin'],
     icon: "user-group",
-    links: [{
-        title: ' Create user',
+    links: [
+        {
+            title: 'All users',
+            link: '/user/all',
+            abilities: 'delete user'
+        },
+        {
+        title: ' Onboard a user',
         link: '/user/create',
         abilities: 'create user'
     },
-    {
-        title: 'Users',
-        link: '/user/all',
-        abilities: 'delete user'
-    },
+ 
     
 ]
 },

@@ -5,6 +5,7 @@ import Discountdefinition from './Discountdefinition';
 import Userdefinition from './Userdefinition';
 import FeedDefinition from './FeedDefinition';
 import BreedDefinition from './BreedDefinition';
+import RolesAndPermissions from './RolesAndPermissions';
 import {
   Tabs,
   TabsHeader,
@@ -16,30 +17,24 @@ function Tablist() {
   const [currentValue,setCurrentValue]= useState('pd');
   const data = [
     {
-      label: "product definition",
+      label: "Product Definition",
       value: "pd",
       comp: <Productdefinition/>
     },
     {
-      label: "feed definition",
+      label: "Feed Definition",
       value: "fd",
       comp: <FeedDefinition/>
     },
     {
-      label: "breed definition",
+      label: "Breed Definition",
       value: "bd",
       comp: <BreedDefinition/>
     },
     {
-      label: "discount definition",
-      value: "dd",
-      comp: <Discountdefinition />
-    },
-
-    {
-      label: "user definition",
-      value: "ud",
-      comp: <Userdefinition />
+      label: "Roles and Permissions",
+      value: "rp",
+      comp: <RolesAndPermissions />
     }
   ];
 

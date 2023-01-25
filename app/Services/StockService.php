@@ -42,9 +42,13 @@ class StockService
     public function decreaseproduction(Expense $expense)
     {
         $current_daily_production = $this->todaysStock->first()->daily_production / 100;
+        $current_closing_stock = $this->todaysStock->first()->closing_stock / 100;
         $current_opening_stock = $this->todaysStock->first()->opening_stock / 100;
         $newvalue = (($current_daily_production + $current_opening_stock) - $expense->total) * 100;
-        $this->todaysStock->update([
+        if($current_closing_stock < $expense->total){
+            throw new \ErrorException('Failed not enough funds');
+        }
+        return $this->todaysStock->update([
             'closing_stock' => $newvalue
         ]);
     }

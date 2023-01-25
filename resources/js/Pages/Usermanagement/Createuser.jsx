@@ -5,6 +5,10 @@ import getSelectItems from '../../api/Getselectsitems'
 import { useForm } from '@inertiajs/inertia-react'
 import Buttonsubmint from '../../components/Buttonsubmit'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Api from '../../api/Api'
+
+
+
 
 
 
@@ -59,6 +63,16 @@ export default function Createuser() {
     useEffect(() => {
         fetchData()
     }, [])
+
+    useEffect(() => {
+        Api.get('/permission/all')
+        .then(res=>{
+          console.log(res.data)
+        }).catch(err=>{
+          console.log(err)
+        })
+      }, [])
+      
  
 
 
@@ -92,7 +106,7 @@ export default function Createuser() {
                     <div className='mt-5'>
                         <Custominput reset={resetform} error={errors.identification_number} getValue={(value) => setData('identification_number', value)} label='identification number'  />
                     </div>
-                    <div className='flex gap-10 mt-5'>
+                    <div className='flex flex-wrap gap-10 mt-5'>
                         <span className="space-y-1 text-sm">
                             <div className='flex items-center justify-between relative'>
                                 <label htmlFor="userrole" className="font-medium">user's role</label><abbr className='text-red-300' title='defines users role on the system'>*</abbr>
@@ -105,13 +119,14 @@ export default function Createuser() {
                             </div>
                             <select onChange={(e) => setData('role', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded leading-6 w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
                                 <option value='' >select role</option>
+                                <option onClick={()=>alert('hello')} >select role</option>
                                 {roles && roles.map((role) => <option key={role.id} value={role.name}>{role.name}</option>)
                                 }
                             </select>
                         </span>
                         <span className="space-y-1 text-sm">
                             <div className='flex items-center justify-between relative'>
-                                <label htmlFor="lastname" className="font-medium">job position</label>
+                                <label htmlFor="lastname" className="font-medium">job title</label>
                                 {errors.jobposition && <div className=' mt-2'>
                                     <nav className="cursor-pointer font-awesome  gap-1  flex items-center absolute right-2 inset-y-0">
                                         <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
@@ -120,10 +135,14 @@ export default function Createuser() {
                                 </div>}
                             </div>
                             <select onChange={(e) => setData('jobposition', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded leading-6 w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150"  type="text" placeholder="Enter user first name" >
-                                <option value='' >select job position</option>
+                                <option value='' >select job title</option>
                                 {jobPositions && jobPositions.map((position, i) => <option key={position.id} value={position.position}>{position.position} </option>)
                                 }
                             </select>
+                        </span>
+
+                        <span>
+
                         </span>
                     </div>
                     <div className='flex w-full  mt-7 justify-end'>

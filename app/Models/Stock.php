@@ -16,6 +16,7 @@ class Stock extends Model
     }
 
 
+  
 
     public function scopeFilter($query, array $filters){
         $query->when($filters['sort'] ?? false, function($query,$sort){

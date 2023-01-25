@@ -9,4 +9,11 @@ class Gradinghistory extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function grading(){
+        return $this->belongsTo(Grading::class,'grading_id');
+    } 
+    public function productDefinition(){
+        return $this->hasMany(productDefinition::class,'productsdefinition_id');
+    } 
 }
