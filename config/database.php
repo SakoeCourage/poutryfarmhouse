@@ -68,7 +68,7 @@ return [
             'host' => env('STACKHERO_MARIADB_HOST'),
             'port' => 3306,
             'username' => env('STACKHERO_MARIADB_USER'),
-            'password' => env('STACKHERO_MARIADB_PASSWORD'),
+            'password' => env('STACKHERO_MARIADB_ROOT_PASSWORD'),
             'database' => env('STACKHERO_MARIADB_DB'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
