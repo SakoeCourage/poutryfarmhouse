@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AcessControl } from "../authorization/AcessControl";
+import { AcessControl,AccessByPermission } from "../authorization/AcessControl";
 import { Link } from '@inertiajs/inertia-react'
 import {useState,useMemo,useEffect,useRef}  from 'react'
 import React from 'react'
@@ -28,7 +28,7 @@ export default function Sidebaritem(props) {
             </nav>
             <ul ref={listitems} className={`overflow-hidden transition-[height] duration-500 ${isColapsed ? 'h-0' : 'h-auto'}`}>
                 {props.links.map((link, i) =>
-                <AcessControl key={i} abilities={[link.abilities]}>
+                <AccessByPermission key={i} abilities={link.abilities}>
                     <li >
                         <Link
                             href={link.link}
@@ -36,7 +36,7 @@ export default function Sidebaritem(props) {
                             {url === link.link && <FontAwesomeIcon className="absolute left-2" size="xs" icon='caret-right'/>} <span>{link.title}</span>
                         </Link>
                     </li>
-                 </AcessControl>
+                 </AccessByPermission>
                 )}
             </ul>
 

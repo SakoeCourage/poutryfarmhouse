@@ -36,7 +36,7 @@ class BreedController extends Controller
     public function create(Request $request)
     {   
         $data=$request->validate([
-            'type' =>['required','string','max:255']
+            'type' =>['required','string','max:255','unique:breeds,type']
         ]);
         Breed::create($data);
         return redirect()->back()->with([

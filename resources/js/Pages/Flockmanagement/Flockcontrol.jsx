@@ -65,7 +65,7 @@ export default function Flockcontrol(props) {
 
     useEffect(() => {
         if(data.flock_name){
-          let shed = flocknames.find((item,i)=>item.flock_identification_name == data.flock_name)
+          let shed = flocknames.find((item,i)=>item.id == data.flock_name)
             setCurrentPen(shed.shed_id )
         }
     }, [data])
@@ -143,7 +143,7 @@ export default function Flockcontrol(props) {
                 <select onChange={(e) => setData('flock_name',e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded leading-6 w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
                   <option value='' >select flock name</option>
                   {flocknames.map((flock )=><option 
-                  key={flock.id} value={flock.flock_identification_name}>{flock.flock_identification_name}
+                  key={flock.id} value={flock.id}>{flock.flock_identification_name}
                   </option>
                   )}
                   

@@ -12,10 +12,13 @@ let Api = axios.create({
 })
 
 Api.interceptors.response.use(function(response) {
+    console.log(response)
     return response
 }, function(error) {
     if (error.response.status === 401 || error.response.status === 419) {
         Inertia.get('/');
+    } else if (error.response.status === 403) {
+        alert('not enough priviledges')
     } else {
         return Promise.reject(error);
     }

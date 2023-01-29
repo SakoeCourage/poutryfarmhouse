@@ -3,7 +3,7 @@ import Api from "./Api";
 
 export default {
     async getRoles() {
-        return Api.get("/roles/all");
+        return Api.get("/roles/select");
     },
     async getJobPositions() {
         return Api.get("/jobpositions/all");

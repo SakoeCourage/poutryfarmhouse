@@ -42,10 +42,6 @@ export default function Grading() {
                     <span className='p-1 px-3 bg-red-300 text-sm text-white rounded-full '>{new Intl.NumberFormat('en', { notation: 'compact' }).format(graded)}  </span>
                     <span>Graded</span>
                 </button>
-                <button  className={`flex items-center justify-center gap-1 p-3 border rounded-md shadow-md  min-h-[5rem] ${Boolean(filter.filter === 'graded') && 'bg-red-100/20'}  `}>
-                 <span>
-                        Grading History</span>
-                </button>
             </nav>
             <div>
 

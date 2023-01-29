@@ -66,12 +66,26 @@ export default function Allflocks() {
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 flock name
                             </th>
-                         
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                opening birds
+                            </th>
+                                
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                               in pen
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                               breed
+                            </th>
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                dead
+                            </th>
+                            
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                               culled
+                            </th>
+                            
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                               missing
                             </th>
                             
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
@@ -97,13 +111,25 @@ export default function Allflocks() {
                                     {flock.flock_identification_name}
 
                                     </td>
-                                   
+                                    <td className="py-2 px-6 ">
+                                       {flock.opening_birds}
+                                    </td>
                                  
                                     <td className="py-2 px-6 ">
                                         {flock.pen.shed_identification_name}
                                     </td>
+                                 
                                     <td className="py-2 px-6 ">
                                        {flock.breed?.type}
+                                    </td>
+                                    <td className="py-2 px-6 ">
+                                    {flock.dead}
+                                    </td>
+                                    <td className="py-2 px-6 ">
+                                    {flock.culled}
+                                    </td>
+                                    <td className="py-2 px-6 ">
+                                    {flock.missing}
                                     </td>
                                     <td className="py-2 px-6 ">
                                         <nav className='text-blue-500 flex items-center gap-2'>

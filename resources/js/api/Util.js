@@ -25,7 +25,24 @@ export function setfilter(filter) {
 }
 
 export function formatcurrency(amount) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'GHS' }).format(amount)
+    let value = 0;
+    if (amount >= 100000000) {
+        value = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'GHS', notation: 'compact' }).format(amount)
+    } else {
+        value = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'GHS' }).format(amount)
+    }
+
+    return value
+}
+export function formatnumber(num) {
+    let value = 0;
+    if (num >= 100000000) {
+        value = new Intl.NumberFormat('en-US', { notation: 'compact' }).format(num)
+    } else {
+        value = new Intl.NumberFormat('en-US').format(num)
+    }
+
+    return value
 }
 
 export function dateReformat(date) {

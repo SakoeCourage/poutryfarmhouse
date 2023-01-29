@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
                 // FlockControlSeeder::class,
                 // BreedSeeder::class,
                 // ProductsdefinitionSeeder::class,
-                // PaymentmethodsSeeder::class,
+                PaymentmethodsSeeder::class,
                 // FeedSeeder::class,
                 // ProductSeeder::class,
         ]);

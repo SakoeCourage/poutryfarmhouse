@@ -6,8 +6,9 @@ use App\Models\FlockControl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\FeedStockService;
+use App\Services\MortalityService;
 use App\Models\Grading;
-use PhpParser\Node\Expr\Cast\Object_;
+
 
 class FlockControlController extends Controller
 {
@@ -19,14 +20,14 @@ class FlockControlController extends Controller
     public function index(FlockControl $data)
     {
         return Inertia('Flockmanagement/Flockcontroldata',[
-            'controldata' =>fn () => $data->filter(request()->only('sort'))
+            'controldata' =>fn () => $data->with('flocks')->filter(request()->only('sort'))
             ->latest()->paginate(15)
             ->withQueryString()
             -> through(fn($cdata)=>[
                 'id'=> $cdata->id,
                 'date_created' => $cdata->created_at,
                 'record_date' => $cdata->record_date,
-                'flock_name' => $cdata->flock_name,
+                'flock_name' => $cdata->flocks->flock_identification_name,
                 'shed' => $cdata->relatedshed->shed_identification_name,
                 'eggs_produced' => $cdata->eggs_produced,
                 'feeds_consumed' => $cdata->feeds_consumed,
@@ -52,7 +53,9 @@ class FlockControlController extends Controller
      */
     public function create(Request $request)
     {
-            
+           
+        
+     
         $request->validate([
             'record_date' => ['required', 'date'],
             'flock_name' => ['required', 'string', 'max:255'],
@@ -71,24 +74,26 @@ class FlockControlController extends Controller
             'time' => ['date_format:H:i']
             
         ]);
-      
+        
         $record_date = date('Y-m-d H:i:s', strtotime($request->record_date));
         $feedservice = new FeedStockService();
+        $mortality =  new MortalityService($request);
 
-        DB::transaction(function()use($request,$record_date,$feedservice,){
+        DB::transaction(function()use($request,$record_date,$feedservice,$mortality){
             $newflockdata = FlockControl::Create([
                 'record_date' => $record_date,
-                'flock_name' => $request->flock_name,
+                'flock_id' => $request->flock_name,
                 'shed_id' => $request->pen_identification,
                 'production' => $request->products,
                 'feeds' => $request->feeds,
-                'dead' => $request->dead ?? null,
                 'vaccination' => $request->vaccination ?? null,
                 'time' => $request->time ?? null,
                 'medication' => $request->medication ?? null,
-                'missing' => $request->missing ?? null,
-                'culled' => $request->culled ?? null,
-            ]);     
+                'dead' => $mortality->handleDeadMortality(),
+                'missing' => $mortality->handleMissingMortality(),
+                'culled' => $mortality->handleCulledMortality()
+            ]);  
+
             \App\Models\Grading::create([
                 'flock_control_id' =>$newflockdata->id,
                 'is_graded' =>false,
@@ -166,9 +171,7 @@ class FlockControlController extends Controller
             'shed_id' => $request->shed_identification,
             'eggs_produced' => $request->eggs_produced,
             'feeds_consumed' => $request->feeds_consumed,
-            'dead' => $request->dead ?? null,
-            'missing' => $request->missing ?? null,
-            'culled' => $request->culled ?? null,
+      
         ]);
         return redirect()->back()->with([
             "message" => [

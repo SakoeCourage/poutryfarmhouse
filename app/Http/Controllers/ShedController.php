@@ -16,7 +16,16 @@ class ShedController extends Controller
     public function index()
     {
        return Inertia('Shedmanagement/Allshed',[
-                'sheds' => Shed::latest()->paginate(10)
+                'sheds' => Shed::with('flocks')->latest()->paginate(10)
+                ->through(function($item){
+                    return[
+                        'created_at' =>$item->created_at,
+                        'shed_identification_name'=>$item->shed_identification_name,
+                        'number_of_flocks' => $item->flocks->count(),
+                        'number_of_birds' => $item->flocks->sum('opening_birds')
+                    ];
+                })
+                
        ]);
     }
 
@@ -34,11 +43,11 @@ class ShedController extends Controller
             
             $data = $request->validate([
                 'identification_name' => ['required','string','max:255','unique:sheds,shed_identification_name'],
-                'number_of_flocks' => ['nullable','numeric']
+               
             ]);
             $shed->create([
                 'shed_identification_name' => $data['identification_name'],
-                'number_of_flocks' => $data['number_of_flocks']
+            
             ]);
             return back()->with([
                 "message" => [

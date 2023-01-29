@@ -19,6 +19,9 @@ class RolesSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
+        //dashboard
+        Permission::create(['name'=> 'view dashboard']);
+
         //expense
         Permission::create(['name' => 'create expense']);
         Permission::create(['name' => 'authorize expense']);
@@ -62,7 +65,8 @@ class RolesSeeder extends Seeder
 
         //Sytem definition
         Permission::create(['name' => 'define system data']);
-
+         // Super Admin
+        Role::create(['name' => 'Super Admin']);
 
         // operator role
         $operator = Role::create(['name' => 'data entry operator']);
@@ -74,7 +78,7 @@ class RolesSeeder extends Seeder
             'create flock', 'edit flock', 'delete flock', 'compare flock', 'create flock control', 'edit flock control',
             'delete flock control', 'create stock data', 'manage stock data', 'delete stock data', 'create pen', 'edit pen', 'delete pen'
         ]);
-        // Super Admin
-        Role::create(['name' => 'Super Admin']);
+       
+        
     }
 }

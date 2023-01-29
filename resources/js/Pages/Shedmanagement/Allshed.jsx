@@ -45,6 +45,9 @@ export default function Allshed() {
                                 number of flocks
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                number of birds
+                            </th>
+                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 Action
                             </th>
 
@@ -67,6 +70,9 @@ export default function Allshed() {
                                     </td>
                                     <td className="py-2 px-6 ">
                                         {new Intl.NumberFormat().format(shed.number_of_flocks)}
+                                    </td>
+                                    <td className="py-2 px-6 ">
+                                        {new Intl.NumberFormat().format(shed.number_of_birds)}
                                     </td>
                                     <td className="py-2 px-6 ">
                                         <nav className='text-blue-500 flex items-center gap-2'>

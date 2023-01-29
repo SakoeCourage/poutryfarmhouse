@@ -17,6 +17,24 @@ export function AcessControl({ abilities, children }) {
     }
 
 }
+export function AccessByPermission({abilities, children}){
+    const { auth } = usePage().props
+    const { permissions, roles } = auth?.user
+    // console.log({'abilities':abilities})
+    // console.log({'permissions':permissions})
+    if (roles.includes('Super Admin')) {
+        return <div> {children}</div>;
+    }
+    if (!roles.includes('Super Admin')) {
+        for (const ability of abilities) {
+            if (permissions.some((c_permission, i) => c_permission === ability)) {
+                return <div> {children}</div>;
+            }
+        }
+
+    }
+
+}
 
 export function AccessByRole({ requiredRoles, children }){
     const { auth } = usePage().props

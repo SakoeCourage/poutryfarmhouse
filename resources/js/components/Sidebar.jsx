@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from '@inertiajs/inertia-react'
 import Sidebaritem from "./Sidebaritem";
 import { usePage } from "@inertiajs/inertia-react";
-import { AccessByRole } from "../authorization/AcessControl";
+import { AccessByRole,AccessByPermission } from "../authorization/AcessControl";
 import { sidebarRoutes } from "./SidebarRoutes";
 import SimpleBar from "simplebar-react";
 
@@ -17,6 +17,18 @@ function Sidebarlink(props) {
 }
 export default function Sidebar() {
     const { url, component } = usePage()
+    const getAllRequiredAbilitiesPerRoute = (route) =>{
+            let currentAbilities = [];
+            if(route.hasOwnProperty('abilities')){
+                currentAbilities = [...currentAbilities,...route.abilities]
+            }
+            if(route.hasOwnProperty('links')){
+                for(const {abilities} of route.links){
+                    currentAbilities = [...currentAbilities,...abilities]
+                }
+            }
+            return currentAbilities;
+    }
     return (
         <SimpleBar className="bg-[#0E121F]/90 h-screen text-gray-100  w-full">
             <ul className="w-full flex flex-col gap-3">
@@ -25,14 +37,14 @@ export default function Sidebar() {
                         <span>Poultry</span>
                         <span className='text-sm block text-center'>Farm House</span>
                     </h1></nav>
-                {sidebarRoutes.map((route, i) => <AccessByRole key={i} requiredRoles={route.Role}>
+                {sidebarRoutes.map((route, i) => <AccessByPermission key={i} abilities={getAllRequiredAbilitiesPerRoute(route)}>
                 <li className="w-full"  >
                     {!route.links ?
                         <Sidebarlink title={route.title} link={route.link} icon={route.icon} /> :
                         <Sidebaritem title={route.title} icon={route.icon} links={route.links} />
                     }
                 </li>
-                </AccessByRole>
+                </AccessByPermission>
                 )}
             </ul>
 

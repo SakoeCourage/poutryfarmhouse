@@ -14,7 +14,7 @@ export default function Layout({ children }) {
     
     const sideBarRef=useRef(null)
     useEffect(() => {
-        // console.log(auth?.user)
+        console.log(auth)
     }, [auth])
 
     let toggleSidebar = () =>{

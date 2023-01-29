@@ -47,6 +47,8 @@ export default function Createflock(props) {
     }).then(() => {
       selectApi.getAllBreeds().then(res => {
         setBreeds(res.data.breeds)
+      }).catch(err=>{
+        console.log(err.response)
       })
     })
 

@@ -28,13 +28,7 @@ export default function Gradeaction(props) {
             setIsLoadingData(false)
         }).catch(err => console.log(err))
     }
-    useEffect(() => {
-        if (productData?.definitions) {
-            productData.definitions.forEach(function (value) {
-                setGradeList(cd => cd = [...cd, { 'productsdefinition_id': value.id, 'name': value.name, 'quantity': '','description': 'from product grading' }])
-            })
-        }
-    }, [productData])
+
 
     let AutoCheckAnomality = useMemo(() => {
         let Total = 0
@@ -55,6 +49,13 @@ export default function Gradeaction(props) {
     useEffect(() => {
         GetProductData()
     }, [])
+        useEffect(() => {
+        if (productData?.definitions) {
+            productData.definitions.forEach(function (value) {
+                setGradeList(cd => cd = [...cd, { 'productsdefinition_id': value.id, 'name': value.name, 'quantity': '','description': 'from product grading' }])
+            })
+        }
+    }, [productData])
 
 
     let submit = () =>{
@@ -122,7 +123,7 @@ export default function Gradeaction(props) {
                     </nav>
                        <nav className='flex items-center gap-1 my-1 flex-auto'>
                         <Custominput  type="text" placeholder='enter description' error={errors['remainder_description']} getValue={(value) => setData(cd => cd = { ...cd, 'remainder_description': value })} />
-                        <Custominput   placeholder="enter quantity" type="number" error={errors['remainder_quantity']}  getValue={(value) => setData(cd => cd = { ...cd, 'remainder_quantity': value })} />
+                        <Custominput   placeholder="enter quantity" type="number" disabled={true} number={AutoCheckAnomality}  getValue={(value) => setData(cd => cd = { ...cd, 'remainder_quantity': value })} />
                     </nav>
                     {/* {AutoCheckAnomality < 0 &&
                     <nav className='text-red-600 text-sm flex items-center gap-1 mb-4 p-5  bg-red-50 mt-10'>

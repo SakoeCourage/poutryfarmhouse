@@ -19,7 +19,7 @@ const TextField = ((props) => {
     , [props.reset])
   return (
     <div className={`w-full space-y-1 ${props.disabled && 'pointer-events-none opacity-50'}`}>
-      {props.label && <nav>   <label htmlFor="lastname" className="font-medium text-sm">{props.label ?? 'label'}</label> {props.required && <abbr className='text-red-300' title='this field is requred'>*</abbr>}
+      {props.label && <nav>   <label htmlFor="lastname" className="font-medium text-sm capitalize ">{props.label ?? 'label'}</label> {props.required && <abbr className='text-red-300' title='this field is requred'>*</abbr>}
       </nav>
       }
       <nav className={`block relative border border-gray-200 focus-within:border-none rounded leading-6 w-full ring-offset-1 focus-within:ring-2 transition-all ease-out duration-150 ${props.readOnly && 'focus-within:none border-none ring-0 ring-offset-0 outline-none'}`} >

@@ -40,25 +40,23 @@ class FlockController extends Controller
     }
 
     public function createnewflock(Request $request)
-    {
-
+    {  
         $data = $request->validate([
             'flock_identification_name' => ['required', 'max:255', 'unique:flocks'],
             'shed_id'    => ['required', 'max:255'],
-            'start_date' => ['required', 'date'],
-            'age_of_flocks' => ['nullable', 'numeric'],
-            'opening_birds' => ['required', 'numeric'],
             'breed' => ['required'],
-           
-
+            'start_date' => ['required', 'date'],
+            'opening_birds' => ['required', 'numeric'],
+            'age_of_flocks' => ['nullable', 'numeric'],
         ]);
         $startdate = date('Y-m-d H:i:s', strtotime($request->start_date));
         Flock::create([
             'flock_identification_name' => $data['flock_identification_name'],
+            'age_of_flocks' => $data['age_of_flocks'],
             'start_date' => $startdate,
             'shed_id' => $data['shed_id'],
-            'breed_id' => $data['breed']
-            
+            'breed_id' => $data['breed'],
+            'opening_birds' =>$data['opening_birds'] 
         ]);
 
         return redirect()->back()->with([

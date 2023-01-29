@@ -62,8 +62,6 @@ class ExpenseController extends Controller
             'items.*.amount' => ['required']
         ]);
 
-
-
         DB::transaction(function () use ($request) {
             $newexpense = Expense::create([
                 'description' => $request->description,

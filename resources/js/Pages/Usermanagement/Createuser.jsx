@@ -119,7 +119,6 @@ export default function Createuser() {
                             </div>
                             <select onChange={(e) => setData('role', e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded leading-6 w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
                                 <option value='' >select role</option>
-                                <option onClick={()=>alert('hello')} >select role</option>
                                 {roles && roles.map((role) => <option key={role.id} value={role.name}>{role.name}</option>)
                                 }
                             </select>

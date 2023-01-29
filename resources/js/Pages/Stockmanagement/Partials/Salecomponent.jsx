@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
+import { formatnumber } from '../../../api/Util'
 
 export default function Salecomponent(props) {
     const [showAllProducts, setShowAllProducts] = useState(false)
@@ -31,13 +32,13 @@ export default function Salecomponent(props) {
                 <span>{props.productname}</span>
             </nav>
             <nav className=' my-auto flex '>
-                <span className='text-xs text-gray-500'>GHS</span>
+                <span className='text-xs text-gray-500'>units</span>
                 <span className='pl-2 leading-5 font-semibold text-2xl text-gray-900 text-center'>
-                    {new Intl.NumberFormat().format(amount)}
+                    {formatnumber(units)}
                 </span>
             </nav>
             <nav className=' h-auto  w-full mt-auto  flex items-center justify-between  text-semibold'>
-                <span>{new Intl.NumberFormat().format(units)}<span className='text-xs text-gray-500'>units</span></span>
+                <span>{formatnumber(units)}<span className='text-xs text-gray-500'>units</span></span>
 
             </nav>
         </nav>
@@ -59,13 +60,13 @@ export default function Salecomponent(props) {
                         <span>{definition[0]}</span>
                     </nav>
                     <nav className=' my-auto flex '>
-                        <span className='text-xs text-gray-500'>GHS</span>
+                        <span className='text-xs text-gray-500'>units</span>
                         <span className='pl-2 leading-5 font-semibold text-2xl text-gray-900'>
-                            {new Intl.NumberFormat().format(definition[1].amount)}
+                            {formatnumber(definition[1].units)}
                         </span>
                     </nav>
                     <nav className=' h-auto  w-full mt-auto  flex items-center justify-between  text-semibold'>
-                        <span>{new Intl.NumberFormat().format(definition[1].units)} <span className='text-xs text-gray-500'>units</span></span>
+                        <span>{formatnumber(definition[1].units)} <span className='text-xs text-gray-500'>units</span></span>
 
                     </nav>
                 </nav>

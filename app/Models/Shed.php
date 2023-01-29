@@ -9,4 +9,8 @@ class Shed extends Model
 {
     use HasFactory;
     protected $guarded=[];
+
+    public function flocks(){
+        return $this->hasMany(Flock::class,'shed_id');
+    }
 }

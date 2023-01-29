@@ -15,7 +15,17 @@ class FlockControl extends Model
         return $this->belongsTo(Shed::class,'shed_id');
     }
 
+    public function flocks(){
+        return  $this->belongsTo(Flock::class,'flock_id');
+    }
+
     public function feeds():Attribute{
+        return Attribute::make(
+            get: fn ($value) => json_decode($value, true),
+            set: fn ($value) => json_encode($value),
+        );
+    }
+    public function ageOfFlocks():Attribute{
         return Attribute::make(
             get: fn ($value) => json_decode($value, true),
             set: fn ($value) => json_encode($value),

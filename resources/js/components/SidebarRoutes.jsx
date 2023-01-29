@@ -4,102 +4,102 @@ export let sidebarRoutes =
         title: 'Dashboard',
         icon: 'grip',
         link: '/',
-        Role: ['Super Admin','admin']
+        Role: ['Super Admin'],
+        abilities: ['view dashboard']
     },
     {
         title: 'Expense',
         icon: 'credit-card-alt',
         link: '/expenses',
-        Role: ['Super Admin','admin']
+        Role: ['Super Admin'],
+        abilities: ['create expense','authorize expense']
     },
     
 {
     title: "Pen management",
     icon: "shop",
-    Role: ['Super Admin','admin'],
+    Role: ['Super Admin'],
     links: [{
         title: 'pens',
         link: '/pen/all',
-        abilities: 'edit pen'
+        abilities: ['create pen','edit pen','delete pen']
 
     }]
 },
     {
     title: "Flock management",
     icon: "list-check",
-    Role: ['Super Admin','admin', 'data entry operator'],
+    Role: ['Super Admin'],
     links: [
  
     {
         title: 'Flocks',
         link: '/flock/all',
-        abilities: 'create flock'
+        abilities: ['create flock','edit flock','delete flock']
     },
     {
         title: 'Flock control data',
         link: '/flock/control/data',
-        abilities: 'edit flock control'
+        abilities: ['create flock control','edit flock control','delete flock control']
     },
     {
         title: 'Compare flock',
         link: '/flock/compare',
-        abilities: 'compare flock'
+        abilities: ['compare flock']
     },
     {
         title: 'Grading',
         link: '/flock/products/grade?filter=ungraded',
-        abilities: 'compare flock'
+        abilities:['grade flock control data']
     }
     ],
 },
 {
     title: "Stock management",
     icon: "arrow-trend-up",
-    Role: ['Super Admin','admin', 'data entry operator'],
+    Role: ['Super Admin'],
     links: [{
-        title: 'Daily overview',
-        link: '/stock/all',
-        abilities: 'edit stock'
+        title: 'Overview',
+        link: '/stock/sale',
+        abilities: ['create stock data']
 
     },
     {
         title: 'Manage stock',
         link: '/stock/add',
-        abilities: 'create stock'
+        abilities: ['create stock data','manage stock data','delete stock data']
     }]
 },
 {   title: "Sale management",
-    Role: ['Super Admin','admin'],
-    icon: "tags",
+    Role: ['Super Admin'],
+    icon: "bag-shopping",
     links: [{
             title: 'Product orders',
             link: '/salemanagement/newsale',
-            abilities: 'create user'
+            abilities: ['generate product order']
     },
     {
         title: 'Make payment',
         link: '/invoice/all/?filter=unpaid',
-        abilities: 'create user'
+        abilities: ['process payments']
     },
     {
         title: 'Payments history',
         link: '/payments/all',
-        abilities: 'delete user'
+        abilities: ['process payments']
     }
 ]
 },
 {
     title: "Report",
     icon: "file-lines",
-    Role: ['Super Admin','admin', 'data entry operator'],
+    Role: ['Super Admin'],
     links: [{
-        title: 'Tabular',
-        link: '/report/tabular'
+        title: 'new report',
+        link: '/report/new',
+        abilities: ['generate report']
     },
-    {
-        title: 'Grapical',
-        link: '/report/graphical'
-    }]
+   ]
 },
 {   title: "User management",
     Role: ['Super Admin'],
@@ -108,12 +108,12 @@ export let sidebarRoutes =
         {
             title: 'All users',
             link: '/user/all',
-            abilities: 'delete user'
+            abilities: ['create user','delete user','edit user']
         },
         {
         title: ' Onboard a user',
         link: '/user/create',
-        abilities: 'create user'
+        abilities: ['create user']
     },
  
     
@@ -123,7 +123,8 @@ export let sidebarRoutes =
     title: 'System definition',
     icon: 'gear',
     link: '/system/definitions',
-    Role: ['Super Admin','admin']
+    Role: ['Super Admin'],
+    abilities:['define system data']
 },
 
 ];

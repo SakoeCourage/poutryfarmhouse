@@ -30,6 +30,7 @@ export default function Allstock() {
     const [usablegradedProducts, setusablegradedProducts] = useState(null)
     const { newdata } = usePage().props
     const [sales, setSales] = useState([])
+    const [feedStock,setFeedStock] = useState([])
     const [currentDate, setCurrentDate] = useState(new Date())
     const [isLoading, setIsLoading] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null)
@@ -54,13 +55,14 @@ export default function Allstock() {
 
     useEffect(() => {
         fetchPerDate()
+        console.log(currentDate)
     }, [currentDate])
 
 
     function fetchPerDate() {
         setIsLoading(true)
         Api.get(`/stock/get?date=${dayjs(currentDate).format('YYYY-MM-DD')}`).then(res => {
-            const { sales, stocks, defected_unusable, culled, dead, missing, usablegradedProducts, empty_stock } = res.data
+            const { sales, stocks,feed_stock, defected_unusable, culled, dead, missing, usablegradedProducts, empty_stock } = res.data
             console.log(res.data)
             setSales(sales)
             setStocks(stocks)
@@ -68,6 +70,7 @@ export default function Allstock() {
             setdefected(defected_unusable)
             setmissing(missing)
             setculled(culled)
+            setFeedStock(feed_stock)
             setusablegradedProducts(usablegradedProducts)
             setIsEmpty(empty_stock)
             setIsLoading(false)
@@ -84,11 +87,14 @@ export default function Allstock() {
         return Total
     }
 
+
     useEffect(() => {
-        if (usablegradedProducts) {
-            console.log(Object.keys(usablegradedProducts))
+        if (feedStock) {
+            console.log()
+            // Object.values(feedStock).reduce((acc,cv)=>acc+cv,0)
         }
-    }, [usablegradedProducts])
+    }, [feedStock])
+    
 
 
 
@@ -118,13 +124,13 @@ export default function Allstock() {
 
                 <nav className='text-slate-800 min-h-[12rem] min-w-[13rem] relative w-full flex flex-col p-8 px-10  custom_box_shadow rounded-lg gap-2 items-center justify-center'>
                     <nav className='absolute z-0 isolate   inset-0 opacity-30 blur-[1px] rounded-md shadow-md bg-gradient-to-br from-blue-200 via-indigo-300 to-indigo-400'></nav>
-                    <nav className='my-2 font-bold'>opening stock</nav>
+                    <nav className='my-2 font-bold'>Accrued Sales  </nav>
                     <nav className='font-bold text-xl text-center'>{formatcurrency(stocks?.opening_stock ?? 0)}</nav>
                 </nav>
                 <nav className='text-slate-800 min-h-[12rem] min-w-[13rem] relative w-full flex flex-col p-8 px-10 bg-white custom_box_shadow rounded-lg gap-2 items-center justify-center'>
                     <nav className='absolute z-0 isolate   inset-0 opacity-30 blur-[1px] rounded-md shadow-md bg-gradient-to-br from-indigo-200 via-emerald-300 to-emerald-400'></nav>
 
-                    <nav className='my-2 font-bold'>sale production</nav>
+                    <nav className='my-2 font-bold'>Today's Sale</nav>
                     <nav className='font-bold text-xl text-center'>{formatcurrency(stocks?.daily_production ?? 0)}</nav>
                     <nav className='flex items-center justify-center text-sm text-green-900 gap-1'>
 
@@ -132,7 +138,7 @@ export default function Allstock() {
                 </nav>
                 <nav className='text-slate-800 min-h-[12rem] min-w-[13rem] w-full relative flex flex-col p-8 px-10 bg-white custom_box_shadow rounded-lg gap-2 items-center justify-center'>
                     <nav className='absolute z-0 isolate   inset-0 opacity-30 blur-[1px] rounded-md shadow-md bg-gradient-to-br from-indigo-200 via-sky-300 to-sky-400'></nav>
-                    <nav className='my-2 font-bold'>closing stock</nav>
+                    <nav className='my-2 font-bold'> Current Sale Bal </nav>
                     <nav className='font-bold text-xl text-center'>{formatcurrency(stocks?.closing_stock ?? 0)}</nav>
                 </nav>
                 <nav className='text-slate-800 min-h-[12rem] min-w-[13rem] relative w-full flex flex-col p-8 px-10 bg-white custom_box_shadow rounded-lg gap-2 items-center justify-center'>
@@ -148,6 +154,16 @@ export default function Allstock() {
                         <Primarybutton onClick={() => setCurrentProduct(item)} className="text-xs cursor-pointer z-20" text="view details" />
                     </nav>)
                 })}
+                {feedStock && <nav  className='text-indigo-800 min-h-[12rem] min-w-[13rem] relative w-full flex flex-col p-8 px-10 bg-white custom_box_shadow rounded-lg gap-2 items-center justify-center'>
+                        {/* <nav className='absolute top-2 right-2 text-muted' >Feeds At this day</nav> */}
+                        <nav className='absolute z-0 isolate   inset-0 opacity-30 blur-[1px] rounded-md shadow-md bg-gradient-to-br from-blue-200 via-indigo-300 to-indigo-400'></nav>
+                        <nav className='my-2 font-bold'>FeedStock</nav>
+                        <nav className='font-bold text-xl text-center'>
+                            {Object.values(feedStock).reduce((acc,cv)=>acc+cv,0)}kg
+                        </nav>
+                        {/* <Primarybutton onClick={() => setCurrentProduct(item)} className="text-xs cursor-pointer z-20" text="view details" /> */}
+                    </nav>
+                }
 
                 <nav className='text-slate-800 min-h-[12rem] min-w-[13rem] relative w-full flex flex-col p-8 px-10 bg-white custom_box_shadow rounded-lg gap-2 items-center justify-center'>
                     <nav className='absolute z-0 isolate   inset-0 opacity-30 blur-[1px] rounded-md shadow-md bg-gradient-to-br from-red-200 via-pink-300 to-pink-400'></nav>
@@ -170,7 +186,7 @@ export default function Allstock() {
             </nav>}
 
             <div className='text-gray-800 font-bold flex items-center justify-between my-10'>
-                <span className='text-lg'>Sales</span>
+                <span className='text-lg'>Product sales quantity</span>
                 <span className='text-indigo-900 text-sm  font-semibold flex items-center gap-2'><span>Manage Products </span> <FontAwesomeIcon icon="arrow-right" /> </span>
             </div>
             <div className='flex items-center gap-5 flex-wrap'>

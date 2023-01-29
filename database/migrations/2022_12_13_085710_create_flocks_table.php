@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('flock_identification_name');
             $table->string('age_of_flocks')->nullable();
             $table->bigInteger('opening_birds')->nullable();
+            $table->bigInteger('dead')->nullable()->default(0);
+            $table->bigInteger('culled')->nullable()->default(0);
+            $table->bigInteger('missing')->nullable()->default(0);
             $table->foreignId('breed_id');
             $table->foreignId('shed_id');
             $table->dateTime('start_date')->nullable();

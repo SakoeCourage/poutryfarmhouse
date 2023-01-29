@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->dateTime('record_date');
-            $table->string('flock_name');
+            $table->foreignId('flock_id');
             $table->foreignId('shed_id');
             $table->json('production')->nullable();
             $table->json('feeds')->nullable();

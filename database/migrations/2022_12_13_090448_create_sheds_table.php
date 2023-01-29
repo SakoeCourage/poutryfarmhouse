@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('sheds', function (Blueprint $table) {
             $table->id();
             $table->string('shed_identification_name');
-            $table->bigInteger('number_of_flocks')->nullable();
             $table->timestamps();
         });
     }
