@@ -9,9 +9,9 @@ function ProductionOverview() {
   console.log((graded_products))
   return (
     <div className='grid grid-cols-1 md:grid-cols-3 items-center bg-slate-200/50 rounded-lg shadow-sm min-h-[16rem] p-7'>
-        <nav className="p-5  h-[13rem] min-w-full md:min-w-[12rem]    " >
+        <nav className="p-5  h-[13rem] min-w-full md:min-w-[12rem]">
           <nav className='my-auto'>
-          <nav className="text-slate-800 font-bold text-lg" >Production </nav>
+          <nav className="text-slate-800 font-bold text-lg">Production </nav>
             <nav className='text-muted mt-5 text-xs'>
                 Products from flocks today
             </nav>
