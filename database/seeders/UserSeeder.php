@@ -27,8 +27,8 @@ class UserSeeder extends Seeder
         ]);
         $superAdmin->assignRole('Super Admin');
 
-         User::factory()->count(50)->create();
-         Userprofile::factory()->count(50)->create();
+        //  User::factory()->count(50)->create();
+        //  Userprofile::factory()->count(50)->create();
                 
     }       
 }

@@ -67,7 +67,7 @@ return [
             'driver' => 'mysql',
             'host' => env('STACKHERO_MARIADB_HOST'),
             'port' => 3306,
-            'username' => env('STACKHERO_MARIADB_USER'),
+            'username' => env('STACKHERO_MARIADB_USER0'),
             'password' => env('STACKHERO_MARIADB_ROOT_PASSWORD'),
             'database' => env('STACKHERO_MARIADB_DB'),
             'charset' => 'utf8mb4',
