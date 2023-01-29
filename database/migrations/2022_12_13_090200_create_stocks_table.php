@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->biginteger('opening_stock');
-            $table->biginteger('closing_stock')->nullable();
+            $table->biginteger('opening_stock')->default(0);
+            $table->biginteger('closing_stock')->nullable()->default(0);
             $table->biginteger('daily_production')->nullable(); 
         });
     }

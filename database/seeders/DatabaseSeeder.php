@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
                 // ShedSeeder::class,
                 // FlockSeeder::class,
                 // ExpenseSeeder::class,
-                // StockSeeder::class,
+                StockSeeder::class,
                 // FlockControlSeeder::class,
                 // BreedSeeder::class,
                 // ProductsdefinitionSeeder::class,
