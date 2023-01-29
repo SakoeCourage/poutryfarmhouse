@@ -21,9 +21,9 @@ class UserSeeder extends Seeder
         $superAdmin = \App\Models\User::factory()->create([
             'name' => 'super Admin',
             'email' => 'poultryfarmhouse@superadmin.com',
-            'email_verified_at' => now(),
+            'email_verified_at' => true,
             'password' => Hash::make('superAdmin@'), // password
-            'remember_token' => Str::random(10),
+            
         ]);
         $superAdmin->assignRole('Super Admin');
 
