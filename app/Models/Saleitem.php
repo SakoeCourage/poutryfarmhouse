@@ -18,7 +18,7 @@ class Saleitem extends Model
   
 
     public function sale(){
-        return $this->belongsTo(sale::class,'sale_id');
+        return $this->belongsTo(Sale::class,'sale_id');
     }
     public function amount(): Attribute {
         return Attribute::make(
