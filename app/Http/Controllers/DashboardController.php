@@ -158,9 +158,9 @@ class DashboardController extends Controller
     //sales and stock values
     $productStockValue= Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock'));
     $feedStockValue = Feed::sum(DB::raw('(cost_per_kg/100) * (quantity_in_stock/100)'));
-    $currentSaleStockValue =  Stock::whereDate('created_at',Carbon::now())->get()->first()->closing_stock/100;
-    $todaySaleProduction =  Stock::whereDate('created_at',Carbon::today())->get()->first()->daily_production/100;
-    $yesterdaySaleProduction =  Stock::whereDate('created_at',Carbon::yesterday())->get()->first()->daily_production/100;
+    $currentSaleStockValue =  Stock::whereDate('created_at',Carbon::now())->get()->firstorFail()->closing_stock/100;
+    $todaySaleProduction =  Stock::whereDate('created_at',Carbon::today())->get()->firstorFail()->daily_production/100;
+    $yesterdaySaleProduction =  Stock::whereDate('created_at',Carbon::yesterday())->get()->firstorFail()->daily_production/100;
     $currentSaleStockValue = $feedStockValue + $productStockValue ;
     
 
