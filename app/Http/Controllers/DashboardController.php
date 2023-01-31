@@ -71,6 +71,11 @@ class DashboardController extends Controller
                 'offsetY' => 0
             ]);
         });
+        // $new_sale->map(function($value,$key){
+        //     dd($key,$value);
+        // });
+
+        // dd($categories,s$new_sale);
         return [
             'categories' => $categories,
             'series' => $series
@@ -96,6 +101,7 @@ class DashboardController extends Controller
            $date = new Carbon($value);
            return ($date->format('M'));
        }); 
+
    
        $new_sale = $sales->mapWithKeys(function($group,$key){
             return[
