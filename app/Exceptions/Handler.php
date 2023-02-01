@@ -44,35 +44,35 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-// public function render($request, Throwable $e)
-// {
-//     $response = parent::render($request, $e);
-//     $statusText = $response::$statusTexts[$response->getStatusCode()];
-//     if (in_array($response->getStatusCode(), [500, 503, 404])) {
-//         return back()->with([
-//             "message" => [
-//                 'type' => 'warn',
-//                 'text' => 'Error ' . $response->getStatusCode() . ' ' . $statusText
-//             ]
-//         ]);
-//     } else if ($response->getStatusCode() === 419) {
-//         return  redirect('/login')->with([
-//             "message" => [
-//                 'type' => 'warn',
-//                 'text' => 'The page expired, please try again.'
-//             ]
-//         ]);
-//     } else if ($response->getStatusCode() === 403) {
-//         return back()->with([
-//             "message" => [
-//                 'type' => 'warn',
-//                 'text' => $response->getStatusCode() . ' ' . $statusText . ' you dont have enough priviledges to take this action'
-//             ]
-//         ]);
-//     }
+public function render($request, Throwable $e)
+{
+    $response = parent::render($request, $e);
+    $statusText = $response::$statusTexts[$response->getStatusCode()];
+    if (in_array($response->getStatusCode(), [500, 503, 404])) {
+        return back()->with([
+            "message" => [
+                'type' => 'warn',
+                'text' => 'Error ' . $response->getStatusCode() . ' ' . $statusText
+            ]
+        ]);
+    } else if ($response->getStatusCode() === 419) {
+        return  redirect('/login')->with([
+            "message" => [
+                'type' => 'warn',
+                'text' => 'The page expired, please try again.'
+            ]
+        ]);
+    } else if ($response->getStatusCode() === 403) {
+        return back()->with([
+            "message" => [
+                'type' => 'warn',
+                'text' => $response->getStatusCode() . ' ' . $statusText . ' you dont have enough priviledges to take this action'
+            ]
+        ]);
+    }
 
-//     return $response;
-// }
+    return $response;
+}
 
     public function register()
     {

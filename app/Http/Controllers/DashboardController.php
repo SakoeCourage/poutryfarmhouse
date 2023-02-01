@@ -164,16 +164,23 @@ class DashboardController extends Controller
     //sales and stock values
     $productStockValue= Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock'));
     $feedStockValue = Feed::sum(DB::raw('(cost_per_kg/100) * (quantity_in_stock/100)'));
-    $currentSaleStockValue =  Stock::whereDate('created_at',Carbon::now())->get()->firstorFail()->closing_stock/100;
-    $todaySaleProduction =  Stock::whereDate('created_at',Carbon::today())->get()->firstorFail()->daily_production/100;
-    // $yesterdaySaleProduction =  Stock::whereDate('created_at',Carbon::yesterday())->get()->firstorFail()->daily_production/100;
-    $currentSaleStockValue = $feedStockValue + $productStockValue ;
-    
-
+    $todaySaleProduction =  Stock::whereDate('created_at',Carbon::today())->get();
+    if($todaySaleProduction->count()){
+        $todaySaleProduction = $todaySaleProduction->first()->daily_production/100;
+    }else{
+        $todaySaleProduction = 0 ;
+    }
+    $yesterdaySaleProduction =  Stock::whereDate('created_at',Carbon::yesterday())->get();
+    if($yesterdaySaleProduction->count()){
+        $yesterdaySaleProduction =$yesterdaySaleProduction->first()->daily_production/100;
+    }else{
+        $yesterdaySaleProduction = 0;
+    }
+    $currentStockValue = $feedStockValue + $productStockValue ;
 
     return[
         'todays_sale' => $todaySaleProduction,
-        'current_stock_value'=> $currentSaleStockValue,
+        'current_stock_value'=> $currentStockValue,
         'todays_expenses' => [
             'amount' => $todaysExpenses->sum('total'),
             'number' => $todaysExpenses->count()

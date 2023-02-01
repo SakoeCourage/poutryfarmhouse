@@ -15,9 +15,6 @@ class Stock extends Model
        return $this->hasMany(Expense::class);
     }
 
-
-  
-
     public function scopeFilter($query, array $filters){
         $query->when($filters['sort'] ?? false, function($query,$sort){
             if($sort === 'created_asc'){

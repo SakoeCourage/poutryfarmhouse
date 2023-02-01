@@ -40,6 +40,7 @@ export let sidebarRoutes =
     {
         title: 'Flock control data',
         link: '/flock/control/data',
+        only: ['controldata'],
         abilities: ['create flock control','edit flock control','delete flock control']
     },
     {
