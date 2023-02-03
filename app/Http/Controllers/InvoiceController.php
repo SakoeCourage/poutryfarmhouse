@@ -116,7 +116,6 @@ class InvoiceController extends Controller
     {
         return ([
             'invoice' => Invoice::where('id', $invoice)->with(['sale', 'paymentmethod'])->get()
-            
                 ->map(function ($item) {
                     return ([
                         'sale_representative' => User::find($item->sale->user_id)->name,

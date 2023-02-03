@@ -10,11 +10,12 @@
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo,useContext } from 'react'
 import ReactApexChart from "react-apexcharts";
 import { Typography } from "antd";
 import { MinusOutlined } from "@ant-design/icons";
 import { usePage } from '@inertiajs/inertia-react';
+import { DashboardContext } from '../../Pages/Dashboardcomponents/DashboardContext';
 
 
 function LineChart() {
@@ -22,6 +23,8 @@ function LineChart() {
   const [series, setSeries] = useState([])
   const [colors, setColors] = useState([])
   const [categories, setCategories] = useState([])
+  
+  const {dashboarData} = useContext(DashboardContext)
 
   const lineChart = useMemo(function () {
     return {
@@ -87,23 +90,14 @@ function LineChart() {
       },
     };
   }, [series,categories])
-
-  const { line_chart } = usePage().props
-
   useEffect(() => {
-    setCategories(line_chart.categories)
-    setSeries(Object.values(line_chart.series))
-  }, [line_chart])
-
-  useEffect(() => {
-    console.log(series)
-  }, [series])
-  
-
+    if(dashboarData?.line_chart){
+      setCategories(dashboarData?.line_chart.categories)
+      setSeries(Object.values(dashboarData?.line_chart.series))
+    }
+  }, [dashboarData])
 
   
-
-
   return (
     <>
       <div className="linechart">

@@ -1,9 +1,10 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { usePage } from '@inertiajs/inertia-react'
 import { formatcurrency } from '../../api/Util'
+import { DashboardContext } from './DashboardContext'
 function StatsOverview() {
-    const{todays_stats} = usePage().props
+    const {dashboarData} = useContext(DashboardContext)
 
     
     function formatExpenseValue(value){
@@ -28,7 +29,7 @@ function StatsOverview() {
                         </span>
                         <span className='text-green-600  p-1 rounded-full text-xs w-8 h-8 grid place-items-center' > +30%</span>
                     </nav>
-                    <nav className='text-slate-700 font-bold  '>{formatcurrency(todays_stats.todays_sale)}</nav>
+                    <nav className='text-slate-700 font-bold  '>{formatcurrency(dashboarData?.todays_stats.todays_sale)}</nav>
                 </nav>
             </nav>
             <nav className='flex item-center gap-3 p-5 '>
@@ -40,9 +41,9 @@ function StatsOverview() {
                         <span>
                             Today's expenses
                         </span>
-                        <span className='text-white bg-red-500   p-1 rounded-full text-xs w-6 h-6 grid place-items-center ' >{formatExpenseValue(todays_stats.todays_expenses.number)}</span>
+                        <span className='text-white bg-red-500   p-1 rounded-full text-xs w-6 h-6 grid place-items-center ' >{formatExpenseValue(dashboarData?.todays_stats.todays_expenses.number)}</span>
                     </nav>
-                    <nav className='text-slate-700 font-bold  '>{formatcurrency(todays_stats.todays_expenses.amount)}</nav>
+                    <nav className='text-slate-700 font-bold  '>{formatcurrency(dashboarData?.todays_stats.todays_expenses.amount)}</nav>
                 </nav>
             </nav>
             <nav className='flex item-center gap-3 p-5 '>
@@ -55,7 +56,7 @@ function StatsOverview() {
                             current stock value
                         </span>
                     </nav>
-                    <nav className='text-slate-700 font-bold  '>{formatcurrency(todays_stats.current_stock_value)}</nav>
+                    <nav className='text-slate-700 font-bold  '>{formatcurrency(dashboarData?.todays_stats.current_stock_value)}</nav>
                 </nav>
             </nav>
 

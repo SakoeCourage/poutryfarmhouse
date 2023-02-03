@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-
+    Route::get('/dasboard/data', [\App\Http\Controllers\DashboardController::class, 'data']);
     Route::get('/roles/all', [\App\Http\Controllers\RolesController::class, 'index']);
     Route::get('/roles/select', [\App\Http\Controllers\RolesController::class, 'RolesToSelect']);
     Route::get('/roles/{rolename}/permissions',[\App\Http\Controllers\RolesController::class, 'getPermissionFromRoleName']);

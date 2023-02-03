@@ -12,7 +12,8 @@
   =========================================================
   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import React, { useState } from "react";
+import React, { useState,useContext,useEffect,useLayoutEffect } from "react";
+import { DashboardContext } from "./Dashboardcomponents/DashboardContext";
 
 import {
   Card,
@@ -29,20 +30,32 @@ import '../assets/styles/responsive.css'
 import StatsOverview from "./Dashboardcomponents/StatsOverview";
 import ProductionOverview from "./Dashboardcomponents/ProductionOverview";
 import StockOverview from "./Dashboardcomponents/StockOverview";
+import Api from '../api/Api'
+import Preloader from "./Dashboardcomponents/Preloader";
 
 function Dashboard() {
   const { Title, Text } = Typography;
+  const [dashboarData,setDashboardData] = useState()
+  const [isLoading,setIsLoading] = useState(true)
+  useEffect(()=>{
+    Api.get('/dasboard/data').then(res=>{
+      setDashboardData(res.data)
+      setIsLoading(false)
+    }).catch(err=>{
+      console.log(err)})
+  },[])
   return (
-    <>
-      <div className="container mx-auto">
+    <DashboardContext.Provider value={{ dashboarData}}>
+      {isLoading &&  <Preloader />}
+      {!isLoading &&       <div className="container mx-auto">
         <StatsOverview />
         <Row gutter={[12, 0]}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
+          <Col xs={24} sm={24} md={24} lg={12} xl={10} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <Echart />
             </Card>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
+          <Col xs={24} sm={24} md={24} lg={12} xl={14} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <LineChart />
             </Card>
@@ -63,8 +76,8 @@ function Dashboard() {
           </Col>    
         </Row>
 
-      </div>
-    </>
+      </div>}
+    </DashboardContext.Provider>
   );
 }
 

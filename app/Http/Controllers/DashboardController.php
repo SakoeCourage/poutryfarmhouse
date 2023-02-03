@@ -18,25 +18,32 @@ class DashboardController extends Controller
     public function index()
     {
 
-        return Inertia('Dashboard', [
+        return Inertia('Dashboard');
+    }
+    public function data()
+    {
+
+
+
+        return  [
             'line_chart' => Self::generateLineChart(),
             'e_chart' => Self::generateEchart(),
-            'productSales' => Self::getYearlyProductSales(),
             'todays_stats' => Self::generateTodaysSats(),
-            'graded_products' =>Self::getUsuableGradedProducts(),
-            'feed_and_stock'=> Self::generateFeedandProductStockData()
-            
-        ]);
+            'productSales' => Self::getYearlyProductSales(),
+            'graded_products' => Self::getUsuableGradedProducts(),
+            'feed_and_stock' => Self::generateFeedandProductStockData()
+        ];
     }
 
 
-    public function getPayedSaleBetweenDates($openingDate,$closingData){
+    public function getPayedSaleBetweenDates($openingDate, $closingData)
+    {
         return DB::table('invoices')->where('payment_verified', '=', 1)
-        ->whereBetween('invoices.updated_at', [$openingDate, $closingData])
-        ->join('sales', 'invoices.sale_id', '=', 'sales.id')
-        ->join('saleitems', 'sales.id', '=', 'saleitems.sale_id')
-        ->join('productsdefinitions', 'saleitems.productsdefinition_id', '=', 'productsdefinitions.id')
-        ->join('products', 'productsdefinitions.product_id', '=', 'products.id');
+            ->whereBetween('invoices.updated_at', [$openingDate, $closingData])
+            ->join('sales', 'invoices.sale_id', '=', 'sales.id')
+            ->join('saleitems', 'sales.id', '=', 'saleitems.sale_id')
+            ->join('productsdefinitions', 'saleitems.productsdefinition_id', '=', 'productsdefinitions.id')
+            ->join('products', 'productsdefinitions.product_id', '=', 'products.id');
     }
 
 
@@ -44,152 +51,144 @@ class DashboardController extends Controller
     {
         $begining_of_week = Carbon::now()->startOfWeek(Carbon::MONDAY)->format('Y-m-d');
         $end_of_week = Carbon::now()->endOfWeek(Carbon::SUNDAY)->format('Y-m-d');
-        $sales = Self::getPayedSaleBetweenDates($begining_of_week,$end_of_week)->selectRaw('
-        Date(invoices.updated_at) as day,
-        products.name as name, saleitems.*')
-       ->get();
+        $today = Carbon::now();
+        $days = collect();
+        $startOfWeek = $today->startOfWeek();
+        for ($date = $startOfWeek; $date->lte(Carbon::now()); $date->addDay()) {
+            $days->push($date->format('D'));
+        }
+        $sales = Self::getPayedSaleBetweenDates($begining_of_week, $end_of_week)->selectRaw('
+            DATE_FORMAT(invoices.updated_at,"%a") as day,
+            products.name as name, saleitems.*')->get()->groupBy('name');
 
-        $new_sale = $sales->groupBy(['name', 'day'])->map(function ($collection, $ckey) use ($sales) {
-            return ($collection->mapWithKeys(function ($group, $key) use ($sales, $ckey) {
-                return [
-                    $key => [
-                        'units' =>  $group->sum('quantity'),
-                    ]
-                ];
-            })
-            );
-        });
-        $categories = $sales->unique('day')->pluck('day');
-        $categories = $categories->map(function ($value, $key) {
-            $date = new Carbon($value);
-            return ($date->format('D'));
-        });
-        $series = $new_sale->map(function ($value, $key) {
-            return ([
-                'name' => $key,
-                'data' => $value->flatten(),
+        $sales = $sales->map(function ($currentGroup, $groupKey) use ($days) {
+            return [
+                'name' => $groupKey,
+                'data' => $days->map(function ($day) use ($currentGroup, $groupKey) {
+                    $daysSale = $currentGroup->where('day', $day);
+                    return $daysSale->sum('quantity');
+                }),
                 'offsetY' => 0
-            ]);
+            ];
         });
-        // $new_sale->map(function($value,$key){
-        //     dd($key,$value);
-        // });
 
-        // dd($categories,s$new_sale);
         return [
-            'categories' => $categories,
-            'series' => $series
+            'categories' => $days,
+            'series' => $sales
         ];
     }
 
 
-    public function generateEchart(){
+    public function generateEchart()
+    {
         $begining_of_year = Carbon::now()->startOfYear(Carbon::JANUARY)->format('Y-m-d');
         $end_of_year = Carbon::now()->endOfYear(Carbon::DECEMBER)->format('Y-m-d');
-        $sales = Self::getPayedSaleBetweenDates($begining_of_year,$end_of_year)->selectRaw("
+        $today = Carbon::now();
+        $months = collect();
+        $startOfWeek = $today->startOfYear();
+        for ($date = $startOfWeek; $date->lte(Carbon::now()); $date->addMonth()) {
+            $months->push($date->format('M'));
+        }
+    
+
+        $sales = Self::getPayedSaleBetweenDates($begining_of_year, $end_of_year)->selectRaw("
         DATE_FORMAT(invoices.updated_at,'%Y-%m') as date,
         sales.total_amount as amount,
-        MONTH(invoices.updated_at) as month,
+        DATE_FORMAT(invoices.updated_at,'%b') as month,
         YEAR(invoices.updated_at) as year, 
         products.name as name, saleitems.*")
-       ->get()
-       ->groupBy('date')
-       ;
+            ->get()
+            ->groupBy('month');
 
-       $categories = $sales->unique('date')->pluck('date');
-       $categories = $categories->map(function ($value, $key) {
-           $date = new Carbon($value);
-           return ($date->format('M'));
-       }); 
-
-   
-       $new_sale = $sales->mapWithKeys(function($group,$key){
-            return[
-                'amount' => $group->sum('amount') /100
-            ];
-       });
-          
-       return([
-        'data' =>  $new_sale,
-        'categories' => $categories
-    ]);
-
+     
+       
+        $sale = $sales->map(function ($group, $key) {
+            return ($group->sum('amount') / 100);
+        });
+      
+        return ([
+            'data' =>  $sale,
+            'categories' => $months
+        ]);
     }
 
 
-   public  function getYearlyProductSales(){
-    $begining_of_year = Carbon::now()->startOfYear(Carbon::JANUARY)->format('Y-m-d');
-    $end_of_year = Carbon::now()->endOfYear(Carbon::DECEMBER)->format('Y-m-d');
-    $productSale = Self::getPayedSaleBetweenDates($begining_of_year,$end_of_year)
-    ->selectRaw('invoices.*,productsdefinitions.name as definition_name,products.name as name,productsdefinitions.unit_price, saleitems.*
-    ')->get();
-    ;
-    $productSale = $productSale
-    ->groupBy(['name', 'definition_name'])
-    ->map(function ($collection, $ckey)  {
-        return ($collection->mapWithKeys(function ($group, $key) {
-            return [
-                $key => [
-                    'units' =>  $group->sum('quantity'),
-                ]
-            ];
-        })
-        );
-    });
-    return $productSale;
-   }
+    public  function getYearlyProductSales()
+    {
+        $begining_of_year = Carbon::now()->startOfYear(Carbon::JANUARY)->format('Y-m-d');
+        $end_of_year = Carbon::now()->endOfYear(Carbon::DECEMBER)->format('Y-m-d');
+        $productSale = Self::getPayedSaleBetweenDates($begining_of_year, $end_of_year)
+            ->selectRaw('invoices.*,productsdefinitions.name as definition_name,products.name as name,productsdefinitions.unit_price, saleitems.*
+    ')->get();;
+        $productSale = $productSale
+            ->groupBy(['name', 'definition_name'])
+            ->map(function ($collection, $ckey) {
+                return ($collection->mapWithKeys(function ($group, $key) {
+                    return [
+                        $key => [
+                            'units' =>  $group->sum('quantity'),
+                        ]
+                    ];
+                })
+                );
+            });
+        return $productSale;
+    }
 
-   public function getSalesPerGivenDate($day){
+    public function getSalesPerGivenDate($day)
+    {
         return DB::table('invoices')->where('payment_verified', '=', 1)
-        ->whereDate('invoices.updated_at',$day)
-        ->join('sales', 'invoices.sale_id', '=', 'sales.id')
-        ->join('saleitems', 'sales.id', '=', 'saleitems.sale_id')
-        ->join('productsdefinitions', 'saleitems.productsdefinition_id', '=', 'productsdefinitions.id')
-        ->join('products', 'productsdefinitions.product_id', '=', 'products.id')
-        ->selectRaw('invoices.*,productsdefinitions.name as definition_name,products.name as name,productsdefinitions.unit_price, saleitems.*
+            ->whereDate('invoices.updated_at', $day)
+            ->join('sales', 'invoices.sale_id', '=', 'sales.id')
+            ->join('saleitems', 'sales.id', '=', 'saleitems.sale_id')
+            ->join('productsdefinitions', 'saleitems.productsdefinition_id', '=', 'productsdefinitions.id')
+            ->join('products', 'productsdefinitions.product_id', '=', 'products.id')
+            ->selectRaw('invoices.*,productsdefinitions.name as definition_name,products.name as name,productsdefinitions.unit_price, saleitems.*
         ')->get();
-   }
+    }
 
-   public function getPercentageSaleIncreaseOrDecrease($today,$yesterday){
+    public function getPercentageSaleIncreaseOrDecrease($today, $yesterday)
+    {
         // return  
-   }
-
-   public function generateTodaysSats(){
-    //Todays expenses
-    $todaysExpenses = Expense::query()
-    ->where('status', 1)
-    ->whereDate('updated_at',Carbon::now())
-    ->get();
-
-    //sales and stock values
-    $productStockValue= Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock'));
-    $feedStockValue = Feed::sum(DB::raw('(cost_per_kg/100) * (quantity_in_stock/100)'));
-    $todaySaleProduction =  Stock::whereDate('created_at',Carbon::today())->get();
-    if($todaySaleProduction->count()){
-        $todaySaleProduction = $todaySaleProduction->first()->daily_production/100;
-    }else{
-        $todaySaleProduction = 0 ;
     }
-    $yesterdaySaleProduction =  Stock::whereDate('created_at',Carbon::yesterday())->get();
-    if($yesterdaySaleProduction->count()){
-        $yesterdaySaleProduction =$yesterdaySaleProduction->first()->daily_production/100;
-    }else{
-        $yesterdaySaleProduction = 0;
-    }
-    $currentStockValue = $feedStockValue + $productStockValue ;
 
-    return[
-        'todays_sale' => $todaySaleProduction,
-        'current_stock_value'=> $currentStockValue,
-        'todays_expenses' => [
-            'amount' => $todaysExpenses->sum('total'),
-            'number' => $todaysExpenses->count()
-        ]
-    ];
-   
-}
-    public function generateFeedandProductStockData(){
-        return[
+    public function generateTodaysSats()
+    {
+        //Todays expenses
+        $todaysExpenses = Expense::query()
+            ->where('status', 1)
+            ->whereDate('updated_at', Carbon::now())
+            ->get();
+
+        //sales and stock values
+        $productStockValue = Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock'));
+        $feedStockValue = Feed::sum(DB::raw('(cost_per_kg/100) * (quantity_in_stock/100)'));
+        $todaySaleProduction =  Stock::whereDate('created_at', Carbon::today())->get();
+        if ($todaySaleProduction->count()) {
+            $todaySaleProduction = $todaySaleProduction->first()->daily_production / 100;
+        } else {
+            $todaySaleProduction = 0;
+        }
+        $yesterdaySaleProduction =  Stock::whereDate('created_at', Carbon::yesterday())->get();
+        if ($yesterdaySaleProduction->count()) {
+            $yesterdaySaleProduction = $yesterdaySaleProduction->first()->daily_production / 100;
+        } else {
+            $yesterdaySaleProduction = 0;
+        }
+        $currentStockValue = $feedStockValue + $productStockValue;
+
+        return [
+            'todays_sale' => $todaySaleProduction,
+            'current_stock_value' => $currentStockValue,
+            'todays_expenses' => [
+                'amount' => $todaysExpenses->sum('total'),
+                'number' => $todaysExpenses->count()
+            ]
+        ];
+    }
+    public function generateFeedandProductStockData()
+    {
+        return [
             'product_stock' => [
                 'value_in_stock' => Productsdefinition::sum(DB::raw('(unit_price/100) * quantity_in_stock')),
                 'number_of_products' => Product::count(),
@@ -200,19 +199,19 @@ class DashboardController extends Controller
                 'number_of_feeds' => Feed::count(),
                 'quantity_of_feeds_left' => Feed::sum(DB::raw('quantity_in_stock/100'))
             ]
-            ];
+        ];
     }
 
 
     public function getUsuableGradedProducts()
     {
         $usuableGradedProducts = DB::table('gradinghistories')
-            ->whereDate('gradinghistories.updated_at',Carbon::now())
+            ->whereDate('gradinghistories.updated_at', Carbon::now())
             ->join('productsdefinitions', 'gradinghistories.productsdefinition_id', '=', 'productsdefinitions.id')
             ->join('products', 'productsdefinitions.product_id', '=', 'products.id')
             ->selectRaw('productsdefinitions.name as definition_name,products.name as name,gradinghistories.quantity as quantity')
             ->get()
-            ->groupBy(['definition_name','name']);
+            ->groupBy(['definition_name', 'name']);
 
         $usuableGradedProducts = $usuableGradedProducts->map(function ($collection, $ckey) {
             return ($collection->mapWithKeys(function ($group, $key) use ($ckey) {
@@ -228,6 +227,3 @@ class DashboardController extends Controller
         return $usuableGradedProducts;
     }
 }
-
-
-
