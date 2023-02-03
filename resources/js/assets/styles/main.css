@@ -2195,24 +2195,6 @@ section.ant-layout.layout-content .ant-layout-content.content-ant {
     box-shadow: 0 20px 27px rgb(0 0 0 / 5%);
 }
 
-.card-credit {
-    background-image: url("../images/info-card-3.jpg");
-    background-position: 50%;
-    background-size: cover;
-    border: none;
-}
-
-.card-credit * {
-    color: #fff;
-}
-
-.card-credit .card-number {
-    word-spacing: 10px;
-    font-weight: 600;
-    margin-bottom: 45px;
-    font-size: 20px;
-}
-
 .ant-card-head-wrapper {
     min-height: 72px;
 }
