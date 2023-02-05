@@ -82,7 +82,7 @@ export default function Productstock() {
                     {!productData && <Noselectedproduct />}
                     {productData && <div className="h-full ">
                         {isLoading ? <ProductMetaDataLoader /> :
-                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-10 py-2'>
+                            <div className='grid grid-cols-1  lg:grid-cols-3  gap-10 py-2'>
                                 <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm'>
                                     <nav className='text-sm text-gray-400'>product</nav>
                                     <nav className='font-semibold text-indigo-900 text-2xl '><span>{productData.product?.name}</span><span className='text-indigo-700 text-xl ml-2'>{productData.name}</span></nav>

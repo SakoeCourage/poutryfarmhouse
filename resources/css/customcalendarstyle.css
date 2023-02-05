@@ -6,6 +6,12 @@
     @apply text-sm
 }
 
+@media (max-width: 1140px) {
+    .react-calendar {
+        width: 210px;
+    }
+}
+
 .react-calendar--doubleView {
     width: 700px;
 }

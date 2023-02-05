@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
-use App\Models\Stock;
-use Illuminate\Http\Request;
-use App\Models\Expenseitem;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Stock;
+use App\Models\Expense;
+use App\Models\Expenseitem;
+use Illuminate\Http\Request;
 use App\Services\StockService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\NewUnApprovedExpense;
+use Illuminate\Support\Facades\Notification;
+
+
 
 class ExpenseController extends Controller
 {
@@ -23,7 +28,6 @@ class ExpenseController extends Controller
         return inertia('Expensesmanagement/index', [
             'today' => Expense::whereDate('created_at', Carbon::today())->count(),
             'submission_today' => Auth::user()->issuedtoday->count()
-
         ]);
     }
 
@@ -77,7 +81,11 @@ class ExpenseController extends Controller
                     'amount' => $expense['amount']
                 ]);
             });
+            $users_to_authorize =  User::getUsersWhoCan('authorize expense')->get(); 
+            Notification::send($users_to_authorize,new NewUnApprovedExpense(Auth::user(), $newexpense));
+            
         });
+        
         return redirect()->back()->with([
             'message' => [
                 'type' => 'sucess',
@@ -105,28 +113,18 @@ class ExpenseController extends Controller
     public function action(Expense $expense, $action)
     {
 
-        $stock = new StockService();
 
-        try {
+      
             if ($action === 'accept') {
-                if ($stock->decreaseproduction($expense)) {
                     $expense->update([
                         'status' => 1
                     ]);
-                }
+            
             } elseif ($action === 'decline') {
                 $expense->update([
                     'status' => 0
                 ]);
             }
-        } catch (\Exception $e) {
-            return redirect()->back()->with([
-                'message' => [
-                    'type' => 'sucess',
-                    'text' => $e->getMessage()
-                ]
-            ]);
-        }
 
         return redirect()->back()->with([
             'message' => [

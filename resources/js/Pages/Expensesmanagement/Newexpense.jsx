@@ -6,6 +6,7 @@ import { useForm, usePage } from '@inertiajs/inertia-react'
 import { formatcurrency } from '../../api/Util'
 import { motion } from 'framer-motion'
 import { Link } from '@inertiajs/inertia-react'
+import Modal from '../../components/Modal'
 
 
 export default function Newexpense() {
@@ -78,6 +79,9 @@ export default function Newexpense() {
 
   return (
       <div className=''>
+        {/* <Modal>
+          Hello
+        </Modal> */}
         <nav className="flex ml-10 mb-10" aria-label="Breadcrumb">
   <ol className="inline-flex items-center space-x-1 md:space-x-3">
     <li className="inline-flex items-center">

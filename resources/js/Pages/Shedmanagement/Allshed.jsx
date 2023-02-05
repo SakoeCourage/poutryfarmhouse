@@ -45,7 +45,7 @@ export default function Allshed() {
                                 number of flocks
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                number of birds
+                                current number of birds
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 Action

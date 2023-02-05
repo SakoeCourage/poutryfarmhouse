@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import { usePage } from '@inertiajs/inertia-react'
-import { dateReformat, setsort } from '../../api/Util'
+import { dateReformat, setsort,formatnumber } from '../../api/Util'
 import SimpleBar from 'simplebar-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Simplepagination from '../../components/Simplepagination'
@@ -72,7 +72,7 @@ export default function Flockcontroldata() {
                                 productions
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                feed consumption
+                                feed consumption <span className='text-muted text-xs'>(kg)</span>
                             </th>
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 dead
@@ -89,9 +89,7 @@ export default function Flockcontroldata() {
                             <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                 medication
                             </th>
-                            <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                Action
-                            </th>
+                         
 
                         </tr>
                     </thead>
@@ -116,14 +114,11 @@ export default function Flockcontroldata() {
                                         {data.shed}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                    <button  className='border border-gray-500 p-2 rounded-full text-xs'>
-                                           <span>view</span>
-                                        </button>
+                                        {formatnumber(data.eggs_produced)}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                    <button  className='border border-gray-500 p-2 rounded-full text-xs'>
-                                           <span>view</span>
-                                        </button>
+                                    {formatnumber(data.feeds_consumed)}
+                                        
                                     </td>
                                     <td className="py-2 px-6 ">
                                         {new Intl.NumberFormat().format(data.dead)}
@@ -141,12 +136,6 @@ export default function Flockcontroldata() {
                                     <td className="py-2 px-6 ">
                                     {data.medication}
 
-                                    </td>
-                                    <td className="py-2 px-6 ">
-                                        <button onClick={()=>setCurrentData({id:data.id})} className='text-blue-500 flex items-center gap-2'>
-                                            <span >Edit</span>
-                                            <FontAwesomeIcon icon='arrow-right' className='text-blue-500' size='sm' />
-                                        </button>
                                     </td>
 
                                 </tr>

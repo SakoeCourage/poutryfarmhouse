@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function StockLoader() {
-    return <nav className=' grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 animate-pulse '>
+    return <nav className=' grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-5 animate-pulse '>
 
         <nav className='text-slate-800 min-h-[12rem] min-w-[13rem] relative  w-full flex flex-col p-8 px-10  custom_box_shadow rounded-lg gap-2 items-center justify-center'>
             <nav className='absolute z-0 isolate   inset-0 opacity-30 blur-[1px] rounded-md shadow-md bg-gradient-to-br from-blue-200 via-indigo-300 to-indigo-400'></nav>

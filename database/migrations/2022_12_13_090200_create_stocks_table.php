@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->biginteger('opening_stock')->default(0);
             $table->biginteger('closing_stock')->nullable()->default(0);
-            $table->biginteger('daily_production')->nullable(); 
+            $table->biginteger('daily_production')->nullable()->default(0); 
         });
     }
 

@@ -104,7 +104,7 @@ export default function Allstock() {
 
 
     return (<div className='min-h-full h-max  flex '>
-        <main className='mx-auto max-w-4xl p-5  '>
+        <main className='mx-auto container p-5  '>
             {
                 currentProduct && <Modal title={currentProduct} closeModal={() => setCurrentProduct(null)}>
                     <ProductViewTable entries={Object.entries(usablegradedProducts[`${currentProduct}`])} />
@@ -114,13 +114,15 @@ export default function Allstock() {
                 <Stocksetup handleAfterSucess={() => { fetchPerDate(); setIsEmpty(false) }} />
             </Modal>}
             <nav className='flex items-center gap-10 my-auto mb-7 justify-between'>
-                <button onClick={prevDay} className='p-2 flex items-center bg-gray-200 text-gray-700 shadow-sm rounded-md gap-2 justify-center  lg:w-auto lg:justify-start min-w-[7rem]'><FontAwesomeIcon icon='chevron-left' /><span className='hidden lg:block'>previous day</span></button>
-                <span className='text-gray-700 font-bold'>{currentDate.toDateString()}</span>
-                <button onClick={nextDay} className='p-2 flex items-center bg-gray-200 text-gray-700 shadow-sm rounded-md gap-2 justify-center  lg:w-auto lg:justify-end min-w-[7rem]'> <span className='hidden lg:block'>next day</span><FontAwesomeIcon icon="chevron-right" /></button>
+                <button onClick={prevDay} className='p-2 flex w-max items-center bg-gray-200 text-gray-700 shadow-sm rounded-md gap-2 justify-center  xl:w-auto xl:justify-start xl:min-w-[8rem]'>
+                    <FontAwesomeIcon icon='chevron-left' /><span className='hidden xl:block text-sm'>previous day</span></button>
+                <div className='text-gray-700 font-bold min-w-[12rem] text-center w-full'>{currentDate.toDateString()}</div>
+                <button onClick={nextDay} className='p-2 flex w-max items-center bg-gray-200 text-gray-700 shadow-sm rounded-md gap-2 justify-center  xl:w-auto xl:justify-end xl:min-w-[8rem]'> 
+                <span className='hidden xl:block text-sm'>next day</span><FontAwesomeIcon icon="chevron-right" /></button>
             </nav>
 
             {isLoading && <StockLoader />}
-            {!isLoading && <nav className=' grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 '>
+            {!isLoading && <nav className=' grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-5 '>
 
                 <nav className='text-slate-800 min-h-[12rem] min-w-[13rem] relative w-full flex flex-col p-8 px-10  custom_box_shadow rounded-lg gap-2 items-center justify-center'>
                     <nav className='absolute z-0 isolate   inset-0 opacity-30 blur-[1px] rounded-md shadow-md bg-gradient-to-br from-blue-200 via-indigo-300 to-indigo-400'></nav>
@@ -201,11 +203,11 @@ export default function Allstock() {
             </div>
 
         </main>
-        <div className='max-w-sm p-2 hidden md:block'>
+        <div className='max-w-sm p-2 hidden lg:block'>
             <nav className='text-indigo-600 text-sm flex items-center gap-1 mb-4 p-5  bg-indigo-50'>
                 Choose Date from below
             </nav>
-            <Calendar value={currentDate} onChange={handleDateChange} className='w-full   rounded-md outline-none border-none shadow-md' />
+            <Calendar value={currentDate} onChange={handleDateChange} className='rounded-md outline-none border-none shadow-md' />
         </div>
     </div>
     )

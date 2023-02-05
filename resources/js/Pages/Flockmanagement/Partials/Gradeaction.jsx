@@ -8,8 +8,8 @@ import Api from '../../../api/Api'
 export default function Gradeaction(props) {
     const [quantity, setQuantity] = useState(null)
     const [productData, setProductData] = useState(null)
-    const [errors,setErrors] = useState({})
-    const [isLoadingData,setIsLoadingData] = useState(true)
+    const [errors, setErrors] = useState({})
+    const [isLoadingData, setIsLoadingData] = useState(true)
     const [processing, setProcessing] = useState(false)
     const [gradeList, setGradeList] = useState([])
     const [data, setData] = useState({
@@ -23,7 +23,7 @@ export default function Gradeaction(props) {
         Api.get(`/grading/${props.id}/show`).then(res => {
             const { product, quantity } = res.data
             setQuantity(quantity)
-            setData(cd=>cd={...cd,'flock_control_id':res.data.flock_control_id})
+            setData(cd => cd = { ...cd, 'flock_control_id': res.data.flock_control_id })
             setProductData(product[0])
             setIsLoadingData(false)
         }).catch(err => console.log(err))
@@ -49,50 +49,52 @@ export default function Gradeaction(props) {
     useEffect(() => {
         GetProductData()
     }, [])
-        useEffect(() => {
+    useEffect(() => {
         if (productData?.definitions) {
             productData.definitions.forEach(function (value) {
-                setGradeList(cd => cd = [...cd, { 'productsdefinition_id': value.id, 'name': value.name, 'quantity': '','description': 'from product grading' }])
+                setGradeList(cd => cd = [...cd, { 'productsdefinition_id': value.id, 'name': value.name, 'quantity': '', 'description': 'from product grading' }])
             })
         }
     }, [productData])
 
 
-    let submit = () =>{
-      
+    let submit = () => {
+        if (AutoCheckAnomality >= 0) {
             setProcessing(true)
-            Api.post('/grading/update',data).then((res)=>{
+            Api.post('/grading/update', data).then((res) => {
                 props.onSucess()
-            }).catch(error=>{
+            }).catch(error => {
                 console.log(error.response)
-                if(error && error?.response?.status == 422){
+                if (error && error?.response?.status == 422) {
                     setErrors(error.response.data.errors)
                     setProcessing(false)
                 }
             })
+        }
+
     }
     useEffect(() => {
-      console.log(data)
+        console.log(data)
     }, [data])
-    
+
     return (
         <div className='min-h-full'>
-            {isLoadingData && 
-            <Dotanimation />
+            {isLoadingData &&
+                <Dotanimation />
             }
             <nav className='flex items-center justify-between bg-indigo-700/60 text-white p-3 px-5 gap-2 h-12 text-xl'>
                 <nav className='flex items-center gap-1'>
-                <span className='p-1 px-2 rounded-full flex items-center gap-1 border border-white text-xs'>
-                    <FontAwesomeIcon icon='tag' /> <span>product</span>
-                </span>
-                <nav className='w-max p-1 '>
-                    <span>{productData?.name ?? ''}</span>
-                </nav>
+                    <span className='p-1 px-2 rounded-full flex items-center gap-1 border border-white text-xs'>
+                        <FontAwesomeIcon icon='tag' /> <span>product</span>
+                    </span>
+                    <nav className='w-max p-1 '>
+                        <span>{productData?.name ?? ''}</span>
+                    </nav>
                 </nav>
                 <nav className='text-sm'>
                     {quantity && <nav className='text-xs'>
-                         <span className='font-bold'>{quantity} </span> items collected from flock control
-                    </nav> }
+                        <span className='font-bold'>{quantity} </span> items collected from flock control
+                    </nav>}
                 </nav>
             </nav>
 
@@ -119,20 +121,20 @@ export default function Gradeaction(props) {
                     </nav> */}
 
                     <nav className='text-indigo-600 text-sm flex items-center gap-1 mb-4 p-5  bg-indigo-50'>
-                           State  if any remainder where found
+                        State reason for any remainder
                     </nav>
-                       <nav className='flex items-center gap-1 my-1 flex-auto'>
-                        <Custominput  type="text" placeholder='enter description' error={errors['remainder_description']} getValue={(value) => setData(cd => cd = { ...cd, 'remainder_description': value })} />
-                        <Custominput   placeholder="enter quantity" type="number" disabled={true} number={AutoCheckAnomality}  getValue={(value) => setData(cd => cd = { ...cd, 'remainder_quantity': value })} />
+                    <nav className='flex items-center gap-1 my-1 flex-auto'>
+                        <Custominput type="text" placeholder='enter description' error={errors['remainder_description']  } getValue={(value) => setData(cd => cd = { ...cd, 'remainder_description': value })} />
+                        <Custominput placeholder="enter quantity" type="number" error={AutoCheckAnomality < 0 && 'cannot be less than zero'} disabled={true} number={AutoCheckAnomality} getValue={(value) => setData(cd => cd = { ...cd, 'remainder_quantity': value })} />
                     </nav>
                     {/* {AutoCheckAnomality < 0 &&
                     <nav className='text-red-600 text-sm flex items-center gap-1 mb-4 p-5  bg-red-50 mt-10'>
                             entries exceeds amount recorded from flock control
                     </nav>
                     } */}
-                  
+
                     <nav className='flex items-center justify-end mt-10'>
-                        <Buttonsubmit processing={processing} onClick={()=>submit()} text="grade" className=" w-full" />
+                        <Buttonsubmit processing={processing} onClick={() => submit()} text="grade" className=" w-full" />
                     </nav>
                 </nav>
 

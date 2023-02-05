@@ -22,7 +22,7 @@ class ShedController extends Controller
                         'created_at' =>$item->created_at,
                         'shed_identification_name'=>$item->shed_identification_name,
                         'number_of_flocks' => $item->flocks->count(),
-                        'number_of_birds' => $item->flocks->sum('opening_birds')
+                        'number_of_birds' => $item->currentNumberOfBirds()
                     ];
                 })
                 
