@@ -3,14 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Permission;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
-use Symfony\Component\HttpKernel\Profiler\Profile;
-use Carbon\Carbon;
-use Spatie\Permission\Models\Role;
 
 
 class User extends Authenticatable
@@ -70,9 +71,13 @@ class User extends Authenticatable
             }
     });
     }
+    public function expenses(){
+        return $this->hasMany(Expense::class,'user_id');
+    }
 
     static function getUsersWhoCan($permission){
-        $roles = Role::permission($permission)->get('name')->pluck('name'); 
+        $p = Permission::findByName($permission);
+        $roles = $p->roles->pluck('name');
         $roles[] = 'Super Admin';
         $users = User::whereHas('roles', function ($query) use ($roles) {
             $query->whereIn('name', $roles);

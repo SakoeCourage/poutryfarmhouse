@@ -3,19 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { usePage } from '@inertiajs/inertia-react'
 import { formatcurrency } from '../../api/Util'
 import { DashboardContext } from './DashboardContext'
+
+
+export function formatMaximumValue(value){
+    let cv;
+    if(value > 9){
+        cv = "9+"
+    }else{
+        cv = value
+    }
+    return cv;
+}
+
 function StatsOverview() {
     const {dashboarData} = useContext(DashboardContext)
 
     
-    function formatExpenseValue(value){
-        let cv;
-        if(value > 9){
-            cv = "9+"
-        }else{
-            cv = value
-        }
-        return cv;
-}
+
     return (
         <div className='grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:px-6'>
             <nav className='flex item-center gap-3 p-5 '>
@@ -27,7 +31,7 @@ function StatsOverview() {
                         <span>
                             Today's sales
                         </span>
-                        <span className='text-green-600  p-1 rounded-full text-xs w-8 h-8 grid place-items-center' > +30%</span>
+                        {/* <span className='text-green-600  p-1 rounded-full text-xs w-8 h-8 grid place-items-center' > +30%</span> */}
                     </nav>
                     <nav className='text-slate-700 font-bold  '>{formatcurrency(dashboarData?.todays_stats.todays_sale)}</nav>
                 </nav>
@@ -41,7 +45,7 @@ function StatsOverview() {
                         <span>
                             Today's expenses
                         </span>
-                        <span className='text-white bg-red-500   p-1 rounded-full text-xs w-6 h-6 grid place-items-center ' >{formatExpenseValue(dashboarData?.todays_stats.todays_expenses.number)}</span>
+                        <span className='text-white bg-red-500   p-1 rounded-full text-xs w-6 h-6 grid place-items-center ' >{formatMaximumValue(dashboarData?.todays_stats.todays_expenses.number)}</span>
                     </nav>
                     <nav className='text-slate-700 font-bold  '>{formatcurrency(dashboarData?.todays_stats.todays_expenses.amount)}</nav>
                 </nav>

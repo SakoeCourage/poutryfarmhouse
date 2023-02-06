@@ -2,30 +2,26 @@
 
 namespace App\Notifications;
 
+use App\Models\Expense;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\User;
-use App\Models\Expense;
 
-class NewUnApprovedExpense extends Notification
+
+class ExpenseApproved extends Notification
 {
     use Queueable;
     public $expense;
-    public $author;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(User $author,Expense $expense)
+    public function __construct(Expense $expense)
     {
-       
         $this->expense = $expense;
-        $this->author = $author->only(['id','name','email']);
-
     }
 
     /**
@@ -47,7 +43,7 @@ class NewUnApprovedExpense extends Notification
      */
     public function toMail($notifiable)
     {
-       
+    
     }
 
     /**
@@ -58,9 +54,7 @@ class NewUnApprovedExpense extends Notification
      */
     public function toArray($notifiable)
     {
-       
         return [
-            'author'=>$this->author,
             'expense' =>$this->expense
         ];
     }

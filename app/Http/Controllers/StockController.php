@@ -27,7 +27,7 @@ class StockController extends Controller
 
 
     public function index()
-    {   
+    {  
         
         return Inertia('Stockmanagement/Allstock');
     }
@@ -73,23 +73,16 @@ class StockController extends Controller
     }
 
 
-    public function getFeedDailyFeedStockData($day){
-        $date = null; 
-        if(Carbon::parse($day)->isToday()){
-            $date = Carbon::today();
-        }else if(Carbon::parse($day)->isPast()){
-            $date= Carbon::parse($day)->subDay();
-        }
+    public function getFeedDailyUsedData($day){
+      
         $feed_data = DB::table('feeds')
         ->join('feedstockhistories','feeds.id','feedstockhistories.feed_id')
-        ->whereDate('feedstockhistories.created_at',$date)
+        ->where('action_type','reduction')
+        ->whereDate('feedstockhistories.created_at',$day)
+        ->selectRaw('feedstockhistories.quantity as feedquantity')
         ->get();
-        $feed_data = $feed_data->groupBy('feed_name');
-        $feed_data = $feed_data->map(function($collection,$key){
-          return(
-               $collection->last()->net_quantity/100          
-          );
-       });
+        $feed_data = $feed_data->sum('feedquantity')/100;
+     
        return $feed_data;
     }
 
@@ -168,7 +161,7 @@ class StockController extends Controller
                         ->get()->sum('total'),
                 ])->first(),
             'currentDate'=>Request()->date,
-            'feed_stock' => $this->getFeedDailyFeedStockData(Request()->date ?? Carbon::now()),
+            'feedUsed' => $this->getFeedDailyUsedData(Request()->date ?? Carbon::now()),
             'sales' => $this->getProductSales(Request()->date),
             'usablegradedProducts' => $this->getUsuableGradedProducts(Request()->date ?? Carbon::now()),
             'defected_unusable' => Grading::where('is_graded', 1)

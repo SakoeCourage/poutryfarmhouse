@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Stock;
 use App\Models\Expense;
 use App\Models\Expenseitem;
+use App\Notifications\ExpenseApproved;
 use Illuminate\Http\Request;
 use App\Services\StockService;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,16 @@ class ExpenseController extends Controller
     public function allExpenses()
     {
         return inertia('Expensesmanagement/Allexpense', [
-            'expenses' => fn () => Expense::with('author:id,name')->filter(request()->only('sort'))
+            'expenses' => fn () => Expense::where('status',2)->with('author:id,name')->filter(request()->only('sort'))
+                ->latest()->paginate(10)
+                ->withQueryString()
+        ]);
+    }
+
+    public function mySubmissions()
+    {
+        return inertia('Expensesmanagement/Allexpense', [
+                'expenses' => fn () => Expense::where('user_id',Auth()->user()->id)->with('author:id,name')->filter(request()->only('sort'))
                 ->latest()->paginate(10)
                 ->withQueryString()
         ]);
@@ -81,11 +91,10 @@ class ExpenseController extends Controller
                     'amount' => $expense['amount']
                 ]);
             });
-            $users_to_authorize =  User::getUsersWhoCan('authorize expense')->get(); 
-            Notification::send($users_to_authorize,new NewUnApprovedExpense(Auth::user(), $newexpense));
-            
+            $users_to_authorize =  User::getUsersWhoCan('authorize expense')->get();
+            Notification::send($users_to_authorize, new NewUnApprovedExpense(Auth::user(), $newexpense));
         });
-        
+
         return redirect()->back()->with([
             'message' => [
                 'type' => 'sucess',
@@ -113,18 +122,19 @@ class ExpenseController extends Controller
     public function action(Expense $expense, $action)
     {
 
-
-      
+        DB::transaction(function () use ($expense, $action) {
             if ($action === 'accept') {
-                    $expense->update([
-                        'status' => 1
-                    ]);
-            
+                $expense->update([
+                    'status' => 1
+                ]);
+            $expense->author->notify(new ExpenseApproved($expense));
             } elseif ($action === 'decline') {
                 $expense->update([
                     'status' => 0
                 ]);
             }
+        });
+
 
         return redirect()->back()->with([
             'message' => [

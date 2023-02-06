@@ -39,7 +39,7 @@ class ProductStockService
                 'user_id' => Auth()->user()->id,
                 'action_type' => StockActionEnum::Depreciate,
                 'quantity' => $request->quantity,
-                'description' => $request->description ?? 'from sale',
+                'description' => $request->description ?? 'for sale',
                 'net_quantity' => $last_record ? $last_record->net_quantity - $request->quantity : 0 - $request->quantity
             ]);
         });

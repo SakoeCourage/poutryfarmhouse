@@ -59,7 +59,7 @@ export default function Feedstock() {
             let Ndate = new Date(date)
             let dateString = `${Ndate.getFullYear()}-${Ndate.getUTCMonth() + 1}-${Ndate.getDate()}`
             Api.get(`/feed/history/${id}?date=${dateString}`).then(res => {
-                setFeedData(res.data.feed)
+                setFeedHistoryData(res.data.feed_history?.data)
                 setNextPage(res.data.feed_history?.next_page_url)
             }).catch(err => console.log(err))
         }

@@ -24,14 +24,17 @@ export default function Slideover(props) {
       className='fixed bg-black/20 backdrop-blur-[1px] isolate z-40 inset-0   '>
       <div className='h-full w-full ' ref={backdrop}>
       <motion.div
-            initial={{ x: "100%" }}
-            animate={{
-              x: 0
-            }}
-            exit={{
-              x: "100%"
-            }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+          initial={{ opacity: 0, x: '100vw' }}
+          animate={{
+            opacity: 1, x: 0,
+            transition: {
+              type: 'spring',
+              mass: 0.1,
+              damping: 8
+            }
+          }}
+          exit={{ opacity: 0, x: '100vw' }}
+         
             className="fixed z-40 rounded-md   md:top-[2%] md:right-[2%] md:bottom-0  h-screen  md:max-w-2xl bg-gray-50 isolate  shadow-lg  w-full "
           >
           <div  className=' text-lg  p-5 flex items-center gap-3 justify-between  shadow-sm'>

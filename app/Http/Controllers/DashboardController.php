@@ -18,6 +18,7 @@ class DashboardController extends Controller
     public function index()
     {
 
+        Self::generateEchart();
         return Inertia('Dashboard');
     }
     public function data()
@@ -50,7 +51,7 @@ class DashboardController extends Controller
     public function generateLineChart()
     {
         $begining_of_week = Carbon::now()->startOfWeek(Carbon::MONDAY)->format('Y-m-d');
-        $end_of_week = Carbon::now()->endOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+        $end_of_week = Carbon::now();
         $today = Carbon::now();
         $days = collect();
         $startOfWeek = $today->startOfWeek();
@@ -71,6 +72,7 @@ class DashboardController extends Controller
                 'offsetY' => 0
             ];
         });
+       
 
         return [
             'categories' => $days,
@@ -85,11 +87,10 @@ class DashboardController extends Controller
         $end_of_year = Carbon::now()->endOfYear(Carbon::DECEMBER)->format('Y-m-d');
         $today = Carbon::now();
         $months = collect();
-        $startOfWeek = $today->startOfYear();
-        for ($date = $startOfWeek; $date->lte(Carbon::now()); $date->addMonth()) {
+        $startOfYear = $today->startOfYear();
+        for ($date = $startOfYear; $date->lte(Carbon::now()); $date->addMonth()) {
             $months->push($date->format('M'));
         }
-    
 
         $sales = Self::getPayedSaleBetweenDates($begining_of_year, $end_of_year)->selectRaw("
         DATE_FORMAT(invoices.updated_at,'%Y-%m') as date,
@@ -97,15 +98,16 @@ class DashboardController extends Controller
         DATE_FORMAT(invoices.updated_at,'%b') as month,
         YEAR(invoices.updated_at) as year, 
         products.name as name, saleitems.*")
-            ->get()
-            ->groupBy('month');
+            ->get();
+            
 
-     
+    
        
-        $sale = $sales->map(function ($group, $key) {
-            return ($group->sum('amount') / 100);
+    
+        $sale = $months->mapWithKeys(function ($month,$key)use($sales) {
+            $monthSales = $sales->where('month',$month);
+            return [$month=> $monthSales->sum('amount') / 100];
         });
-      
         return ([
             'data' =>  $sale,
             'categories' => $months

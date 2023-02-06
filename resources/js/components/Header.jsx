@@ -5,12 +5,17 @@ import { AccessByRole } from '../authorization/AcessControl'
 import { usePage } from '@inertiajs/inertia-react'
 import { Link } from '@inertiajs/inertia-react'
 import { motion, AnimatePresence } from "framer-motion"
+import Notification from './Notification'
+import Api from '../api/Api'
+import { formatMaximumValue } from '../Pages/Dashboardcomponents/StatsOverview'
+
+
 
 function Accountmenu() {
     const { auth } = usePage().props
     const { user } = auth
     return <div
-        className="mt-2 absolute min-w-[18rem]   right-16">
+        className="mt-2 absolute min-w-[100vw] h-screen inset-x-0  md:h-auto md:min-w-[18rem] md:left-auto  md:right-16">
         <div className="bg-white rounded overflow-hidden shadow-lg">
             <div className="text-center p-6  border-b">
                 <img
@@ -80,22 +85,50 @@ function Accountmenu() {
 
 export default function Header(props) {
     const [isDropped, setisDropped] = useState(false)
+    const [showNotifications, setShowNotifications] = useState(false)
     const { auth } = usePage().props
     const { user } = auth
+    const [unreadCount, setUnreadCount] = useState(0);
+    useEffect(() => {
+        Api.get('/notifications/uread/count').then(res => {
+            setUnreadCount(res.data)
+        }).catch(err => console.log(err.response.data))
+    }, [])
+
+    useEffect(() => {
+     setUnreadCount(user.notifications);
+    }, [user.notifications])
+    
+
+    useEffect(() => {
+        setisDropped(false);
+        setShowNotifications(false);
+    }, [window.location.href])
+
     return (
-        <div className=' h-14 z-20 sticky top-0 shadow-sm  basis-16 ' id='header'>
+        <div className=' h-14 z-40 sticky top-0 shadow-sm  basis-16 ' id='header'>
             <div className='flex justify-between items-center  px-10 py-2'>
-                <FontAwesomeIcon className='text-[#0E121F]/90 cursor-pointer' onClick={props.toggleSidebar} icon="bars"/>
-                <nav className=' flex items-center gap-3'> <span className=' order-2 flex flex-col'>
-                    <span>{user.user?.name ?? "Username"}</span>
-                    <span className='text-xs text-gray-400'>{user.roles[0] ?? 'role'}</span>
-                </span>
+                <FontAwesomeIcon className='text-[#0E121F]/90 cursor-pointer' onClick={props.toggleSidebar} icon="bars" />
+                <nav className=' flex items-center gap-3'>
+                    <span className=' order-2 flex flex-col'>
+                        <span>{user.user?.name ?? "Username"}</span>
+                        <span className='text-xs text-gray-400'>{user.roles[0] ?? 'role'}</span>
+                    </span>
+                    <button onClick={() => setShowNotifications(!showNotifications)} className={`relative mr-3 ${(Boolean(unreadCount) || showNotifications) ? 'text-gray-500' : 'text-gray-300'}`}>
+                        <FontAwesomeIcon icon='bell' size='xl' />
+                        {Boolean(unreadCount) && <span className="flex items-center justify-center absolute -top-[40%] -right-[50%] bg-red-500 text-white p-1 h-5 w-5 rounded-full text-xs ring-1 ring-offset-1 ring-white">
+                            {formatMaximumValue(unreadCount)}
+                        </span>
+                        }
+                    </button>
                     <img className='h-8 w-8 aspect-square object-cover rounded-full order-1' src={profilepic} alt="" />
                     <FontAwesomeIcon onClick={() => setisDropped(!isDropped)} className='order-3 cursor-pointer  bg-gray-700 text-white h-2 w-2 p-1 rounded-full' icon='angle-down' />
                 </nav>
             </div>
             {isDropped && <Accountmenu />
 
+            }
+            {showNotifications && <Notification onClose={() => setShowNotifications(false)} setUnreadCount={(value) => setUnreadCount(value)} />
             }
         </div>
     )

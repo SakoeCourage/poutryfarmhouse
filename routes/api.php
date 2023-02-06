@@ -62,7 +62,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/roles/select', [\App\Http\Controllers\RolesController::class, 'RolesToSelect']);
     Route::get('/roles/{rolename}/permissions',[\App\Http\Controllers\RolesController::class, 'getPermissionFromRoleName']);
     Route::post('/roles/permissions/new',[\App\Http\Controllers\RolesController::class, 'applyNewPermissions']);
-
+    Route::get('/notifications/uread/count',[\App\Http\Controllers\NotificationController::class, 'getUnreadNotificationCount']);
+    Route::get('/notifications/uread',[\App\Http\Controllers\NotificationController::class, 'getUnreadNotification']);
+    Route::get('/notifications/uread/markasread',[\App\Http\Controllers\NotificationController::class, 'markAsRead']);
 
     Route::post('flock/control/create', [\App\Http\Controllers\FlockControlController::class, 'create'])->middleware('permission:create flock control');
 

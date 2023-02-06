@@ -48,7 +48,7 @@ Class FeedStockService{
                     'user_id' => Auth()->user()->id,
                     'action_type' => StockActionEnum::Depreciate,
                     'quantity' => $request->quantity,
-                    'description' => $request->description ?? 'from flock control',
+                    'description' => $request->description ?? 'for flock control',
                     'net_quantity' => $currentRecord->get()->firstorFail()->quantity_in_stock
                 ]);
             });

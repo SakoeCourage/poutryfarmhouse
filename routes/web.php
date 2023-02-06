@@ -29,9 +29,10 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
 
-    Route::get('/expenses', [\App\Http\Controllers\ExpenseController::class, 'index'])->middleware(['permission:create expense','permission:authorize expense']);
+    Route::get('/expenses', [\App\Http\Controllers\ExpenseController::class, 'index'])->middleware(['permission:create expense']);
     Route::put('/expenses/action/{expense}/{action}', [\App\Http\Controllers\ExpenseController::class, 'action'])->middleware(['permission:authorize expense']);
-    Route::get('/expenses/all', [\App\Http\Controllers\ExpenseController::class, 'allExpenses']);
+    Route::get('/expenses/all', [\App\Http\Controllers\ExpenseController::class, 'allExpenses'])->middleware(['permission:authorize expense']);
+    Route::get('/expenses/submissions', [\App\Http\Controllers\ExpenseController::class, 'mySubmissions']);
     Route::post('/expenses/create', [\App\Http\Controllers\ExpenseController::class, 'store']);
 
 
@@ -40,10 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/createuser', [\App\Http\Controllers\Auth\UserController::class, 'create']);
     Route::put('/user/edit/{user}', [\App\Http\Controllers\Auth\UserController::class, 'edit'])->middleware(['permission:edit user']);
     Route::delete('/user/delete/{user}', [\App\Http\Controllers\Auth\UserController::class, 'delete'])->middleware(['permission:delete user']);
-    
-    
-
-
+  
     Route::group(['prefix' => 'flock'], function () {
         Route::get('/all', [\App\Http\Controllers\FlockController::class, 'index']);
         Route::get('/products/grade', [\App\Http\Controllers\GradingController::class, 'index']);
