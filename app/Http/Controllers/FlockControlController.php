@@ -44,6 +44,19 @@ class FlockControlController extends Controller
     }
 
 
+    public function flocksToSelect(){
+        return ([
+            'flocks' => \App\Models\Flock::with('pen')->get()->map(function ($item) {
+                return ([
+                    'flock_identification_name' => $item->flock_identification_name,
+                    'id' => $item->id,
+                    'shed_identification_name' => $item->pen->shed_identification_name,
+                    'shed_id' => $item->pen->id
+                ]);
+            })
+        ]);
+    }
+
     
 
     /**

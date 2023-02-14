@@ -29,6 +29,12 @@ class ShedController extends Controller
        ]);
     }
 
+    public function shedToSelect(){
+        return ([
+            'sheds' => \App\Models\Shed::get(['id', 'shed_identification_name'])
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

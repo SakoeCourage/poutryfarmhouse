@@ -33,6 +33,12 @@ class RolesController extends Controller
             ]);
     }
 
+    public function permissionToSelect(){
+        return ([
+            'permissions' => \Spatie\Permission\Models\Permission::all()
+        ]);
+    }
+
     public function getPermissionFromRoleName($rolename){
         return [
             'rolePermissions' => Role::findByName($rolename)->permissions()->get(['name'])->pluck('name'),

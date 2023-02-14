@@ -9,6 +9,7 @@ use App\Models\Expense;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Productsdefinition;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Date;
 
@@ -18,7 +19,7 @@ class DashboardController extends Controller
     public function index()
     {
 
-        Self::generateEchart();
+      
         return Inertia('Dashboard');
     }
     public function data()

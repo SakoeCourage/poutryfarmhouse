@@ -29,6 +29,10 @@ class PaymentController extends Controller
         ]);
     }
 
+
+    public function paymentToSelect(){
+        return \App\Models\Paymentmethods::get(['id', 'method']);
+    }
     /**
      * Show the form for creating a new resource.
      *

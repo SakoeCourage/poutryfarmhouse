@@ -18,45 +18,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/flocks/all', function () {
-        return ([
-            'flocks' => \App\Models\Flock::with('pen')->get()->map(function ($item) {
-                return ([
-                    'flock_identification_name' => $item->flock_identification_name,
-                    'id' => $item->id,
-                    'shed_identification_name' => $item->pen->shed_identification_name,
-                    'shed_id' => $item->pen->id
-                ]);
-            })
-        ]);
-    });
-
-    Route::get('/payment/methods/all', function () {
-        return \App\Models\Paymentmethods::get(['id', 'method']);
-    });
-
-    Route::get('/jobpositions/all', function () {
-        return ([
-            'jobs' => \App\Models\Jobposition::get(['id', 'position'])
-        ]);
-    });
-
-    Route::get('/sheds/all', function () {
-        return ([
-            'sheds' => \App\Models\Shed::get(['id', 'shed_identification_name'])
-        ]);
-    });
-
-    Route::get('/permission/all', function () {
-        return ([
-            'permissions' => \Spatie\Permission\Models\Permission::all()
-        ]);
-    });
-
-    Route::group(['middleware' => 'permission:define system data'], function () {
-
-    });
-
+    Route::get('/flocks/all', [\App\Http\Controllers\FlockControlController::class, 'flocksToSelect']);
+    Route::get('/payment/methods/all',[\App\Http\Controllers\PaymentController::class, 'paymentToSelect']);
+    Route::get('/jobpositions/all', [\App\Http\Controllers\JobpositionController::class,'jobPostionToSelect']);
+    Route::get('/sheds/all',[\App\Http\Controllers\ShedController::class,'shedToSelect']);
+    Route::get('/permission/all', [\App\Http\Controllers\RolesController::class, 'permissionToSelect']);
+    
     Route::get('/dasboard/data', [\App\Http\Controllers\DashboardController::class, 'data']);
     Route::get('/roles/all', [\App\Http\Controllers\RolesController::class, 'index']);
     Route::get('/roles/select', [\App\Http\Controllers\RolesController::class, 'RolesToSelect']);
