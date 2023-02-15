@@ -108,7 +108,6 @@ export default function FeedDefinition() {
                     {nextPage && <div className='w-full flex items-center justify-center'>
                         <Buttonsubmit processing={isLoading} onClick={() => getMoreData(nextPage)} className="text-xs w-full my-4" text="load more data" />
                     </div>}
-
                 </SimpleBar> 
             }
             </div>
