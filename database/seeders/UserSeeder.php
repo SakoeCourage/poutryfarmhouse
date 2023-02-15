@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $superAdmin = \App\Models\User::factory()->create([
-            'name' => 'super Admin',
+            'name' => 'Super Admin',
             'email' => 'poultryfarmhouse@superadmin.com',
             'email_verified_at' => now(),
             'password' => Hash::make('superAdmin@'), // password

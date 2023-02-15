@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
                 // BreedSeeder::class,
                 // ProductsdefinitionSeeder::class,
                 PaymentmethodsSeeder::class,
+                ExpensibleItemsSeeder::class,
                 // FeedSeeder::class,
                 // ProductSeeder::class,
         ]);

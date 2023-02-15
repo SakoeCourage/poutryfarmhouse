@@ -18,7 +18,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
 
+    Route::get('user/profile',[\App\Http\Controllers\UserprofileController::class, 'show']);
+
     Route::get('/flocks/all', [\App\Http\Controllers\FlockControlController::class, 'flocksToSelect']);
+    Route::get('/expensibles/all', [\App\Http\Controllers\ExpensibleItemsController::class, 'expensibleItemsToSelect']);
     Route::get('/payment/methods/all',[\App\Http\Controllers\PaymentController::class, 'paymentToSelect']);
     Route::get('/jobpositions/all', [\App\Http\Controllers\JobpositionController::class,'jobPostionToSelect']);
     Route::get('/sheds/all',[\App\Http\Controllers\ShedController::class,'shedToSelect']);

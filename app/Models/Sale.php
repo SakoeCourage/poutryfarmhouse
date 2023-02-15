@@ -27,6 +27,7 @@ class Sale extends Model
             set: fn ($amount) => $amount * 100,
         );
     }
+ 
     public function saleitems(){
         return $this->hasMany(Saleitem::class,'sale_id');
     } 

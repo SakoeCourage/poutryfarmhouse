@@ -14,6 +14,13 @@ class Saleitem extends Model
     public function definitions(){
         return $this->belongsTo(Productsdefinition::class,'productsdefinition_id');
     }
+    
+    public function price(): Attribute {
+        return Attribute::make(
+            get: fn ($amount) => $amount / 100,
+            set: fn ($amount) => $amount * 100,
+        );
+    }
 
   
 

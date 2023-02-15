@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Userprofile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserprofileController extends Controller
 {
@@ -46,7 +47,10 @@ class UserprofileController extends Controller
      */
     public function show(Userprofile $userprofile)
     {
-        //
+        return[ 'user'=> Auth::user(),
+                'profile' =>Auth::user()->profile,
+                'role' => Auth::user()->getRoleNames()->first()
+                ];
     }
 
     /**

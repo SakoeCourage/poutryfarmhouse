@@ -79,7 +79,6 @@ export default function Newsale() {
         <Custominput error={errors.customer_contact} value={formData.customer_contact} label="customer contact number" placeholder="(000) 000 0000" getValue={(value) => setFormData((cd) => cd = { ...cd, customer_contact: value })} />
       </nav>
       <Itemslist reset={resetform} errors={errors} getTotal={(value) => setFormData((cd) => cd = { ...cd, sub_total: value })} getData={(data) => setFormData((cd) => cd = { ...cd, customer_purchases: data })} />
-
       <div>
         <nav className='p-3 px-4 rounded-md bg-indigo-50/50 font-semibold justify-between  flex items-center gap-5 user-select-none pointer-events-none '>
           <span className=''>Sub total</span>

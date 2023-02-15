@@ -6,12 +6,11 @@ import { usePage } from '@inertiajs/inertia-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AccessByPermission } from '../../authorization/AcessControl'
 
+
 export default function Selectionscreen(props) {
 
     const { today, auth, submission_today } = usePage().props
-    useEffect(() => {
-        console.log(submission_today)
-    }, [submission_today])
+ 
     return (
 
         <motion.div
@@ -26,7 +25,6 @@ export default function Selectionscreen(props) {
             }}
             exit={{ opacity: 0, scale: 0.8 }}
             className=" max-w-3xl mx-auto flex items-center  p-2 w-full min-h-screen">
-
             <div className=" grid grid-cols-1 gap-6 w-full  md:grid-cols-2  ">
 
                 <div onClick={() => props.showform()} className="relative  w-full aspect-square max-w-xs mx-auto  flex items-center  justify-center bg-white  rounded-xl  shadow-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-indigo-200 via-pink-500 to-indigo-200 cursor-pointer transform transition-transform hover:scale-105">

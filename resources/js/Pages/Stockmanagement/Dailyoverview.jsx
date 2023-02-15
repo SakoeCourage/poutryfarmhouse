@@ -20,7 +20,7 @@ import Stocksetup from './Partials/Stocksetup';
 
 
 
-export default function Allstock() {
+export default function Dailyoverview() {
     // const { stocks, sales, filter } = usePage().props
     const [stocks, setStocks] = useState(null)
     const [culled, setculled] = useState(null)
@@ -34,7 +34,7 @@ export default function Allstock() {
     const [currentDate, setCurrentDate] = useState(new Date())
     const [isLoading, setIsLoading] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null)
-    const [isempty, setIsEmpty] = useState(false);
+
 
     function nextDay() {
         let newDate = currentDate
@@ -72,7 +72,6 @@ export default function Allstock() {
             setculled(culled)
             setFeedUsed(feedUsed)
             setusablegradedProducts(usablegradedProducts)
-            setIsEmpty(empty_stock)
             setIsLoading(false)
         }).catch(err => console.log(err.response))
     }
@@ -110,9 +109,6 @@ export default function Allstock() {
                     <ProductViewTable entries={Object.entries(usablegradedProducts[`${currentProduct}`])} />
                 </Modal>
             }
-            {isempty && <Modal closeModal={()=>void(0)}>
-                <Stocksetup handleAfterSucess={() => { fetchPerDate(); setIsEmpty(false) }} />
-            </Modal>}
             <nav className='flex items-center gap-10 my-auto mb-7 justify-between'>
                 <button onClick={prevDay} className='p-2 flex w-max items-center bg-gray-200 text-gray-700 shadow-sm rounded-md gap-2 justify-center  xl:w-auto xl:justify-start xl:min-w-[8rem]'>
                     <FontAwesomeIcon icon='chevron-left' /><span className='hidden xl:block text-sm'>previous day</span></button>
@@ -175,7 +171,7 @@ export default function Allstock() {
                 </nav>
             </nav>}
 
-            <div className='text-gray-800 font-bold flex items-center justify-between my-10'>
+            <div onClick={()=>Inertia.visit('/stock/products/manage')} className='text-gray-800 font-bold cursor-pointer flex items-center justify-between my-10'>
                 <span className='text-lg'>Product sales quantity</span>
                 <span className='text-indigo-900 text-sm  font-semibold flex items-center gap-2'><span>Manage Products </span> <FontAwesomeIcon icon="arrow-right" /> </span>
             </div>
@@ -191,9 +187,9 @@ export default function Allstock() {
             </div>
 
         </main>
-        <div className='max-w-sm p-2 hidden lg:block'>
-            <nav className='text-indigo-600 text-sm flex items-center gap-1 mb-4 p-5  bg-indigo-50'>
-                Choose Date from below
+        <div className='max-w-sm p-2 hidden lg:block custom_box_shadow h-max mt-5 rounded-md'>
+            <nav className='text-indigo-600 rounded-md text-sm flex items-center gap-1 mb-4 p-5  bg-indigo-50'>
+                Choose a date from below
             </nav>
             <Calendar value={currentDate} onChange={handleDateChange} className='rounded-md outline-none border-none shadow-md' />
         </div>

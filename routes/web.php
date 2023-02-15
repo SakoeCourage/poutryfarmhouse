@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'stock'], function () {
         Route::get('/products/manage', [\App\Http\Controllers\ManageProductsController::class, 'index'])->middleware('permission:manage stock data');
         Route::get('/feeds/manage', [\App\Http\Controllers\FeedController::class, 'showFeedStockPage'])->middleware('permission:manage stock data');
-        Route::get('/sale', [\App\Http\Controllers\StockController::class, 'index'])->middleware('permission:manage stock data');
+        Route::get('/daily', [\App\Http\Controllers\StockController::class, 'index'])->middleware('permission:manage stock data');
         Route::get('/add', [\App\Http\Controllers\StockController::class, 'showcreateform'])->middleware('permission:create stock data');
         Route::post('/add', [\App\Http\Controllers\StockController::class, 'create'])->middleware('permission:create stock data');
         Route::put('/update/{stock}', [\App\Http\Controllers\StockController::class, 'update'])->middleware('permission:edit stock data');

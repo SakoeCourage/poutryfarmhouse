@@ -20,7 +20,7 @@ export let sidebarRoutes =
     icon: "shop",
     Role: ['Super Admin'],
     links: [{
-        title: 'pens',
+        title: 'Pens',
         link: '/pen/all',
         abilities: ['create pen','edit pen','delete pen']
 
@@ -60,8 +60,8 @@ export let sidebarRoutes =
     icon: "arrow-trend-up",
     Role: ['Super Admin'],
     links: [{
-        title: 'Overview',
-        link: '/stock/sale',
+        title: 'Daily overview',
+        link: '/stock/daily',
         abilities: ['create stock data']
 
     },

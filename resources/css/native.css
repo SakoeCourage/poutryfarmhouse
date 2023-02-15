@@ -98,3 +98,13 @@
 .text-muted {
     color: #8c8c8c;
 }
+
+.notificationheight {
+    height: 100vh
+}
+
+@media (min-width: 768px) {
+    .notificationheight {
+        height: calc(100vh - 6rem)
+    }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useLayoutEffect} from 'react'
 import SimpleBar from 'simplebar-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ExpenseNotification from './notificationcomponents/ExpenseNotification'
@@ -67,9 +67,11 @@ export default function Notification(props) {
 
 
 
+
+
     return (
-        <div className='mt-2 bg-gray-50 fixed md:absolute min-w-[100vw] p-1   inset-0  md:h-auto md:min-w-[25rem] md:rounded-md custom_box_shadow md:left-auto md:top-auto md:bottom-auto   md:right-32  '>
-            <SimpleBar className=" h-screen  md:h-[32rem] w-full pb-4 relative ">
+        <div className='mt-2 bg-gray-50 fixed md:absolute min-w-[100vw] p-1 notificationbar   inset-0  md:h-auto md:min-w-[25rem] md:max-w-[25rems] md:rounded-md custom_box_shadow md:left-auto md:top-auto md:bottom-auto   md:right-32  '>
+            <SimpleBar className="notificationheight w-full pb-4 relative ">
                 <div className="w-full flex items-center justify-between bg-white px-5 sticky top-0 z-20 py-2 ">
                     <span className="font-medium text-sm text-slate-400">New Notifications({formatnumber(total)})</span>
                     <button onClick={()=>props.onClose()} className="  text-slate-400 hover:text-slate-600 h-full w-max rounded-full flex justify-center items-center">

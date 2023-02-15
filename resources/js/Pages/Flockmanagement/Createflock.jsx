@@ -74,7 +74,7 @@ export default function Createflock(props) {
           </span>
           <Custominput error={errors.flock_identification_name} getValue={(value) => setData('flock_identification_name', value)} label='flock identification' />
           <nav className='flex flex-col md:flex-row gap-10'>
-            <Custominput type="number" error={errors.age_of_flocks} getValue={(value) => setData('age_of_flocks', value)} label='age of flock' />
+            <Custominput type="number" error={errors.age_of_flocks} getValue={(value) => setData('age_of_flocks', value)} label='age of flock (months)' placeholder="(00)" />
             <Custominput type="number" error={errors.opening_birds} getValue={(value) => setData('opening_birds', value)} label='opening birds' />
           </nav>
       

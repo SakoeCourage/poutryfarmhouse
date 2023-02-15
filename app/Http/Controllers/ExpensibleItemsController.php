@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Saleitem;
+use App\Models\ExpensibleItems;
 use Illuminate\Http\Request;
 
-class SaleitemController extends Controller
+class ExpensibleItemsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,6 +16,13 @@ class SaleitemController extends Controller
     {
         //
     }
+
+   
+    public function expensibleItemsToSelect(){
+        return ([
+            'items' => \App\Models\ExpensibleItems::get(['id', 'item'])
+        ]);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -42,33 +48,21 @@ class SaleitemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\ExpensibleItems  $expensibleItems
      * @return \Illuminate\Http\Response
      */
-    public function show($saleid)
-    {     
-        $sale_items = Saleitem::where('sale_id',$saleid);
-        return([
-            'saleitems' => $sale_items->with(['definitions:id,name,product_id','sale:id,total_amount'])->get()->map(function($item){
-                return([
-                    'amount' => $item->amount,
-                    'definition' =>    $item->definitions->name,
-                    'product'=>Product::where('id',$item->definitions->product_id)->pluck('name')[0],
-                    'price' =>$item->price,
-                    'quantity' =>$item->quantity,
-                    'total'=>$item->sale->total_amount
-                ])  ;
-            })
-        ]);
+    public function show(ExpensibleItems $expensibleItems)
+    {
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\ExpensibleItems  $expensibleItems
      * @return \Illuminate\Http\Response
      */
-    public function edit(Saleitem $saleitem)
+    public function edit(ExpensibleItems $expensibleItems)
     {
         //
     }
@@ -77,10 +71,10 @@ class SaleitemController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\ExpensibleItems  $expensibleItems
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Saleitem $saleitem)
+    public function update(Request $request, ExpensibleItems $expensibleItems)
     {
         //
     }
@@ -88,10 +82,10 @@ class SaleitemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Saleitem  $saleitem
+     * @param  \App\Models\ExpensibleItems  $expensibleItems
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Saleitem $saleitem)
+    public function destroy(ExpensibleItems $expensibleItems)
     {
         //
     }

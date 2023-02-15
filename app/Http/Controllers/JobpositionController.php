@@ -17,6 +17,12 @@ class JobpositionController extends Controller
         //
     }
 
+    public function jobPostionToSelect(){
+        return ([
+            'jobs' => \App\Models\Jobposition::get(['id', 'position'])
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

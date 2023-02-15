@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import Notification from './Notification'
 import Api from '../api/Api'
 import { formatMaximumValue } from '../Pages/Dashboardcomponents/StatsOverview'
+import Rightmodalwithbackdrop from './Rightmodalwithbackdrop'
+import Editprofile from './Editprofile'
 
 
 
@@ -15,18 +17,14 @@ function Accountmenu() {
     const { auth } = usePage().props
     const { user } = auth
     return <div
-        className="mt-2 absolute min-w-[100vw] h-screen inset-x-0  md:h-auto md:min-w-[18rem] md:left-auto  md:right-16">
-        <div className="bg-white rounded overflow-hidden shadow-lg">
+        className="mt-2 absolute min-w-[100vw] h-screen inset-x-0 custom_box_shadow  md:h-auto md:min-w-[18rem] md:left-auto  md:right-16 md:rounded-md">
+        <div className="bg-white md:rounded-md overflow-hidden shadow-lg">
             <div className="text-center p-6  border-b">
-                <img
-                    className="h-24 w-24 rounded-full mx-auto"
-                    src={profilepic}
-                    alt="user name"
-                />
-
+                <div className="h-24 w-24 mx-auto rounded-full text-3xl grid place-items-center text-indigo-400 bg-indigo-100  uppercase">
+                    {user.roles[0].charAt(0)}
+                </div>
                 <p className="pt-2 text-lg font-semibold">{user.user?.name ?? "Username"}</p>
                 <p className="text-sm text-gray-600">{user.user?.email ?? "user email"}</p>
-
             </div>
             <div className="border-b">
                 <AccessByRole requiredRoles={['Super Admin']}>
@@ -50,7 +48,6 @@ function Accountmenu() {
                         </div>
                     </Link>
                 </AccessByRole>
-
                 <a href="#" className="px-4 py-2 hover:bg-gray-100 flex">
                     <div className="text-gray-800">
                         <svg
@@ -74,7 +71,6 @@ function Accountmenu() {
             </div>
 
             <div className="">
-
                 <Link href="/logout" method='post' as='button' className="px-4 py-2 w-full pb-4 hover:bg-gray-100 flex gap-4 items-center justify between ">
                     <FontAwesomeIcon className='text-gray-500' icon="right-from-bracket" /><p className="text-sm font-medium text-gray-800 leading-none">Logout</p>
                 </Link>
@@ -96,9 +92,8 @@ export default function Header(props) {
     }, [])
 
     useEffect(() => {
-     setUnreadCount(user.notifications);
+        setUnreadCount(user.notifications);
     }, [user.notifications])
-    
 
     useEffect(() => {
         setisDropped(false);
@@ -107,6 +102,9 @@ export default function Header(props) {
 
     return (
         <div className=' h-14 z-40 sticky top-0 shadow-sm  basis-16 ' id='header'>
+            {/* <Rightmodalwithbackdrop title="Edit Profile">
+                <Editprofile/>
+            </Rightmodalwithbackdrop> */}
             <div className='flex justify-between items-center  px-10 py-2'>
                 <FontAwesomeIcon className='text-[#0E121F]/90 cursor-pointer' onClick={props.toggleSidebar} icon="bars" />
                 <nav className=' flex items-center gap-3'>
@@ -118,18 +116,16 @@ export default function Header(props) {
                         <FontAwesomeIcon icon='bell' size='xl' />
                         {Boolean(unreadCount) && <span className="flex items-center justify-center absolute -top-[40%] -right-[50%] bg-red-500 text-white p-1 h-5 w-5 rounded-full text-xs ring-1 ring-offset-1 ring-white">
                             {formatMaximumValue(unreadCount)}
-                        </span>
-                        }
+                        </span>}
                     </button>
-                    <img className='h-8 w-8 aspect-square object-cover rounded-full order-1' src={profilepic} alt="" />
+                    <div className="h-8 w-8 rounded-full text-xl grid place-items-center text-indigo-400 bg-indigo-100 uppercase">
+                        {user.roles[0].charAt(0)}
+                    </div>
                     <FontAwesomeIcon onClick={() => setisDropped(!isDropped)} className='order-3 cursor-pointer  bg-gray-700 text-white h-2 w-2 p-1 rounded-full' icon='angle-down' />
                 </nav>
             </div>
-            {isDropped && <Accountmenu />
-
-            }
-            {showNotifications && <Notification onClose={() => setShowNotifications(false)} setUnreadCount={(value) => setUnreadCount(value)} />
-            }
+            {isDropped && <Accountmenu />}
+            {showNotifications && <Notification onClose={() => setShowNotifications(false)} setUnreadCount={(value) => setUnreadCount(value)} />}
         </div>
     )
 }

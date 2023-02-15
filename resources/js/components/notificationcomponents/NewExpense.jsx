@@ -3,9 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Inertia } from '@inertiajs/inertia'
 import { diffForHumans } from '../../api/Util'
 export default function NewExpense(props) {
-    useEffect(() => {
-        console.log(props.data)
-    }, [])
     
   return (
     <div className="w-full h-auto relative rounded-lg shadow hover:shadow-2xl bg-white" onClick={()=>Inertia.visit('/expenses/submissions')}>

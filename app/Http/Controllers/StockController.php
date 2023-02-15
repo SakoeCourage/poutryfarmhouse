@@ -29,7 +29,7 @@ class StockController extends Controller
     public function index()
     {  
         
-        return Inertia('Stockmanagement/Allstock');
+        return Inertia('Stockmanagement/Dailyoverview');
     }
 
     /**
@@ -142,11 +142,15 @@ class StockController extends Controller
     public function getStockPerGivenDay(Stock $stock)
     {
         
-        if (Stock::all()->isEmpty()) {
-            return [
-                'empty_stock' => true
-            ];
-        }
+        // if (Stock::all()->isEmpty()) {
+        //     return redirect()->back()->with(
+        //     [    
+        //         "message" => [
+        //             'type' => 'failed',
+        //             'text' => 'no items in stock'
+        //         ]]
+        //     );
+        // }
         new StockService();
         return [
             'stocks' =>  $stock->whereDate('created_at', Request()->date ?? Carbon::now())

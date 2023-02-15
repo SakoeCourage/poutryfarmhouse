@@ -81,7 +81,7 @@ class FlockControlController extends Controller
             'products.*.quantity' => ['required', 'numeric'],
             'dead' => ['nullable', 'numeric'],
             'medication' => ['nullable','string','max:255'],
-            'vaccination' => ['required','string','max:255'],
+            'vaccination' => ['nullable','string','max:255'],
             'missing' => ['nullable', 'numeric'],
             'culled' => ['nullable', 'numeric'],
             'time' => ['date_format:H:i']

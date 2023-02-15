@@ -12,7 +12,6 @@ let Api = axios.create({
 })
 
 Api.interceptors.response.use(function(response) {
-    console.log(response)
     return response
 }, function(error) {
     if (error.response.status === 401 || error.response.status === 419) {
