@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;

@@ -18,6 +18,12 @@ use Inertia\Inertia;
 
 Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm']);
 Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'index'])->name('login');
+// Route::get('/email/verify',function(){
+//     return view('email.verify',[
+//         'email' =>'akorlicourage@gmail.com',
+//         'password' =>'imthepassword'
+//     ]);
+// });
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [\App\Http\Controllers\DashboardController::class,'index']);

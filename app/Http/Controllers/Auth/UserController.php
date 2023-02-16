@@ -8,75 +8,76 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\Userprofile;
 
-
 class UserController extends Controller
 {
     //
-
-
-    public function index(User $user){
-        return Inertia('Usermanagement/Allusers',[
-            'users' =>fn ()=> $user->filter(request()->only('sort','search'))
+    public function index(User $user)
+    {
+        return Inertia('Usermanagement/Allusers', [
+            'users' => fn () => $user->filter(request()->only('sort', 'search'))
                 ->latest()->paginate(10)
                 ->withQueryString()
-                -> through(fn($cuser)=>[
-                    'id'=> $cuser->id,
+                ->through(fn ($cuser) => [
+                    'id' => $cuser->id,
                     'date_created' => $cuser->created_at,
                     'email' => $cuser->email,
                     'name' => $cuser->name,
                     'profile' => $cuser->profile,
                     'permissions' => $cuser->getAllPermissions()->pluck('name'),
                     'role' => $cuser->getRoleNames()
-                    ]),
-                'filters' => request()->only('sort','search'),
+                ]),
+            'filters' => request()->only('sort', 'search'),
         ]);
     }
-    
-    public function getuserinfo(User $user){
-        return([
+
+    public function getuserinfo(User $user)
+    {
+        return ([
             'user' => $user,
-            'profile'=> $user->profile,
+            'profile' => $user->profile,
             'role' => $user->getRoleNames()
 
-            
-        ]);
 
+        ]);
     }
 
 
-    public function showcreateuserform(){
+    public function showcreateuserform()
+    {
         return Inertia('Usermanagement/Createuser');
     }
+
+    
 
 
 
     public function create(User $user, Userprofile $profile)
     {
-      
+
         $data = request()->validate([
-            'name' => ['required', 'string', 'min:8', 'max:255','unique:users'],
+            'name' => ['required', 'string', 'min:8', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'usedefault' => ['required'],
             'password' => ['required_if:usedefault,0', 'max:255'],
-            'firstname' => ['required', 'string','min:2', 'max:255'],
-            'lastname' => ['required', 'string','min:2', 'max:255'],
-            'contact' => ['required', 'numeric','min:9'],
+            'firstname' => ['required', 'string', 'min:2', 'max:255'],
+            'lastname' => ['required', 'string', 'min:2', 'max:255'],
+            'contact' => ['required', 'numeric', 'min:9'],
             'location' => ['max:255'],
             'identification_number' => ['max:255'],
-            'jobposition' => ['required', 'string','max:255'],
-            'role' => ['required', 'string','max:255']
+            'jobposition' => ['required', 'string', 'max:255'],
+            'role' => ['required', 'string', 'max:255']
         ]);
-            
+
         DB::transaction(function () use ($data, $user, $profile) {
             // creating new using
             $newuser = $user->create([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => Hash::make($data['password'] ?? 'poultryfarmhouse@'),
+                'password' => Hash::make('poultryfarmhouse@'),
             ]);
 
-             // assign role to user
-             $newuser->assignRole($data['role']);
+            // assign role to user
+            $newuser->assignRole($data['role']);
 
             // adding meta data to profile table
             $profile->create([
@@ -89,7 +90,7 @@ class UserController extends Controller
                 'identification_number' => $data['identification_number']
 
             ]);
-        
+            dispatch(new \App\Jobs\SendEmailVerification($newuser));
         });
         return redirect()->back()->with([
             "message" => [
@@ -100,27 +101,28 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit(User $user){
-       
+    public function edit(User $user)
+    {
+
         $data = request()->validate([
             'name' => ['required', 'string', 'min:8', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'firstname' => ['required', 'string','min:2', 'max:255'],
-            'lastname' => ['required', 'string','min:2', 'max:255'],
-            'contact' => ['required', 'numeric','min:9'],
+            'firstname' => ['required', 'string', 'min:2', 'max:255'],
+            'lastname' => ['required', 'string', 'min:2', 'max:255'],
+            'contact' => ['required', 'numeric', 'min:9'],
             'location' => ['max:255'],
             'identification_number' => ['max:255'],
-            'jobposition' => ['required', 'string','max:255'],
-            'role' => ['required', 'string','max:255']
+            'jobposition' => ['required', 'string', 'max:255'],
+            'role' => ['required', 'string', 'max:255']
         ]);
- 
-        DB::transaction(function()use ($data, $user,) {     
+
+        DB::transaction(function () use ($data, $user,) {
             $user->update([
                 'name' => $data['name'],
                 'email' => $data['email'],
             ]);
-             
-             $user->syncRoles($data['role']);
+
+            $user->syncRoles($data['role']);
             $user->profile()->update([
                 'firstname' => $data['firstname'],
                 'lastname' => $data['lastname'],
@@ -130,7 +132,6 @@ class UserController extends Controller
                 'identification_number' => $data['identification_number']
 
             ]);
-        
         });
         return redirect()->back()->with([
             "message" => [
@@ -139,18 +140,17 @@ class UserController extends Controller
             ]
 
         ]);
-
     }
-    public function delete(User $user){
-        if($user->delete()){
+    public function delete(User $user)
+    {
+        if ($user->delete()) {
             return redirect()->back()->with([
                 "message" => [
                     'type' => 'success',
                     'text' => 'user account deleted succesfully'
                 ]
-    
+
             ]);
         }
-    
     }
 }
