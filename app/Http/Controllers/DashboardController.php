@@ -100,11 +100,7 @@ class DashboardController extends Controller
         YEAR(invoices.updated_at) as year, 
         products.name as name, saleitems.*")
             ->get();
-            
-
-    
-       
-    
+  
         $sale = $months->mapWithKeys(function ($month,$key)use($sales) {
             $monthSales = $sales->where('month',$month);
             return [$month=> $monthSales->sum('amount') / 100];
