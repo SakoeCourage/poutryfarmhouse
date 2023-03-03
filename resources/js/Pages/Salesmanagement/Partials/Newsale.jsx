@@ -72,6 +72,8 @@ export default function Newsale() {
 
 
 
+
+
   return (
     <div className='flex flex-col gap-7 max-w-4xl mx-auto pt-5'>
       <nav className='flex items-center gap-5 flex-col md:flex-row '>
@@ -104,7 +106,7 @@ export default function Newsale() {
       <nav className='self-end mt-5'>
         <nav className='flex items-center text-xs gap-2 mb-1'>
           <Customcheckbox onChange={(e) => setAutoGenerateInvoice(e.target.checked)} checked={autoGenerateInvoice} />
-          <label htmlFor="">also  generate sale invoice</label>
+          <label htmlFor="">Generate sale invoice</label>
         </nav>
         <Buttonsubmit onClick={submit} processing={processing} text="done" className="rounded-xl py-2  px-5" />
       </nav>

@@ -14,7 +14,7 @@ import {
 } from "@material-tailwind/react";
 
 function Tablist() {
-  const [currentValue,setCurrentValue]= useState('rp');
+  const [currentValue,setCurrentValue]= useState('pd');
   const data = [
     {
       label: "Product Definition",
@@ -39,7 +39,7 @@ function Tablist() {
   ];
 
   return (
-    <Tabs value="rp" className="">
+    <Tabs value="pd" className="">
       <TabsHeader  className="bg-gray-200/30 text-sm isolate ">
         {data.map(({ label, value }) => (
           <Tab className='text-sm ' onClick={()=>setCurrentValue(value)} key={value} value={value}>

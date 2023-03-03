@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('product_id');
             $table->bigInteger('unit_price');
+            $table->bigInteger('price_per_crate')->nullable()->default(0);
+            $table->bigInteger('units_per_crate')->nullable()->default(0);
             $table->bigInteger('quantity_in_stock')->nullable()->default(0);
             $table->boolean('automated_stocking')->nullable()->default(false);
             $table->timestamps();

@@ -26,4 +26,10 @@ class Productsdefinition extends Model
             set: fn ($unit_price) => $unit_price * 100,
         );
     }
+    public function pricePerCrate(): Attribute {
+        return Attribute::make(
+            get: fn ($unit_price) => $unit_price / 100,
+            set: fn ($unit_price) => $unit_price * 100,
+        );
+    }
 }

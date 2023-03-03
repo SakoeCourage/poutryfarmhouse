@@ -19,7 +19,6 @@ class DashboardController extends Controller
     public function index()
     {
 
-      
         return Inertia('Dashboard');
     }
     public function data()
@@ -73,7 +72,7 @@ class DashboardController extends Controller
                 'offsetY' => 0
             ];
         });
-       
+
 
         return [
             'categories' => $days,
@@ -98,12 +97,13 @@ class DashboardController extends Controller
         sales.total_amount as amount,
         DATE_FORMAT(invoices.updated_at,'%b') as month,
         YEAR(invoices.updated_at) as year, 
-        products.name as name, saleitems.*")
+        products.name as name")
             ->get();
-  
-        $sale = $months->mapWithKeys(function ($month,$key)use($sales) {
-            $monthSales = $sales->where('month',$month);
-            return [$month=> $monthSales->sum('amount') / 100];
+      
+
+        $sale = $months->mapWithKeys(function ($month, $key) use ($sales) {
+             $monthSales = $sales->where('month', $month);
+            return [$month => $monthSales->sum('amount') / 100];
         });
         return ([
             'data' =>  $sale,
@@ -131,6 +131,7 @@ class DashboardController extends Controller
                 })
                 );
             });
+        
         return $productSale;
     }
 

@@ -73,7 +73,7 @@ export default function Invoice() {
                     <Printreceipt printReceipt={() => handlePrint()} ref={PrintReceiptRef} />
                 </Scrollablemodal>}
 
-                <SimpleBar className="   h-full ">
+                <SimpleBar className=" w-full  h-full ">
                     <nav className='flex items-center  my-2 mx-2 w-full  '>
                         <nav className='sticky left-0 flex items-center gap-3 flex-wrap md:flex-nowrap'>
                             <SearchBar placeholder="invoice number or customer name " />

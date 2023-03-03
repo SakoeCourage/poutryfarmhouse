@@ -4,12 +4,13 @@ import Custominput from '../../../components/Custominput'
 import { usePage } from '@inertiajs/inertia-react'
 export default function Itemslist(props) {
   const { productsData, products } = usePage().props
+  const [in_crate, setInCrate] = useState(false);
   const [items, setItems] = useState([
-    { product_id: '', definition_id: '', quantity: '', price: '', amount: '' }
+    { product_id: '', definition_id: '', units: '', price: '', amount: '', price_per_crate: '', crates: '' }
   ])
 
   let addNewItem = () => {
-    setItems((ci => ci = [...ci, { definition_id: '', quantity: '', price: '', amount: '' }]))
+    setItems((ci => ci = [...ci, { definition_id: '', units: '', price: '', amount: '', price_per_crate: '', crates: '' }]))
   }
 
   let removeItemat = (i) => {
@@ -21,6 +22,7 @@ export default function Itemslist(props) {
   let handleChange = (i, data) => {
     let newitems = [...items];
     newitems[i]["definition_id"] = data.definition_id;
+    newitems[i]["price_per_crate"] = data.price_per_crate;
     newitems[i]["price"] = data.unit_price;
     setItems(newitems)
   }
@@ -45,18 +47,22 @@ export default function Itemslist(props) {
     newitems[i]['product_id'] = data
     newitems[i]['definition_id'] = ''
     newitems[i]['price'] = ''
-    newitems[i]['quantity'] = ''
+    newitems[i]['units'] = ''
+    newitems[i]['price_per_crate'] = ''
     setItems(newitems)
 
   }
+  let checkIfInCrate = (index) => {
+    return (Boolean(products.find(pro => pro.id == items[index].product_id)?.in_crates))
+  }
 
   let calculateAmount = (i) => {
-    if (items[i].price && items[i].quantity) {
-      return ((Number(items[i].price) * Number(items[i].quantity)).toFixed(2))
-    } else {
-      return ''
-    }
+
+    return ((Number(items[i].price) * items[i].units) + (Number(items[i].price_per_crate) * Number(items[i].crates))).toFixed(2)
+
   }
+
+
   let getProductfromId = (id) => {
     return productsData.find((item => item.definition_id === Number(id)))
   }
@@ -64,12 +70,16 @@ export default function Itemslist(props) {
 
 
   useEffect(() => {
-    setItems([{ product_id: '', definition_id: '', quantity: '', price: '', amount: '' }])
-    console.log(items)
+    setItems([{ product_id: '', definition_id: '', units: '', price: '', amount: '', price_per_crate: '', crates: '' }])
   }, [props.reset])
 
   let getProductsDefintionsById = (id) => {
     return productsData.filter((data) => data.id == id)
+  }
+
+  let getProductIdfromDefinition = (index) => {
+    let c_p = items[index].definition_id
+    return c_p;
   }
 
 
@@ -78,10 +88,15 @@ export default function Itemslist(props) {
     props.getData(items)
   }, [items])
 
+  useEffect(() => {
+    console.log(productsData, products)
+  }, [productsData])
+
+
   return <dt className='w-full relative'>
     <dl className='hidden md:flex items-center gap-1 ml-10'>
       <dd className='text-indigo-500  basis-5/12  '>product</dd>
-      <dd className='text-indigo-500  basis-2/12 ml-5 '>quantity</dd>
+      <dd className='text-indigo-500  basis-2/12 ml-5 '>units</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5 '>price</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5  grow'>amount</dd>
     </dl>
@@ -107,6 +122,7 @@ export default function Itemslist(props) {
                 })}
               </select>
             </span>
+
             <span className="space-y-1 text-sm w-full">
               {props.errors[`customer_purchases.${i}.definition_id`] && <div className=' mt-2 relative '>
                 <nav className="cursor-pointer z-10 font-awesome  gap-1  flex items-center absolute right-2 top-3">
@@ -114,8 +130,8 @@ export default function Itemslist(props) {
                   <span className="  text-sm text-red-400 backdrop-blur-sm bg-white/30 error ">{props.errors[`customer_purchases.${i}.definition_id`]}</span>
                 </nav>
               </div>}
-              <select onChange={(e) => handleChange(i, getProductfromId(e.target.value))} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
-                <option value='' >type</option>
+              <select value={getProductIdfromDefinition(i)} onChange={(e) => handleChange(i, getProductfromId(e.target.value))} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
+                <option value='' >Select type</option>
                 {getProductsDefintionsById(items[i].product_id).map((product, i) => {
                   return (
                     <option key={i} value={product.definition_id}>{product.definition_name}</option>
@@ -124,11 +140,19 @@ export default function Itemslist(props) {
               </select>
             </span>
           </nav>
+
+          {checkIfInCrate(i) && <nav className='text-gray-500 basis-full md:basis-2/12'>
+            <Custominput value={item.crates} placeholder="enter crates" getValue={(value) => handleValueChange(i, "crates", value)} />
+          </nav>}
           <nav className='text-gray-500 basis-6/12  md:basis-2/12'>
-            <Custominput error={props.errors[`customer_purchases.${i}.quantity`]} value={item.quantity} placeholder="enter quantity" getValue={(value) => handleValueChange(i, "quantity", value)} />
+            <Custominput error={props.errors[`customer_purchases.${i}.units`]} value={item.units} placeholder="enter units" getValue={(value) => handleValueChange(i, "units", value)} />
           </nav>
           <nav className='text-gray-500 basis-full md:basis-2/12'>
             <Custominput readOnly={true} value={item.price} placeholder="enter price" getValue={() => void (0)} />
+          </nav>
+
+          <nav className='text-gray-500 basis-full md:basis-2/12'>
+            <Custominput readOnly={true} value={item.price_per_crate} placeholder="enter price" getValue={() => void (0)} />
           </nav>
           <nav className='text-gray-500 basis-full md:basis-2/12 grow'>
             <Custominput readOnly={true} value={calculateAmount(i)} placeholder="enter amount" getValue={(value) => handleValueChange(i, 'amount', value)} type="number" />

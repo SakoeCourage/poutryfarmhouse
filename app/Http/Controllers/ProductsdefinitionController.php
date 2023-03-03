@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Productsdefinition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ProductsdefinitionController extends Controller
 {
@@ -28,17 +29,21 @@ class ProductsdefinitionController extends Controller
      */
     public function create()
     {
-
+            // dd(request()->in_crates);
         Request()->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:productsdefinitions', 'unique:products,name'],
+            'name' => ['required', 'string', 'max:255', 'unique:products,name'],
+            'in_crates'=>['required','boolean'],
             'definitions' => ['required', 'array', 'min:1'],
             'definitions.*.name' => ['required', 'string', 'max:255', 'distinct'],
             'definitions.*.unit_price' => ['required', 'numeric'],
-            'automated_stocking' => ['nullable', 'boolean']
+            'definitions.*.price_per_crate' => [Rule::requiredIf(request()->in_crates == true),'nullable','numeric'],
+            'definitions.*.units_per_crate' => [Rule::requiredIf(request()->in_crates == true),'nullable','numeric'],
+            'automated_stocking' => ['required', 'boolean']
         ]);
         DB::transaction(function () {
             $newProduct = \App\Models\Product::create([
-                'name'  => Request()->name
+                'name'  => Request()->name,
+                'in_crates' => Request()->in_crates
             ]);
 
             // dd(collect(Request()->definitions));
@@ -47,6 +52,8 @@ class ProductsdefinitionController extends Controller
                     'product_id' => $newProduct->id,
                     'name' => $value['name'],
                     'unit_price' => $value['unit_price'],
+                    'price_per_crate' => $value['price_per_crate'],
+                    'units_per_crate' => $value['units_per_crate'],
                     'automated_stocking' => Request()->automated_stocking
                 ]);
             });

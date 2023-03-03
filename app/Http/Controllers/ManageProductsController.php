@@ -26,6 +26,7 @@ class ManageProductsController extends Controller
                 'products' => Product::latest()->with('definitions')->get()->map(function ($item) {
                     return ([
                         'product' => $item->name,
+                        'in_crates' => $item->in_crates,
                         'id' => $item->id,
                         'definitions' => $item->definitions->map(function ($item) {
                             return ([
@@ -78,7 +79,7 @@ class ManageProductsController extends Controller
     public function show($id)
     {
         return ([
-            'definition' => Productsdefinition::where('id', $id)->with('product:id,name')->firstorFail()
+            'definition' => Productsdefinition::where('id', $id)->with('product:id,name,in_crates')->firstorFail()
         ]);
     }
 

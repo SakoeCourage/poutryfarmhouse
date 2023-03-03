@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Productsdefinition;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ProductStockService;
+use Illuminate\Validation\Rule;
 
 class ProductstockController extends Controller
 {
@@ -65,8 +66,11 @@ class ProductstockController extends Controller
     {
         $request->validate([
             'productsdefinition_id' => ['required'],
-            'quantity' => ['required', 'numeric'],
-            'description' => ['required', 'string', 'max:255']
+             'in_crates' => ['required','boolean'],
+             'crates' => [Rule::requiredIf($request->in_crates),'nullable','numeric'],
+             'units' => [Rule::requiredIf(!request()->in_crates),'nullable','numeric'],
+             'quantity' => ['required', 'numeric'],
+             'description' => ['required', 'string', 'max:255']
         ]);
 
         $productservice->increasestock($request);

@@ -23,19 +23,20 @@ class SaleController extends Controller
      */
     public function index()
     {
- 
+
         return Inertia::render('Salesmanagement/Sale', [
             'productsData' => DB::table('products')->join('productsdefinitions', 'products.id', '=', 'product_id')
                 ->selectRaw(
-                    'products.id as id,
+                   'products.id as id,
                     products.name as productname,
+                    (productsdefinitions.price_per_crate)/100 as price_per_crate,
                     productsdefinitions.id as definition_id,
                     productsdefinitions.name as definition_name,
                     ROUND(productsdefinitions.unit_price/100,2)  as unit_price,
-                    productsdefinitions.quantity_in_stock as quantity_in_stock'      
+                    productsdefinitions.quantity_in_stock as quantity_in_stock'
                 )
                 ->get(),
-                'products' => Product::get(['id','name'])
+            'products' => Product::get(['id', 'name','in_crates'])
         ]);
     }
 
@@ -80,7 +81,7 @@ class SaleController extends Controller
             'discount_rate' => ['nullable'],
             'total_amount' => ['required'],
             'customer_purchases' => ['required', 'array', 'min:1'],
-            'customer_purchases.*.product_id' => ['required', ],
+            'customer_purchases.*.product_id' => ['required',],
             'customer_purchases.*.definition_id' => ['required', 'distinct'],
             'customer_purchases.*.quantity' => ['required', 'numeric']
         ]);
@@ -105,7 +106,6 @@ class SaleController extends Controller
                     'amount' => $item['amount'],
                     'quantity' => $item['quantity']
                 ]);
-
             });
             return redirect()->back()->with([
                 'message' => [

@@ -12,7 +12,7 @@ import Noselectedproduct from './Partials/Noselectedproduct'
 import ProductMetaDataLoader from './Partials/ProductMetaDataLoader'
 import Tableloader from './Partials/Tableloader'
 import axios from 'axios'
-import { dateReformat } from '../../api/Util'
+import { dateReformat, formatnumber } from '../../api/Util'
 
 
 
@@ -73,6 +73,8 @@ export default function Productstock() {
                 <Addtostockform handleOnSucess={(id) => handleOnUpdateFinish(id)} productDetails={{
                     'id': productData.id,
                     'quantity': productData.quantity_in_stock,
+                    'in_crates': Boolean(productData.product?.in_crates),
+                    'units_per_crate': productData.units_per_crate
                 }} />
             </Modal>
             }
@@ -87,14 +89,26 @@ export default function Productstock() {
                                     <nav className='text-sm text-gray-400'>product</nav>
                                     <nav className='font-semibold text-indigo-900 text-2xl '><span>{productData.product?.name}</span><span className='text-indigo-700 text-xl ml-2'>{productData.name}</span></nav>
                                 </nav>
-                                <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm'>
-                                    <nav className='text-sm text-gray-400'>unit price</nav>
-                                    <nav className='font-semibold text-indigo-900 text-2xl'>{formatcurrency(productData.unit_price)}</nav>
+                                <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm flex flex-col gap-2'>
+                                    <nav className="p-2 bg-indigo-100 rounded-md ">
+                                        <nav className='text-sm text-gray-400'>price per unit</nav>
+                                        <nav className='font-semibold text-indigo-900 text-2xl'>{formatcurrency(productData.unit_price)}</nav>
+                                    </nav>
+                                    {Boolean(productData.product?.in_crates) && <nav className="p-2 bg-indigo-100 rounded-md ">
+                                        <nav className='text-sm text-gray-400'>price per crate</nav>
+                                        <nav className='font-semibold text-indigo-900 text-2xl'>{formatcurrency(productData.price_per_crate)}</nav>
+                                    </nav>}
                                 </nav>
                                 <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm'>
-                                    <nav className='text-sm text-gray-400'>quantity in stock</nav>
-                                    <nav className='font-semibold text-indigo-900 text-2xl'>{new Intl.NumberFormat().format(productData.quantity_in_stock)}</nav>
-                                    <Primarybutton onClick={() => setShowForm(true)} text="update" className="mt-2" />
+                                    <nav className='text-sm text-gray-400'>quantity in stock </nav>
+                                    <nav className='font-semibold text-indigo-900 text-2xl'>
+                                        {Boolean(productData.product?.in_crates) ?
+                                            <span className='font-semibold text-xl'>{formatnumber(Math.floor(productData.quantity_in_stock / (productData.units_per_crate ?? 1)))} <span className="text-xs mx-1">crates</span> &nbsp; <div className="block">{productData.quantity_in_stock % (productData.units_per_crate ?? 1)} <span className="text-xs mx-1">units</span></div> </span>
+                                            :
+                                            new Intl.NumberFormat().format(productData.quantity_in_stock)
+                                        }
+                                    </nav>
+                                    <Primarybutton onClick={() => setShowForm(true)} text="update" className="mt-5" />
                                 </nav>
                             </div>
                         }
@@ -122,11 +136,15 @@ export default function Productstock() {
                                             time
                                         </th>
                                         <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                            quantity
+                                            quantity(units)
                                         </th>
+                                        {Boolean(productData.product?.in_crates) && <th scope="col" className="py-3 px-6 min-w-[10rem]">
+                                            quantity after {Boolean(productData.product?.in_crates) && <span>(crates)</span>}
+                                        </th>}
                                         <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                            quantity after
+                                            quantity after (units)
                                         </th>
+
                                         <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                             description
                                         </th>
@@ -153,11 +171,28 @@ export default function Productstock() {
                                                     {item.time}
                                                 </td>
                                                 <td className="py-2 px-6 ">
-                                                    {item.action == 'addition' ? <span className='text-green-300 font-bold'>+</span > : <span className='text-red-300 font-bold'>-</span>} {item.quantity}
+                                                    {item.action == 'addition' ? <span className='text-green-300 font-bold'>+</span > : <span className='text-red-300 font-bold'>-</span>} {formatnumber(item.quantity)}
                                                 </td>
-                                                <td className="py-2 px-6 ">
-                                                    {new Intl.NumberFormat().format(item.net_quantity)}
-                                                </td>
+                                                {
+                                                    Boolean(productData.product?.in_crates) && <td className="py-2 px-6 ">
+                                                        {Boolean(productData.product?.in_crates) ?
+                                                            <span className=''>{formatnumber(Math.floor(item.net_quantity / (productData.units_per_crate ?? 1)))} </span>
+                                                            :
+                                                            new Intl.NumberFormat().format(item.net_quantity)
+                                                        }
+                                                    </td>
+                                                }
+
+                                                {Boolean(productData.product?.in_crates) ?
+                                                    <td className="py-2 px-6 ">
+                                                        {item.net_quantity % (productData.units_per_crate ?? 1)}
+                                                    </td> :
+                                                    <td className="py-2 px-6 ">
+                                                        {item.net_quantity}
+                                                    </td>
+
+
+                                                }
                                                 <td className="py-2 px-6 ">
                                                     {item.description}
                                                 </td>

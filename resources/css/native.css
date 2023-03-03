@@ -108,3 +108,7 @@
         height: calc(100vh - 6rem)
     }
 }
+
+input::placeholder {
+    text-transform: capitalize;
+}
