@@ -4,7 +4,6 @@ import Custominput from '../../../components/Custominput'
 import { usePage } from '@inertiajs/inertia-react'
 export default function Itemslist(props) {
   const { productsData, products } = usePage().props
-  const [in_crate, setInCrate] = useState(false);
   const [items, setItems] = useState([
     { product_id: '', definition_id: '', units: '', price: '', amount: '', price_per_crate: '', crates: '' }
   ])
@@ -57,9 +56,7 @@ export default function Itemslist(props) {
   }
 
   let calculateAmount = (i) => {
-
     return ((Number(items[i].price) * items[i].units) + (Number(items[i].price_per_crate) * Number(items[i].crates))).toFixed(2)
-
   }
 
 
@@ -89,17 +86,29 @@ export default function Itemslist(props) {
   }, [items])
 
   useEffect(() => {
-    console.log(productsData, products)
+     const w_q = items.map((item,i)=>{
+        if(item.definition_id){
+            let units_per_crate = productsData.find(pr=>Number(pr.definition_id)==Number(item.definition_id))?.units_per_crate
+            let quantity = (Number(units_per_crate) * Number(item.crates)) + Number(item.units)
+            item.quantity = quantity
+            item.in_crates = checkIfInCrate(i)
+            console.log(item)
+        }
+     })
+  }, [items])
+
+  useEffect(() => {
+    console.log(productsData)
   }, [productsData])
 
 
   return <dt className='w-full relative'>
-    <dl className='hidden md:flex items-center gap-1 ml-10'>
+    {/* <dl className='hidden md:flex items-center gap-1 ml-10'>
       <dd className='text-indigo-500  basis-5/12  '>product</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5 '>units</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5 '>price</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5  grow'>amount</dd>
-    </dl>
+    </dl> */}
 
     <div className='flex flex-col gap-3  ' >
       {items.map((item, i) => <div className={` bg-indigo-50/50 md:bg-inherit shadow md:shadow-none`} key={i}>
@@ -114,7 +123,7 @@ export default function Itemslist(props) {
               </div>}
 
               <select onChange={(e) => handleProductChange(i, e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
-                <option value='' >select product</option>
+                <option value='' >Select product</option>
                 {products.map((product, i) => {
                   return (
                     <option key={i} value={product.id}>{product.name}</option>
@@ -147,14 +156,14 @@ export default function Itemslist(props) {
           <nav className='text-gray-500 basis-6/12  md:basis-2/12'>
             <Custominput error={props.errors[`customer_purchases.${i}.units`]} value={item.units} placeholder="enter units" getValue={(value) => handleValueChange(i, "units", value)} />
           </nav>
-          <nav className='text-gray-500 basis-full md:basis-2/12'>
+          {/* <nav className='text-gray-500 basis-full md:basis-2/12'>
             <Custominput readOnly={true} value={item.price} placeholder="enter price" getValue={() => void (0)} />
           </nav>
 
           <nav className='text-gray-500 basis-full md:basis-2/12'>
             <Custominput readOnly={true} value={item.price_per_crate} placeholder="enter price" getValue={() => void (0)} />
-          </nav>
-          <nav className='text-gray-500 basis-full md:basis-2/12 grow'>
+          </nav> */}
+          <nav className='text-gray-500 basis-full md:basis-2/12 grow hidden'>
             <Custominput readOnly={true} value={calculateAmount(i)} placeholder="enter amount" getValue={(value) => handleValueChange(i, 'amount', value)} type="number" />
           </nav>
           <button onClick={() => removeItemat(i)} className='text-gray-500 text-center  md:shrink md:text-right '><FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-red-100 shadow-md text-red-300  ' icon="minus" /></button>
