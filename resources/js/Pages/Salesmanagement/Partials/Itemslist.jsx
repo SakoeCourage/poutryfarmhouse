@@ -57,9 +57,7 @@ export default function Itemslist(props) {
   }
 
   let calculateAmount = (i) => {
-
     return ((Number(items[i].price) * items[i].units) + (Number(items[i].price_per_crate) * Number(items[i].crates))).toFixed(2)
-
   }
 
 
@@ -94,12 +92,12 @@ export default function Itemslist(props) {
 
 
   return <dt className='w-full relative'>
-    <dl className='hidden md:flex items-center gap-1 ml-10'>
+    {/* <dl className='hidden md:flex items-center gap-1 ml-10'>
       <dd className='text-indigo-500  basis-5/12  '>product</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5 '>units</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5 '>price</dd>
       <dd className='text-indigo-500  basis-2/12 ml-5  grow'>amount</dd>
-    </dl>
+    </dl> */}
 
     <div className='flex flex-col gap-3  ' >
       {items.map((item, i) => <div className={` bg-indigo-50/50 md:bg-inherit shadow md:shadow-none`} key={i}>
@@ -151,12 +149,12 @@ export default function Itemslist(props) {
             <Custominput readOnly={true} value={item.price} placeholder="enter price" getValue={() => void (0)} />
           </nav>
 
-          <nav className='text-gray-500 basis-full md:basis-2/12'>
+          {/* <nav className='text-gray-500 basis-full md:basis-2/12'>
             <Custominput readOnly={true} value={item.price_per_crate} placeholder="enter price" getValue={() => void (0)} />
           </nav>
           <nav className='text-gray-500 basis-full md:basis-2/12 grow'>
             <Custominput readOnly={true} value={calculateAmount(i)} placeholder="enter amount" getValue={(value) => handleValueChange(i, 'amount', value)} type="number" />
-          </nav>
+          </nav> */}
           <button onClick={() => removeItemat(i)} className='text-gray-500 text-center  md:shrink md:text-right '><FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-red-100 shadow-md text-red-300  ' icon="minus" /></button>
         </div>
       </div>)
