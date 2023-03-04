@@ -17,30 +17,28 @@ class ProductstockController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-       
- 
+    {
     }
 
-    public function getProductHistory($product){
-        
-        return ([
-            'product_history' => Productstock::where('productsdefinition_id',$product)
-            ->filter(request()->only('date'))
-            ->latest()->paginate(10)->withQueryString()
-            ->through(function($item){
-                return([
-                    'date' => $item->created_at,
-                    'time' => date('H:i', strtotime($item->created_at)),
-                    'description' => $item->description,
-                    'quantity' => $item->quantity,
-                    'net_quantity' => $item->net_quantity,
-                    'action' => $item->action_type
-                ]);
-            })
-        ]);
+    public function getProductHistory($product)
+    {
 
-    } 
+        return ([
+            'product_history' => Productstock::where('productsdefinition_id', $product)
+                ->filter(request()->only('date'))
+                ->latest()->paginate(10)->withQueryString()
+                ->through(function ($item) {
+                    return ([
+                        'date' => $item->created_at,
+                        'time' => date('H:i', strtotime($item->created_at)),
+                        'description' => $item->description,
+                        'quantity' => $item->quantity,
+                        'net_quantity' => $item->net_quantity,
+                        'action' => $item->action_type
+                    ]);
+                })
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -66,11 +64,11 @@ class ProductstockController extends Controller
     {
         $request->validate([
             'productsdefinition_id' => ['required'],
-             'in_crates' => ['required','boolean'],
-             'crates' => [Rule::requiredIf($request->in_crates),'nullable','numeric'],
-             'units' => [Rule::requiredIf(!request()->in_crates),'nullable','numeric'],
-             'quantity' => ['required', 'numeric'],
-             'description' => ['required', 'string', 'max:255']
+            'in_crates' => ['required', 'boolean'],
+            'crates' => [Rule::requiredIf($request->in_crates), 'nullable', 'numeric'],
+            'units' => [Rule::requiredIf(!request()->in_crates), 'nullable', 'numeric'],
+            'quantity' => ['required', 'numeric'],
+            'description' => ['required', 'string', 'max:255']
         ]);
 
         $productservice->increasestock($request);
@@ -85,6 +83,8 @@ class ProductstockController extends Controller
         ]);
 
         $productservice->decreasestock($request);
+        $stockManagers = \App\Models\User::getUsersWhoCan('manage stock data')->get();
+        dispatch(New \App\Jobs\Sendstockreductionmail($stockManagers,$request->description,$request->quantity));
         return response('ok', 200);
     }
 

@@ -156,16 +156,16 @@ export default function Itemslist(props) {
           <nav className='text-gray-500 basis-6/12  md:basis-2/12'>
             <Custominput error={props.errors[`customer_purchases.${i}.units`]} value={item.units} placeholder="enter units" getValue={(value) => handleValueChange(i, "units", value)} />
           </nav>
-          {/* <nav className='text-gray-500 basis-full md:basis-2/12'>
+         {/* <nav className='text-gray-500 basis-full md:basis-2/12'>
             <Custominput readOnly={true} value={item.price} placeholder="enter price" getValue={() => void (0)} />
           </nav>
 
-          {/* <nav className='text-gray-500 basis-full md:basis-2/12'>
-            <Custominput readOnly={true} value={item.price_per_crate} placeholder="enter price" getValue={() => void (0)} />
-          </nav> */}
+           <nav className='text-gray-500 basis-full md:basis-2/12'>
+            <Custominput readOnly={true} value={item.price_per_crate} placeholder="enter unit price" getValue={() => void (0)} />
+          </nav>  */}
           <nav className='text-gray-500 basis-full md:basis-2/12 grow hidden'>
             <Custominput readOnly={true} value={calculateAmount(i)} placeholder="enter amount" getValue={(value) => handleValueChange(i, 'amount', value)} type="number" />
-          </nav> */}
+          </nav> 
           <button onClick={() => removeItemat(i)} className='text-gray-500 text-center  md:shrink md:text-right '><FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-red-100 shadow-md text-red-300  ' icon="minus" /></button>
         </div>
       </div>)

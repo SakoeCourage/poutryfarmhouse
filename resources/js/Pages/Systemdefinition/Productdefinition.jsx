@@ -11,7 +11,7 @@ import Buttonsubmit from '../../components/Buttonsubmit'
 import Emptyresults from '../../components/Emptyresults'
 
 export default function Productdefinition() {
-    const [showform, setShowForm] = useState(true)
+    const [showform, setShowForm] = useState(false)
     const [products, setProducts] = useState([])
     const [nextPage, setNextPage] = useState(null)
     const [isLoading, setisLoading] = useState(false)

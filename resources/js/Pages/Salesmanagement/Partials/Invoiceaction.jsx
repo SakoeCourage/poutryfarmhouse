@@ -88,10 +88,10 @@ function OutOfStock(props) {
                         product
                     </th>
                     <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                        quantity in stock
+                        quantity in stock(units)
                     </th>
                     <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                        quantity required
+                        quantity required(units)
                     </th>
                 </tr>
             </thead>

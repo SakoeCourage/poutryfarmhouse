@@ -21,6 +21,7 @@ export default function Addtostockform(props) {
       Api.post(currentRoute, data).then(res => {
         props.handleOnSucess(props.productDetails.id)
       }).catch((err) => {
+        console.log(err.response.data);
         if (err && err.response?.status == 422) {
           setProcessing(false)
           setErrors(err.response.data.errors)
