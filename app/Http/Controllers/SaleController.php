@@ -30,6 +30,7 @@ class SaleController extends Controller
                    'products.id as id,
                     products.name as productname,
                     (productsdefinitions.price_per_crate)/100 as price_per_crate,
+                    productsdefinitions.units_per_crate as units_per_crate,
                     productsdefinitions.id as definition_id,
                     productsdefinitions.name as definition_name,
                     ROUND(productsdefinitions.unit_price/100,2)  as unit_price,
