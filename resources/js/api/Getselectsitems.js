@@ -28,5 +28,8 @@ export default {
     },
     async getAutoStockableProducts() {
         return Api.get('/product/stockable')
+    },
+    async getCollectionTypes() {
+        return Api.get('/collectiontypes/select')
     }
 }

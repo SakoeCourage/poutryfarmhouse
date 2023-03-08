@@ -27,7 +27,7 @@ export default function Sale() {
 
   useMemo(() => {
     if (flash.message?.invoice_sale_id && autoGenerateInvoice) {
-      getInvoiceRoute.generateinvoice(flash.message?.invoice_sale_id).then(res => {
+        getInvoiceRoute.generateinvoice(flash.message?.invoice_sale_id).then(res => {
         console.log(res.data)
         setPrintdata(res.data)
       }).catch(err => console.log(err))

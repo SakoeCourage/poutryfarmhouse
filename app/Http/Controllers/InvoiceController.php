@@ -89,13 +89,17 @@ class InvoiceController extends Controller
                 ->map(function ($item) {
                     return ([
                         'unit_price' => $item->price,
+                        'price_per_crate'=>$item->price_per_crate,
                         'amount' => $item->amount,
                         'quantity' => $item->quantity,
                         'name' => Productsdefinition::where('id', $item->productsdefinition_id)->with('product')->get()
                             ->map(function ($item) {
                                 return ([
                                     'definition_name' => $item->name,
-                                    'product_name' => $item->product->name
+                                    'product_name' => $item->product->name,
+                                    'in_collections'=>$item->product->in_crates,
+                                    'collection_type' => $item->product->collection_type,
+                                    'units_per_crate'=>$item->units_per_crate,
                                 ]);
                             })
 
@@ -137,7 +141,10 @@ class InvoiceController extends Controller
                                 ->map(function ($item) {
                                     return ([
                                         'definition_name' => $item->name,
-                                        'product_name' => $item->product->name
+                                        'product_name' => $item->product->name,
+                                        'in_collections'=>$item->product->in_crates,
+                                        'collection_type' => $item->product->collection_type,
+                                        'units_per_crate'=>$item->units_per_crate,
                                     ]);
                                 })->first()
                             ]);

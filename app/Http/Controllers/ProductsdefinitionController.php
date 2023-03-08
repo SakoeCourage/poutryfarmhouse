@@ -17,7 +17,7 @@ class ProductsdefinitionController extends Controller
     public function index()
     {
         return ([
-            'products' => Productsdefinition::with(['product:id,name'])->latest()->paginate(15)
+            'products' => Productsdefinition::with(['product:id,name,collection_type'])->latest()->paginate(15)
         ]);
     }
 
@@ -29,11 +29,12 @@ class ProductsdefinitionController extends Controller
      */
     public function create()
     {
-            // dd(request()->in_crates);
+       
         Request()->validate([
             'name' => ['required', 'string', 'max:255', 'unique:products,name'],
             'in_crates'=>['required','boolean'],
             'definitions' => ['required', 'array', 'min:1'],
+            'collection_method' => [Rule::requiredIf(request()->in_crates == true),'nullable',Rule::in(\App\Models\CollectionType::get()->pluck('type')->toArray())],
             'definitions.*.name' => ['required', 'string', 'max:255', 'distinct'],
             'definitions.*.unit_price' => ['required', 'numeric'],
             'definitions.*.price_per_crate' => [Rule::requiredIf(request()->in_crates == true),'nullable','numeric'],
@@ -43,7 +44,8 @@ class ProductsdefinitionController extends Controller
         DB::transaction(function () {
             $newProduct = \App\Models\Product::create([
                 'name'  => Request()->name,
-                'in_crates' => Request()->in_crates
+                'in_crates' => Request()->in_crates,
+                'collection_type' => Request()->collection_method
             ]);
 
             // dd(collect(Request()->definitions));

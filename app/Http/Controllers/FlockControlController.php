@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Services\FeedStockService;
 use App\Services\MortalityService;
 use App\Models\Grading;
+use Illuminate\Validation\Rule;
 
 
 class FlockControlController extends Controller
@@ -19,32 +20,33 @@ class FlockControlController extends Controller
      */
     public function index(FlockControl $data)
     {
-        return Inertia('Flockmanagement/Flockcontroldata',[
-            'controldata' =>fn () => $data->with('flocks')->filter(request()->only('sort'))
-            ->latest()->paginate(15)
-            ->withQueryString()
-            -> through(fn($cdata)=>[
-                'id'=> $cdata->id,
-                'date_created' => $cdata->created_at,
-                'record_date' => $cdata->record_date,
-                'flock_name' => $cdata->flocks->flock_identification_name,
-                'shed' => $cdata->relatedshed->shed_identification_name,
-                'eggs_produced' => collect($cdata->production)->sum('quantity'),
-                'feeds_consumed' => collect($cdata->feeds)->sum('quantity'),
-                'dead'=>$cdata->dead,
-                'missing'=>$cdata->missing,
-                'culled' => $cdata->culled,
-                'time'=> $cdata->time,
-                'vaccination' =>$cdata->vaccination,
-                'medication'=>$cdata->medication,
-                'canEdit' =>Request()->user()->can('edit flock control'),
+        return Inertia('Flockmanagement/Flockcontroldata', [
+            'controldata' => fn () => $data->with('flocks')->filter(request()->only('sort'))
+                ->latest()->paginate(15)
+                ->withQueryString()
+                ->through(fn ($cdata) => [
+                    'id' => $cdata->id,
+                    'date_created' => $cdata->created_at,
+                    'record_date' => $cdata->record_date,
+                    'flock_name' => $cdata->flocks->flock_identification_name,
+                    'shed' => $cdata->relatedshed->shed_identification_name,
+                    'eggs_produced' => collect($cdata->production)->sum('quantity'),
+                    'feeds_consumed' => collect($cdata->feeds)->sum('quantity'),
+                    'dead' => $cdata->dead,
+                    'missing' => $cdata->missing,
+                    'culled' => $cdata->culled,
+                    'time' => $cdata->time,
+                    'vaccination' => $cdata->vaccination,
+                    'medication' => $cdata->medication,
+                    'canEdit' => Request()->user()->can('edit flock control'),
                 ]),
             'filters' => request()->only('sort'),
         ]);
     }
 
 
-    public function flocksToSelect(){
+    public function flocksToSelect()
+    {
         return ([
             'flocks' => \App\Models\Flock::with('pen')->get()->map(function ($item) {
                 return ([
@@ -57,7 +59,7 @@ class FlockControlController extends Controller
         ]);
     }
 
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -66,9 +68,9 @@ class FlockControlController extends Controller
      */
     public function create(Request $request)
     {
-           
-        
-     
+
+
+
         $request->validate([
             'record_date' => ['required', 'date'],
             'flock_name' => ['required', 'string', 'max:255'],
@@ -80,42 +82,47 @@ class FlockControlController extends Controller
             'products.*.product_id' => ['required', 'distinct'],
             'products.*.quantity' => ['required', 'numeric'],
             'dead' => ['nullable', 'numeric'],
-            'medication' => ['nullable','string','max:255'],
-            'vaccination' => ['nullable','string','max:255'],
+            'medication' => ['nullable', 'string', 'max:255'],
+            'vaccination' => ['nullable', 'string', 'max:255'],
             'missing' => ['nullable', 'numeric'],
             'culled' => ['nullable', 'numeric'],
-            'time' => ['date_format:H:i']
-            
+            'time' => ['date_format:H:i'],
+            'products.*.in_crates' => ['required', 'boolean'],
+            'products.*.crates' => ['required_if:products.*.in_crates,true', 'nullable', 'numeric'],
+            'products.*.units' => ['required_if:products.*.in_crates,false', 'nullable', 'numeric'],
+
+
         ]);
-        
+
         $record_date = date('Y-m-d H:i:s', strtotime($request->record_date));
         $feedservice = new FeedStockService();
         $mortality =  new MortalityService($request);
 
-        DB::transaction(function()use($request,$record_date,$feedservice,$mortality){
-            $newflockdata = FlockControl::Create([
-                'record_date' => $record_date,
-                'flock_id' => $request->flock_name,
-                'shed_id' => $request->pen_identification,
-                'production' => $request->products,
-                'feeds' => $request->feeds,
-                'vaccination' => $request->vaccination ?? null,
-                'time' => $request->time ?? null,
-                'medication' => $request->medication ?? null,
-                'dead' => $mortality->handleDeadMortality(),
-                'missing' => $mortality->handleMissingMortality(),
-                'culled' => $mortality->handleCulledMortality()
-            ]);  
-
-            \App\Models\Grading::create([
-                'flock_control_id' =>$newflockdata->id,
-                'is_graded' =>false,
-                'remainder_description'=> ''
-            ]);
-            foreach($request->feeds as $feed ){
-                $feedservice->decreasestock((Object)$feed);
+        DB::transaction(function () use ($request, $record_date, $feedservice, $mortality) {
+            foreach ($request->products as $loop => $product) {
+                $newflockdata = FlockControl::Create([
+                    'record_date' => $record_date,
+                    'flock_id' => $request->flock_name,
+                    'shed_id' => $request->pen_identification,
+                    'production' => $product,
+                    'feeds' => $request->feeds,
+                    'vaccination' => $request->vaccination ?? null,
+                    'time' => $request->time ?? null,
+                    'medication' => $request->medication ?? null,
+                    'dead' => $loop == 0 ? $mortality->handleDeadMortality() : 0,
+                    'missing' => $loop == 0 ? $mortality->handleMissingMortality() : 0,
+                    'culled' => $loop == 0 ? $mortality->handleCulledMortality() : 0,
+                ]);
+                \App\Models\Grading::create([
+                    'flock_control_id' => $newflockdata->id,
+                    'is_graded' => false,
+                    'remainder_description' => ''
+                ]);
             }
-            
+
+            foreach ($request->feeds as  $feed) {
+                $feedservice->decreasestock((object)$feed);
+            }
         });
         return response('ok');
     }
@@ -140,10 +147,11 @@ class FlockControlController extends Controller
      */
     public function show(FlockControl $flock)
     {
-        return($flock
-        ->only(['eggs_produced','shed_id','record_date','id','flock_name','missing','feeds_consumed','dead','culled'
-    
-                 ]));
+        return ($flock
+            ->only([
+                'eggs_produced', 'shed_id', 'record_date', 'id', 'flock_name', 'missing', 'feeds_consumed', 'dead', 'culled'
+
+            ]));
     }
 
     /**
@@ -184,7 +192,7 @@ class FlockControlController extends Controller
             'shed_id' => $request->shed_identification,
             'eggs_produced' => $request->eggs_produced,
             'feeds_consumed' => $request->feeds_consumed,
-      
+
         ]);
         return redirect()->back()->with([
             "message" => [

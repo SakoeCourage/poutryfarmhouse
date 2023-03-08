@@ -109,7 +109,7 @@ function LineChart() {
         </div>
         <div className="sales">
         <ul>
-              {series.map((item,i )=><li key={i}>{<MinusOutlined />} {item.name}</li>
+              {series.map((item,i )=><li key={i}>{item.name}</li>
               )}
        </ul>
         </div>

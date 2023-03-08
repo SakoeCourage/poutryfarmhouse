@@ -67,7 +67,9 @@ export default function Itemslist(props) {
 
 
   useEffect(() => {
-    setItems([{ product_id: '', definition_id: '', units: '', price: '', amount: '', price_per_crate: '', crates: '' }])
+    setItems([])
+    setTimeout(()=>setItems([{ product_id: '', definition_id: '', units: '', price: '', amount: '', price_per_crate: '', crates: '' }])
+    ,100)
   }, [props.reset])
 
   let getProductsDefintionsById = (id) => {
@@ -86,15 +88,14 @@ export default function Itemslist(props) {
   }, [items])
 
   useEffect(() => {
-     const w_q = items.map((item,i)=>{
-        if(item.definition_id){
-            let units_per_crate = productsData.find(pr=>Number(pr.definition_id)==Number(item.definition_id))?.units_per_crate
-            let quantity = (Number(units_per_crate) * Number(item.crates)) + Number(item.units)
-            item.quantity = quantity
-            item.in_crates = checkIfInCrate(i)
-            console.log(item)
-        }
-     })
+    const w_q = items.map((item, i) => {
+      if (item.definition_id) {
+        let units_per_crate = productsData.find(pr => Number(pr.definition_id) == Number(item.definition_id))?.units_per_crate
+        let quantity = (Number(units_per_crate) * Number(item.crates)) + Number(item.units)
+        item.quantity = quantity
+        item.in_crates = checkIfInCrate(i)
+      }
+    })
   }, [items])
 
   useEffect(() => {
@@ -103,36 +104,37 @@ export default function Itemslist(props) {
 
 
   return <dt className='w-full relative'>
-    {/* <dl className='hidden md:flex items-center gap-1 ml-10'>
-      <dd className='text-indigo-500  basis-5/12  '>product</dd>
-      <dd className='text-indigo-500  basis-2/12 ml-5 '>units</dd>
-      <dd className='text-indigo-500  basis-2/12 ml-5 '>price</dd>
-      <dd className='text-indigo-500  basis-2/12 ml-5  grow'>amount</dd>
-    </dl> */}
 
-    <div className='flex flex-col gap-3  ' >
-      {items.map((item, i) => <div className={` bg-indigo-50/50 md:bg-inherit shadow md:shadow-none`} key={i}>
-        <div className='flex md:items-center flex-col  md:flex-row  md:gap-1  gap-2 p-2 md:p-1 salelist' data-index={i + 1}>
-          <nav className='text-gray-500 md:basis-5/12 flex flex-col md:flex-row  flex-auto items-center gap-1 '>
+    <div className='flex flex-col gap-5  ' >
+      {items.map((item, i) => <div className={` bg-indigo-50/50 p-3 rounded-md shadow md:shadow-none salelist`} data-index={i + 1} key={i}>
+        <div className='flex md:items-center flex-col   md:gap-7  gap-2 p-2 md:p-1 ' >
+          <nav className='text-gray-500  flex flex-col md:flex-row w-full flex-auto items-center gap-10 '>
             <span className="space-y-1 text-sm w-full">
-              {props.errors[`customer_purchases.${i}.product_id`] && <div className=' mt-2 relative '>
+              <span className="space-y-1 text-sm">
+                <div className='flex items-center justify-between relative'>
+                  <label htmlFor="userrole" className="font-medium">Select a Product</label><abbr className='text-red-300' title='defines users role on the system'>*</abbr>
+                </div>
+                {props.errors[`customer_purchases.${i}.product_id`] && <div className=' mt-2 relative '>
                 <nav className="cursor-pointer z-10 font-awesome  gap-1  flex items-center absolute right-2 top-3">
                   <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
                   <span className="  text-sm text-red-400 backdrop-blur-sm bg-white/30 error ">{props.errors[`customer_purchases.${i}.definition_id`]}</span>
                 </nav>
               </div>}
-
-              <select onChange={(e) => handleProductChange(i, e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
-                <option value='' >Select product</option>
-                {products.map((product, i) => {
-                  return (
-                    <option key={i} value={product.id}>{product.name}</option>
-                  )
-                })}
-              </select>
+                <select onChange={(e) => handleProductChange(i, e.target.value)} className=" block relative border border-gray-200 px-5 min-w-[12rem] py-3 focus:border-none outline-none rounded w-full ring-offset-1 focus:ring-2 transition-all ease-out duration-150" type="text" placeholder="Enter user first name" >
+                  <option value='' >Select product</option>
+                  {products.map((product, i) => {
+                    return (
+                      <option key={i} value={product.id}>{product.name}</option>
+                    )
+                  })}
+                </select>
+              </span>
             </span>
 
             <span className="space-y-1 text-sm w-full">
+                <div className='flex items-center justify-between relative'>
+                  <label htmlFor="userrole" className="font-medium">Select a Type</label><abbr className='text-red-300' title='defines users role on the system'>*</abbr>
+                </div>
               {props.errors[`customer_purchases.${i}.definition_id`] && <div className=' mt-2 relative '>
                 <nav className="cursor-pointer z-10 font-awesome  gap-1  flex items-center absolute right-2 top-3">
                   <FontAwesomeIcon icon="warning" className="text-red-400 h-5 w-5 order-2 " />
@@ -150,22 +152,17 @@ export default function Itemslist(props) {
             </span>
           </nav>
 
-          {checkIfInCrate(i) && <nav className='text-gray-500 basis-full md:basis-2/12'>
-            <Custominput value={item.crates} placeholder="enter crates" getValue={(value) => handleValueChange(i, "crates", value)} />
-          </nav>}
-          <nav className='text-gray-500 basis-6/12  md:basis-2/12'>
-            <Custominput error={props.errors[`customer_purchases.${i}.units`]} value={item.units} placeholder="enter units" getValue={(value) => handleValueChange(i, "units", value)} />
+          <nav className=" w-full flex flex-col gap-7 mt-7 md:flex-row">
+            {checkIfInCrate(i) && <nav className='text-gray-500 w-full'>
+              <Custominput value={item.crates} placeholder="enter crates" label="enter crates" getValue={(value) => handleValueChange(i, "crates", value)} />
+            </nav>}
+            <nav className='text-gray-500 w-full'>
+              <Custominput error={props.errors[`customer_purchases.${i}.units`]} value={item.units} label="enter units" placeholder="enter units" getValue={(value) => handleValueChange(i, "units", value)} />
+            </nav>
           </nav>
-         {/* <nav className='text-gray-500 basis-full md:basis-2/12'>
-            <Custominput readOnly={true} value={item.price} placeholder="enter price" getValue={() => void (0)} />
-          </nav>
-
-           <nav className='text-gray-500 basis-full md:basis-2/12'>
-            <Custominput readOnly={true} value={item.price_per_crate} placeholder="enter unit price" getValue={() => void (0)} />
-          </nav>  */}
           <nav className='text-gray-500 basis-full md:basis-2/12 grow hidden'>
             <Custominput readOnly={true} value={calculateAmount(i)} placeholder="enter amount" getValue={(value) => handleValueChange(i, 'amount', value)} type="number" />
-          </nav> 
+          </nav>
           <button onClick={() => removeItemat(i)} className='text-gray-500 text-center  md:shrink md:text-right '><FontAwesomeIcon className=' h-3 w-3 p-1 rounded-full bg-red-100 shadow-md text-red-300  ' icon="minus" /></button>
         </div>
       </div>)

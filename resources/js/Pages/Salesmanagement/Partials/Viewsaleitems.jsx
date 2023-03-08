@@ -6,6 +6,7 @@ import Buttonsubmit from '../../../components/Buttonsubmit'
 import { printContext } from '../context/Printcontext'
 import getInvoiceRoute from '../../../api/Getselectsitems'
 import Toastnotification from '../../../components/toastnotification'
+import Productcollection from '../../../components/Productcollection'
 export default function Viewsaleitems(props) {
     const [isLoading, setIsLoading] = useState(true)
     const [saleItems, setSaleItems] = useState([])
@@ -69,7 +70,11 @@ export default function Viewsaleitems(props) {
                                 {item.product} <span>{item.definition}</span>
                             </th>
                             <td className="py-4 px-6">
-                                {item.quantity}
+                                <Productcollection in_collections={item.in_collections}
+                                    collection_type ={item.collection_type}
+                                    units_per_crate ={item.units_per_crate}
+                                    quantity ={item.quantity}
+                                />
                             </td>
                             <td className="py-4 px-6">
                                 {formatcurrency(item.price)}

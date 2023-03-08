@@ -89,21 +89,21 @@ export default function Productstock() {
                                     <nav className='text-sm text-gray-400'>product</nav>
                                     <nav className='font-semibold text-indigo-900 text-2xl '><span>{productData.product?.name}</span><span className='text-indigo-700 text-xl ml-2'>{productData.name}</span></nav>
                                 </nav>
-                                <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm flex flex-col gap-2'>
-                                    <nav className="p-2 bg-indigo-100 rounded-md ">
+                                <nav className=' flex flex-col  gap-2 rounded-md '>
+                                    <nav className=" bg-indigo-100 flex-1 p-10   bg-indigo-200/40  rounded-md shadow-sm  ">
                                         <nav className='text-sm text-gray-400'>price per unit</nav>
                                         <nav className='font-semibold text-indigo-900 text-2xl'>{formatcurrency(productData.unit_price)}</nav>
                                     </nav>
-                                    {Boolean(productData.product?.in_crates) && <nav className="p-2 bg-indigo-100 rounded-md ">
-                                        <nav className='text-sm text-gray-400'>price per crate</nav>
+                                    {Boolean(productData.product?.in_crates) && <nav className="p-10  bg-indigo-100 flex-1  bg-indigo-200/40  rounded-md shadow-sm ">
+                                        <nav className='text-sm text-gray-400'>price per {productData.product?.collection_type ?? 'collection'}</nav>
                                         <nav className='font-semibold text-indigo-900 text-2xl'>{formatcurrency(productData.price_per_crate)}</nav>
                                     </nav>}
                                 </nav>
-                                <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm'>
+                                <nav className=' bg-indigo-200/40 p-10 rounded-md shadow-sm flex flex-col justify-between'>
                                     <nav className='text-sm text-gray-400'>quantity in stock </nav>
                                     <nav className='font-semibold text-indigo-900 text-2xl'>
                                         {Boolean(productData.product?.in_crates) ?
-                                            <span className='font-semibold text-xl'>{formatnumber(Math.floor(productData.quantity_in_stock / (productData.units_per_crate ?? 1)))} <span className="text-xs mx-1">crates</span> &nbsp; <div className="block">{productData.quantity_in_stock % (productData.units_per_crate ?? 1)} <span className="text-xs mx-1">units</span></div> </span>
+                                            <span className='font-semibold text-xl'>{formatnumber(Math.floor(productData.quantity_in_stock / (productData.units_per_crate ?? 1)))} <span className="text-xs mx-1">{productData.product?.collection_type + '(s)' ??  'collection'}</span> &nbsp; <div className="block">{productData.quantity_in_stock % (productData.units_per_crate ?? 1)} <span className="text-xs mx-1">units</span></div> </span>
                                             :
                                             new Intl.NumberFormat().format(productData.quantity_in_stock)
                                         }
@@ -139,18 +139,16 @@ export default function Productstock() {
                                             quantity(units)
                                         </th>
                                         {Boolean(productData.product?.in_crates) && <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                            quantity after {Boolean(productData.product?.in_crates) && <span>(crates)</span>}
+                                             {Boolean(productData.product?.in_crates) ? <span>{productData.product?.collection_type + '(s)' ??  'collection'} <span>after</span></span>:
+                                             <span>quantity after</span>
+                                            }   
                                         </th>}
                                         <th scope="col" className="py-3 px-6 min-w-[10rem]">
-                                            quantity after (units)
+                                            units after
                                         </th>
-
                                         <th scope="col" className="py-3 px-6 min-w-[10rem]">
                                             description
                                         </th>
-
-
-
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -162,7 +160,6 @@ export default function Productstock() {
                                                     {item.action == 'addition' ? <FontAwesomeIcon icon="arrow-up" className='text-green-300' />
                                                         : <FontAwesomeIcon icon="arrow-down" className='text-red-300' />
                                                     }
-
                                                 </td>
                                                 <td className="py-2 px-6">
                                                     {dateReformat(item.date)}
@@ -188,7 +185,7 @@ export default function Productstock() {
                                                         {item.net_quantity % (productData.units_per_crate ?? 1)}
                                                     </td> :
                                                     <td className="py-2 px-6 ">
-                                                        {item.net_quantity}
+                                                        {formatnumber(item.net_quantity)}
                                                     </td>
 
 

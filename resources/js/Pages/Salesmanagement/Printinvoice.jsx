@@ -2,6 +2,7 @@ import React,{useState,useEffect,useContext,forwardRef} from 'react'
 import { printContext } from './context/Printcontext'
 import { formatcurrency,dateReformat } from '../../api/Util'
 import Primarybutton from '../../components/Primarybutton'
+import Productcollection from '../../components/Productcollection'
 
  const Printinvoice = forwardRef ((props,ref)=>{
     const [invoiceData,setInvoiceData] =useState([])
@@ -73,7 +74,14 @@ import Primarybutton from '../../components/Primarybutton'
                       <nav key={i} className='flex items-center gap-1 font-semibold text-gray-500 text-sm'>
                         <span className=' basis-[40%]'>{product.name[0].product_name} <span className='text-text-gray-500'>{product.name[0].definition_name}</span> </span>
                         <span className=' basis-[20%]'>{formatcurrency(product.unit_price)}</span>
-                        <span className=' basis-[20%] text-center' >{new Intl.NumberFormat().format(product.quantity)}</span>
+                        <span className=' basis-[20%] text-center' >
+                          <Productcollection
+                            in_collections={product.name[0].in_collections}
+                            quantity ={product.quantity}
+                            units_per_crate={product.name[0].units_per_crate}
+                            collection_type = {product.name[0].collection_type}
+                          />
+                        </span>
                         <span className=' basis-[20%]' >{formatcurrency(product.amount)}</span>
                       </nav>
                       )

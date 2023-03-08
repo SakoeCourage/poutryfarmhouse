@@ -14,6 +14,7 @@ export default function Gradeaction(props) {
     const [gradeList, setGradeList] = useState([])
     const [data, setData] = useState({
         'flock_control_id': null,
+        'in_crates': false,
         'grading': [],
         'remainder_description': null,
         'remainder_quantity': null
@@ -22,13 +23,13 @@ export default function Gradeaction(props) {
     let GetProductData = () => {
         Api.get(`/grading/${props.id}/show`).then(res => {
             const { product, quantity } = res.data
+            console.log(product[0])
             setQuantity(quantity)
-            setData(cd => cd = { ...cd, 'flock_control_id': res.data.flock_control_id })
+            setData(cd => cd = { ...cd, 'flock_control_id': res.data.flock_control_id, 'in_crates': product[0].in_collections })
             setProductData(product[0])
             setIsLoadingData(false)
         }).catch(err => console.log(err))
     }
-
 
     let AutoCheckAnomality = useMemo(() => {
         let Total = 0
@@ -37,6 +38,16 @@ export default function Gradeaction(props) {
         }
         return quantity - Total
     }, [gradeList])
+
+    useMemo(() => {
+        gradeList.map(list => {
+            list.quantity = (Number(list.crates ?? 0) * Number(list.units_per_crate ?? 0)) + Number(list.units)
+        })
+    }, [gradeList])
+
+
+
+
 
 
     let handleChange = (i, name, value) => {
@@ -52,10 +63,15 @@ export default function Gradeaction(props) {
     useEffect(() => {
         if (productData?.definitions) {
             productData.definitions.forEach(function (value) {
-                setGradeList(cd => cd = [...cd, { 'productsdefinition_id': value.id, 'name': value.name, 'quantity': '', 'description': 'from product grading' }])
+                setGradeList(cd => cd = [...cd, {
+                    'productsdefinition_id': value.id, 'name': value.name, 'units_per_crate': value.units_per_crate,
+                    'collection_type': value.collection_type, 'quantity': '', 'description': 'from product grading'
+                }])
             })
         }
     }, [productData])
+
+
 
 
     let submit = () => {
@@ -111,20 +127,18 @@ export default function Gradeaction(props) {
                     {Boolean(gradeList.length) && gradeList.map((definition, i) => {
                         return (<nav key={i} className='flex items-center gap-1 my-1 flex-auto'>
                             <Custominput readOnly={true} value={definition.name} getValue={() => void (0)} />
-                            <Custominput error={errors[`grading.${i}.quantity`]} type="number" placeholder="enter quantity" getValue={(value) => handleChange(i, 'quantity', value)} />
+                            {Boolean(productData.in_collections) && <Custominput error={errors[`grading.${i}.crates`]} type="number" placeholder={`enter ${productData.collection_type + '(s)'}`} getValue={(value) => handleChange(i, 'crates', value)} />
+                            }
+                            <Custominput error={errors[`grading.${i}.units`]} type="number" placeholder="enter units" getValue={(value) => handleChange(i, 'units', value)} />
                         </nav>)
                     })}
 
-                    {/* <nav className='flex items-center gap-1 my-1 flex-auto'>
-                        <Custominput readOnly={true} type="text" value='defected' getValue={() => void (0)} />
-                        <Custominput readOnly={true} error={(AutoCheckAnomality < 0) && 'values do not tally'} placeholder="enter quantity" type="number" number={AutoCheckAnomality} getValue={(value) => setData(cd => cd = { ...cd, 'defected': value })} />
-                    </nav> */}
 
                     <nav className='text-indigo-600 text-sm flex items-center gap-1 mb-4 p-5  bg-indigo-50'>
-                        State reason for any remainder
+                        State description for any remainder
                     </nav>
                     <nav className='flex items-center gap-1 my-1 flex-auto'>
-                        <Custominput type="text" placeholder='enter description' error={errors['remainder_description']  } getValue={(value) => setData(cd => cd = { ...cd, 'remainder_description': value })} />
+                        <Custominput type="text" placeholder='enter description' error={errors['remainder_description']} getValue={(value) => setData(cd => cd = { ...cd, 'remainder_description': value })} />
                         <Custominput placeholder="enter quantity" type="number" error={AutoCheckAnomality < 0 && 'cannot be less than zero'} disabled={true} number={AutoCheckAnomality} getValue={(value) => setData(cd => cd = { ...cd, 'remainder_quantity': value })} />
                     </nav>
                     {/* {AutoCheckAnomality < 0 &&

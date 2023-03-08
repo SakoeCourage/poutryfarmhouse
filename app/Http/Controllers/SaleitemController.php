@@ -49,11 +49,15 @@ class SaleitemController extends Controller
     {     
         $sale_items = Saleitem::where('sale_id',$saleid);
         return([
-            'saleitems' => $sale_items->with(['definitions:id,name,product_id','sale:id,total_amount'])->get()->map(function($item){
+            'saleitems' => $sale_items->with(['definitions:id,name,product_id,units_per_crate','sale:id,total_amount'])->get()->map(function($item){
+                $currentProduct =Product::where('id',$item->definitions->product_id);
                 return([
                     'amount' => $item->amount,
                     'definition' =>    $item->definitions->name,
-                    'product'=>Product::where('id',$item->definitions->product_id)->pluck('name')[0],
+                    'product'=>$currentProduct->pluck('name')->first(),
+                    'in_collections'=>$currentProduct->pluck('in_crates')->first(),
+                    'collection_type'=>$currentProduct->pluck('collection_type')->first(),
+                    'units_per_crate' =>$item->definitions->units_per_crate,
                     'price' =>$item->price,
                     'quantity' =>$item->quantity,
                     'total'=>$item->sale->total_amount

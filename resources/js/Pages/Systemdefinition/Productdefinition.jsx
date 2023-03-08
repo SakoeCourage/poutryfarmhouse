@@ -9,6 +9,7 @@ import axios from 'axios'
 import { formatcurrency, dateReformat } from '../../api/Util'
 import Buttonsubmit from '../../components/Buttonsubmit'
 import Emptyresults from '../../components/Emptyresults'
+import Scrollablemodal from '../../components/Scrollablemodal'
 
 export default function Productdefinition() {
     const [showform, setShowForm] = useState(false)
@@ -65,9 +66,9 @@ export default function Productdefinition() {
     }
     return (
         <div>
-            {showform && <Modal closeModal={() => setShowForm(false)}>
+            {showform && <Scrollablemodal closeModal={() => setShowForm(false)}>
                 <Productform closeModal={handleCloseModal} />
-            </Modal>
+            </Scrollablemodal>
             }
             <div className='flex items-start flex-auto flex-col md:flex-row  justify-center'>
                 <nav className={`w-[100%] transition-all md:w-4/12 ${!Boolean(products.length) && 'md:w-[100%]'}`}>

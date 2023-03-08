@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('user/profile',[\App\Http\Controllers\UserprofileController::class, 'show']);
+    Route::get('collectiontypes/select',[\App\Http\Controllers\CollectionTypeController::class, 'index']);
 
     Route::get('/flocks/all', [\App\Http\Controllers\FlockControlController::class, 'flocksToSelect']);
     Route::get('/expensibles/all', [\App\Http\Controllers\ExpensibleItemsController::class, 'expensibleItemsToSelect']);

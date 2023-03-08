@@ -8,6 +8,7 @@ import Slideover from '../../components/Slideover'
 import Gradeaction from './Partials/Gradeaction'
 import { Inertia } from '@inertiajs/inertia'
 import Gradinghistory from './Partials/Gradinghistory'
+import Productcollection from '../../components/Productcollection'
 export default function Grading() {
     const [flockControlId, setFlockControlId] = useState(null)
     const { records, graded, ungraded, all, filter } = usePage().props
@@ -89,7 +90,11 @@ export default function Grading() {
                                         {record.product_name}
                                     </td>
                                     <td className="py-2 px-6 ">
-                                        {record.quantity}
+                                        <Productcollection in_collections={record.in_collections}
+                                            collection_type = {record.collection_type}
+                                            quantity = {record.quantity}
+                                            units_per_crate = {record.units_per_crate}
+                                        />
                                     </td>
                                     <td className="py-2 px-6 ">
                                         {Boolean(record.status) ? 'graded' : 'ungraded'}

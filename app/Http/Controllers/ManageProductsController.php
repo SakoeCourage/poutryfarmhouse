@@ -27,6 +27,7 @@ class ManageProductsController extends Controller
                     return ([
                         'product' => $item->name,
                         'in_crates' => $item->in_crates,
+                        'collection_type'=>$item->collection_type,
                         'id' => $item->id,
                         'definitions' => $item->definitions->map(function ($item) {
                             return ([
@@ -45,7 +46,7 @@ class ManageProductsController extends Controller
         return ([
                 'products' => Product::with('definitions')->latest()->whereHas('definitions',function($query){
                     $query->where('automated_stocking','=',1);
-                })->get(['id','name'])
+                })->get()
                  ]
         );
     }
@@ -79,7 +80,7 @@ class ManageProductsController extends Controller
     public function show($id)
     {
         return ([
-            'definition' => Productsdefinition::where('id', $id)->with('product:id,name,in_crates')->firstorFail()
+            'definition' => Productsdefinition::where('id', $id)->with('product:id,name,in_crates,collection_type')->firstorFail()
         ]);
     }
 

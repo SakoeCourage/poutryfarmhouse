@@ -10,7 +10,7 @@ import Getselectsitems from '../../../api/Getselectsitems'
 import Modal from '../../../components/Modal'
 import SimpleBar from 'simplebar-react'
 import { printReceiptContext } from '../context/printReceiptContext'
-
+import Productcollection from '../../../components/Productcollection'
 
 
 
@@ -211,9 +211,9 @@ export default function Invoiceaction(props) {
                             <th scope="col" className="py-3 px-6 rounded-r-lg">
                                 Quantity
                             </th>
-                            <th scope="col" className="py-3 px-6 rounded-r-lg">
-                                Price
-                            </th>
+                            {/* <th scope="col" className="py-3 px-6 rounded-r-lg">
+                               Unit Price
+                            </th> */}
                             <th scope="col" className="py-3 px-6 rounded-r-lg">
                                 Amount
                             </th>
@@ -228,11 +228,15 @@ export default function Invoiceaction(props) {
                                <span className='text-gray-500'> {item.name.definition_name}</span>
                             </th>
                             <td className="py-4 px-6">
-                                {item.quantity}
+                                   <Productcollection in_collections={item.name.in_collections}
+                                    collection_type ={item.name.collection_type}
+                                    units_per_crate ={item.name.units_per_crate}
+                                    quantity ={item.quantity}
+                                />
                             </td>
-                            <td className="py-4 px-6">
+                            {/* <td className="py-4 px-6">
                                 {formatcurrency(item.price)}
-                            </td>
+                            </td> */}
                             <td className="py-4 px-6">
                                 {formatcurrency(item.amount)}
                             </td>
